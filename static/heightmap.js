@@ -41,7 +41,7 @@ myMarker.bindTooltip("", {
 
 function requestHeight(e) {
     var xhr = new XMLHttpRequest();
-    var latlng = e.latlng;
+    var latlng = e.latlng.wrap();
     xhr.open('GET', './api/get_height' + '?lat=' + latlng.lat + '&lon=' + latlng.lng);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function() {
@@ -53,8 +53,10 @@ function requestHeight(e) {
                     myMarker.addTo(map);
                     myCircle.addTo(map);
                 }
+                if (!map.getBounds().contains(myMarker.getLatLng())) {
+                    map.panInside(myMarker.getLatLng());
+                }
             }
-//            myMarker._tooltip.setContent("<div style='width: 55px;text-align: right;'><b>"
             myMarker._tooltip.setContent("<div style='text-align: right;'><b>"
                 + height_info.altitude_m + "&nbsp;m</b></div>"+ height_info.source);
             myCircle.setLatLng([height_info.latitude, height_info.longitude]);
