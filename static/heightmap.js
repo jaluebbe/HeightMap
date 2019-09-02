@@ -1,4 +1,4 @@
-var map = L.map('map').setView([50.0, 8.6], 4);
+var map = L.map('map').setView([50.0, 8.0], 5);
 var wmsLayer = L.tileLayer.wms('https://sgx.geodatenzentrum.de/wms_topplus_open', {
     layers: 'web',
     format: 'image/png',
@@ -46,13 +46,33 @@ if (typeof mapboxAccessToken !== 'undefined') {
         "MapBox Satellite Streets": mapbox_streets_satellite
     });
 }
-var other_layers = {};
+var sevenSummits = L.geoJSON(null, {
+    onEachFeature: function(feature, layer) {
+        var tooltipContent =
+            '' + feature.properties.name + "<br>" +
+            feature.properties.elevation_m + "&nbsp;m";
+        layer.bindTooltip(tooltipContent, {
+            direction: "top"
+        });
+
+    },
+    pointToLayer: function(feature, latlng) {
+        return L.circleMarker(latlng, {
+            color: 'green',
+            fillColor: 'green'
+        });
+    }
+}).addTo(map);
+var other_layers = {
+    'Seven Summits': sevenSummits
+};
 var layerControl = L.control.layers(baseLayers, other_layers, {
     collapsed: L.Browser.mobile, // hide on mobile devices
     position: 'topright'
 }).addTo(map);
 var myMarker = L.marker([50, 8.6], {
-    draggable: true
+    draggable: true,
+    zIndexOffset: 1000
 });
 var myCircle = L.circle(myMarker.getLatLng(), {
     radius: 0
@@ -88,5 +108,19 @@ function requestHeight(e) {
     };
     xhr.send();
 }
+
+function loadSevenSummits() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', './static/seven_summits.json');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            sevenSummits.addData(JSON.parse(xhr.responseText));
+        }
+    };
+    xhr.send();
+}
+
 myMarker.on('move', requestHeight);
 map.on('click', requestHeight);
+loadSevenSummits();
