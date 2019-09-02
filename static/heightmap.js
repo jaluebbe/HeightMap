@@ -89,6 +89,20 @@ var layerControl = L.control.layers(baseLayers, other_layers, {
     collapsed: L.Browser.mobile, // hide on mobile devices
     position: 'topright'
 }).addTo(map);
+var info = L.control({position: 'bottomright'});
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.showText('Click on the map to place a marker!<br>You can drag that marker.');
+    return this._div;
+};
+info.showText = function(infoText) {
+    this._div.innerHTML = infoText;
+};
+info.updateElevation = function(altitude_m, source) {
+    this._div.innerHTML = "<div style='text-align: right;'><b>"
+        + altitude_m + "&nbsp;m</b></div>" + source;
+};
+info.addTo(map);
 var myMarker = L.marker([50, 8.6], {
     draggable: true,
     zIndexOffset: 1000
@@ -119,9 +133,10 @@ function requestHeight(e) {
                 }
             }
             myMarker._tooltip.setContent("<div style='text-align: right;'><b>"
-                + height_info.altitude_m + "&nbsp;m</b></div>"+ height_info.source);
+                + height_info.altitude_m + "&nbsp;m</b></div>" + height_info.source);
             myCircle.setLatLng([height_info.latitude, height_info.longitude]);
             myCircle.setRadius(height_info.distance_m);
+	    info.updateElevation(height_info.altitude_m, height_info.source);
             map.attributionControl.addAttribution(height_info.attribution);
         }
     };
