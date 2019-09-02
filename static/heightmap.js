@@ -64,8 +64,26 @@ var sevenSummits = L.geoJSON(null, {
         });
     }
 }).addTo(map);
+var lowLocations = L.geoJSON(null, {
+    onEachFeature: function(feature, layer) {
+        var tooltipContent =
+            '' + feature.properties.name + "<br>" +
+            feature.properties.elevation_m + "&nbsp;m";
+        layer.bindTooltip(tooltipContent, {
+            direction: "top"
+        });
+
+    },
+    pointToLayer: function(feature, latlng) {
+        return L.circleMarker(latlng, {
+            color: 'red',
+            fillColor: 'red'
+        });
+    }
+}).addTo(map);
 var other_layers = {
-    'Seven Summits': sevenSummits
+    'Seven Summits': sevenSummits,
+    'impressive low locations': lowLocations
 };
 var layerControl = L.control.layers(baseLayers, other_layers, {
     collapsed: L.Browser.mobile, // hide on mobile devices
@@ -121,7 +139,19 @@ function loadSevenSummits() {
     };
     xhr.send();
 }
+function loadLowLocations() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', './static/low_locations.json');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            lowLocations.addData(JSON.parse(xhr.responseText));
+        }
+    };
+    xhr.send();
+}
 
 myMarker.on('move', requestHeight);
 map.on('click', requestHeight);
 loadSevenSummits();
+loadLowLocations();
