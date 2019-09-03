@@ -20,10 +20,15 @@ var otmLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
         '<a href="https://opentopomap.org">OpenTopoMap</a> ' +
         '(<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
 });
+esriOceans = L.layerGroup([
+    L.esri.basemapLayer('Oceans'),
+    L.esri.basemapLayer('OceansLabels')
+]);
 baseLayers = {
     "TopPlusOpen": wmsLayer,
     "OpenTopoMap": otmLayer,
-    "OpenStreetMap": osmLayer
+    "OpenStreetMap": osmLayer,
+    "Esri Oceans": esriOceans
 };
 if (typeof mapboxAccessToken !== 'undefined') {
     var mapbox_streets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
