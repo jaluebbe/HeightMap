@@ -28,10 +28,10 @@ else:
 precision = 4.0  # RMS error
 
 def get_x(osgr):
-    return int(round((osgr.easting % (NCOLS * CELLSIZE)) / CELLSIZE))
+    return round(osgr.easting % (NCOLS * CELLSIZE)) // CELLSIZE
 
 def get_y(osgr):
-    return int(round(NROWS - 1 - (osgr.northing % (NROWS * CELLSIZE)) / CELLSIZE))
+    return NROWS - 1 - round(osgr.northing % (NROWS * CELLSIZE)) // CELLSIZE
 
 def get_filename(osgr):
     filename = osgr.toStr(prec=2, sep='') + '.bin'
@@ -56,7 +56,6 @@ def get_height(lat, lon):
         return (NODATA, lat, lon)
     filename = get_filename(osgr)
     full_path = os.path.join(path, filename[:2].lower(), filename)
-    print(full_path)
     if os.path.isfile(full_path):
         x = get_x(osgr)
         y = get_y(osgr)
@@ -89,8 +88,6 @@ def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
     raw_length = len(file_list)
     lowest_max = check_max_list(file_list)
     new_length = len(file_list)
-#    print('files unfiltered: {}, filtered: {}, lowest_max: {}m'.format(
-#        raw_length, new_length, lowest_max))
     (osgr_list, h_max, counter) = check_max_files(file_list)
     latlon_list = []
     for osgr in osgr_list:
@@ -115,8 +112,6 @@ def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
     raw_length = len(file_list)
     largest_min = check_min_list(file_list)
     new_length = len(file_list)
-#    print('files unfiltered: {}, filtered: {}, lowest_max: {}m'.format(
-#        raw_length, new_length, largest_min))
     (osgr_list, h_min, counter) = check_min_files(file_list)
     latlon_list = []
     for osgr in osgr_list:
@@ -147,7 +142,7 @@ def check_min_list(file_list):
         cache_data = map_cache.get(filename)
         if cache_data is None:
             cache_data = create_cache_entry(filename)
-            print('gererated cache data for {} with {}.'.format(filename,
+            print('generated cache data for {} with {}.'.format(filename,
                                                                 cache_data))
         if list_item['complete']:
             if (NODATA < cache_data['h_min'] < h_min):
