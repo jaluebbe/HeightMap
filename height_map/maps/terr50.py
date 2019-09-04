@@ -28,17 +28,17 @@ else:
 precision = 4.0  # RMS error
 
 def get_x(osgr):
-    return int((osgr.easting % (NCOLS * CELLSIZE)) / CELLSIZE)
+    return int(round((osgr.easting % (NCOLS * CELLSIZE)) / CELLSIZE))
 
 def get_y(osgr):
-    return int(NROWS - 1 - (osgr.northing % (NROWS * CELLSIZE)) / CELLSIZE)
+    return int(round(NROWS - 1 - (osgr.northing % (NROWS * CELLSIZE)) / CELLSIZE))
 
 def get_filename(osgr):
     filename = osgr.toStr(prec=2, sep='') + '.bin'
     return filename
 
 def get_lat_lon_from_indices(x, y, filename):
-    osgr = get_osgr_from_indices(x, y, filename)
+    osgr = get_osgr_from_indices(x+1, y, filename)
     latlon = osgr.toLatLon(eV.LatLon)
     return (latlon.lat, latlon.lon)
 
