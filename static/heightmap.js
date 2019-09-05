@@ -26,11 +26,16 @@ esriOceans = L.layerGroup([
     L.esri.basemapLayer('Oceans'),
     L.esri.basemapLayer('OceansLabels')
 ]);
+esriImagery = L.layerGroup([
+    L.esri.basemapLayer('Imagery'),
+    L.esri.basemapLayer('ImageryLabels')
+]);
 baseLayers = {
     "TopPlusOpen": wmsLayer,
     "OpenTopoMap": otmLayer,
     "OpenStreetMap": osmLayer,
-    "Esri Oceans": esriOceans
+    "Esri Oceans": esriOceans,
+    "Esri Imagery": esriImagery
 };
 if (typeof mapboxAccessToken !== 'undefined') {
     var mapbox_streets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
