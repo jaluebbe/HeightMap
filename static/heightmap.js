@@ -68,7 +68,7 @@ var sevenSummits = L.geoJSON(null, {
             fillColor: 'green'
         });
     }
-}).addTo(map);
+});
 var lowLocations = L.geoJSON(null, {
     onEachFeature: function(feature, layer) {
         var tooltipContent =
@@ -85,8 +85,13 @@ var lowLocations = L.geoJSON(null, {
             fillColor: 'red'
         });
     }
-}).addTo(map);
+});
+var openSeaMap = L.tileLayer('http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
+    attribution: 'Map data: &copy; <a href="http://www.openseamap.org">OpenSeaMap</a> contributors'
+});
+
 var other_layers = {
+    'OpenSeaMap': openSeaMap,
     'Seven Summits': sevenSummits,
     'impressive low locations': lowLocations
 };
