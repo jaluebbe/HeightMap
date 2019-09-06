@@ -14,6 +14,7 @@ https://www.ordnancesurvey.co.uk/business-and-government/products/terrain-50.htm
 SRTM (tiles of each 1 arc minute coverage with 30m resolution, registration required):
 
 Download required tiles from https://dwtkns.com/srtm30m/ , unpack and put them to height_map/maps/srtm1/
+
 EARTH2014 (world wide coverage of ocean and terrain with 1 arc minute resolution, could be replaced by GEBCO_2019):
 
 Put http://ddfe.curtin.edu.au/models/Earth2014/data_1min/topo_grids/Earth2014.BED2014.1min.geod.bin to height_map/maps/earth2014/ .
