@@ -11,7 +11,7 @@ Put http://sg.geodatenzentrum.de/web_download/dgm/dgm200/utm32s/gridascii/dgm200
 ### OS Terrain 50 (UK, 50m grid, registration required):
 
 Download ASCII Grid version of OS Terrain 50 from
-https://www.ordnancesurvey.co.uk/business-and-government/products/terrain-50.html , put the content to downloads/ and call terr50_data_conversion.py .
+https://www.ordnancesurvey.co.uk/business-and-government/products/terrain-50.html to downloads/ and call terr50_data_conversion.py .
 
 ### SRTM (tiles of each 1 arc minute coverage with 30m resolution, registration required):
 
