@@ -99,7 +99,7 @@ def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=None, water=None):
         lon_ur -= CELLSIZE / 2
     # consider only correctly defined rectangle:
     if ((lat_ll > lat_ur) or (lon_ll > lon_ur)):
-        return (location_max, NODATA, counter)
+        return (location_min, NODATA, counter)
     # convert coordinates to data indices:
     i_ll = get_index_from_latitude(lat_ll)
     j_ll = get_index_from_longitude(lon_ll)
