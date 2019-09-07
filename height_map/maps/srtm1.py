@@ -113,8 +113,8 @@ def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
         elif h_max == total_h_max:
             total_counter += counter
             total_location += location
-    elif file_name in srtm1_file_list:
-        print('SRTM1: missing file', file_name)
+#    elif file_name in srtm1_file_list:
+#        print('SRTM1: missing file', file_name)
     return (total_location, total_h_max, total_counter)
 
 def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
@@ -199,8 +199,10 @@ def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
         elif h_min == total_h_min:
             total_counter += counter
             total_location += location
-    elif file_name in srtm1_file_list:
-        print('SRTM1: missing file', file_name)
+#    elif file_name in srtm1_file_list:
+#        print('SRTM1: missing file', file_name)
+    if total_h_min == -NODATA:
+        total_h_min = NODATA
     return (total_location, total_h_min, total_counter)
 
 def get_height(lat, lon):
@@ -226,8 +228,8 @@ def get_height(lat, lon):
             # turn indices back to coordinates
             lat = get_lat_from_index(i, yllcenter)
             lon = get_lon_from_index(j, xllcenter)
-    elif not (lat > 60 or lat < -56) and file_name in srtm1_file_list:
-        print('SRTM1: missing file', file_name)
+#    elif not (lat > 60 or lat < -56) and file_name in srtm1_file_list:
+#        print('SRTM1: missing file', file_name)
     return (val, lat, lon)
 
 def get_filename(yllcenter, xllcenter):
