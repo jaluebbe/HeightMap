@@ -112,6 +112,7 @@ if __name__ == "__main__":
         lat = location['lat']
         lon = location['lon']
         results = test_height(lat, lon, sources, name=label)
+    sources = [etopo1, earth2014, dgm200, terr50, gebco_2019]
     for location in locations['areas']:
         label = location['label']
         area = location['area']
