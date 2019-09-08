@@ -1,5 +1,6 @@
 import h5py
 import os
+import json
 import numpy as np
 
 attribution_url = ('https://www.gebco.net/data_and_products/'
@@ -9,6 +10,7 @@ attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,
     attribution_name)        
 path = 'height_map/maps/gebco_2019'
 filename = 'GEBCO_2019.nc'
+cache_filename = 'gebco_2019_cache.json'
 NCOLS = 86400
 NROWS = 43200
 CELLSIZE = 1./240
@@ -42,7 +44,107 @@ def get_height(lat, lon):
             val = round(float(f['elevation'][i][j]), 1)
     return (val, lat, lon)
 
+def get_max_height_from_indices(i_ll, j_ll, i_ur, j_ur):
+    i_ur = i_ur + 1
+    j_ur = j_ur + 1
+    h_max = NODATA
+    location_max = []
+    counter = 0
+    h5_results = []
+    if i_ll % 240 != 0:
+        i_ll_cache = i_ll + 240 - i_ll%240
+    else:
+        i_ll_cache = i_ll
+    if j_ll % 240 != 0:
+        j_ll_cache = j_ll + 240 - j_ll%240
+    else:
+        j_ll_cache = j_ll
+    i_ur_cache = i_ur - i_ur%240
+    j_ur_cache = j_ur - j_ur%240
+    if i_ll_cache >= i_ur_cache or j_ll_cache >= j_ur_cache:
+        return get_max_height_from_h5file(i_ll, j_ll, i_ur, j_ur)
+    else:
+        h5_results.append(get_max_height_from_h5file(i_ll, j_ll, i_ll_cache, j_ur))
+        h5_results.append(get_max_height_from_h5file(i_ur_cache, j_ll, i_ur, j_ur))
+        h5_results.append(get_max_height_from_h5file(i_ll_cache, j_ll, i_ur_cache,
+            j_ll_cache))
+        h5_results.append(get_max_height_from_h5file(i_ll_cache, j_ur_cache,
+            i_ur_cache, j_ur))
+        cache_result = get_max_height_from_cache(i_ll_cache//240,
+            j_ll_cache//240, i_ur_cache//240, j_ur_cache//240)
+        cache_location_max, cache_h_max, cache_counter = cache_result
+        for _cache_location in cache_location_max:
+            _i_ll = _cache_location[0] * 240
+            _j_ll = _cache_location[1] * 240
+            h5_results.append(get_max_height_from_h5file(_i_ll, _j_ll, _i_ll+240,
+                _j_ll+240))
+        for _result in h5_results:
+            _location_max, _h_max, _counter = _result
+            if not _location_max:
+                continue
+            if _h_max > h_max:
+                location_max = _location_max
+                h_max = _h_max
+                counter = _counter
+            elif _h_max == h_max:
+                location_max += _location_max
+                counter += _counter
+    return (location_max, round(float(h_max), 1), counter)
+
+def get_max_height_from_cache(i_ll, j_ll, i_ur, j_ur):
+    h_max = NODATA
+    location_max = []
+    counter = 0
+    cache_file = os.path.join(path, cache_filename)
+    if os.path.isfile(cache_file) and i_ll < i_ur and j_ll < j_ur:
+        with open(cache_file, 'r') as f:
+            max_cache = np.array(json.load(f)['maximum'])
+            selection = max_cache[i_ll:i_ur, j_ll:j_ur]
+            h_max = selection.max()
+            x, y = np.where(selection==h_max)
+            counter = len(x)
+            for _index in range(counter):
+                location_max += [(i_ll+x[_index], j_ll+y[_index])]
+    return (location_max, round(float(h_max), 1), counter)
+
+def get_max_height_from_h5file(i_ll, j_ll, i_ur, j_ur):
+    h_max = NODATA
+    location_max = []
+    counter = 0
+    file = os.path.join(path, filename)
+    if os.path.isfile(file) and i_ll < i_ur and j_ll < j_ur:
+        with h5py.File(file, 'r') as f:
+            selection = f['elevation'][i_ll:i_ur, j_ll:j_ur]
+            h_max = selection.max()
+            x, y = np.where(selection==h_max)
+            counter = len(x)
+            for _index in range(counter):
+                location_max += [(i_ll+x[_index], j_ll+y[_index])]
+    return (location_max, round(float(h_max), 1), counter)
+
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
+    h_max = NODATA
+    location_max = []
+    counter = 0
+    if lon_ur >= 180 - CELLSIZE/2:
+        lon_ur -= CELLSIZE
+    # consider only correctly defined rectangle:
+    if ((lat_ll > lat_ur) or (lon_ll > lon_ur)):
+        return (location_max, NODATA, counter)
+    # convert coordinates to data indices:
+    i_ll = get_index_from_latitude(lat_ll)
+    j_ll = get_index_from_longitude(lon_ll)
+    i_ur = get_index_from_latitude(lat_ur)
+    j_ur = get_index_from_longitude(lon_ur)
+    location_max, h_max, counter = get_max_height_from_indices(
+        i_ll, j_ll, i_ur, j_ur)
+    location_max = [[get_lat_from_index(_x), get_lon_from_index(_y)]
+        for (_x, _y) in location_max]
+    return (location_max, round(float(h_max), 1), counter)
+
+# this method remains here for comparison until the cached_search is fully
+# implemented
+def get_max_height_old(lat_ll, lon_ll, lat_ur, lon_ur):
     h_max = NODATA
     location_max = []
     counter = 0
