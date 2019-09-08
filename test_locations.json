@@ -133,5 +133,6 @@
 {"area": [51.4, 9.85, 52.1, 11.65], "label": "Harz"},
 {"area": [50.842524, 6.266616, 51.115481, 6.649815], "label": "Open pits Hambach and Garzweiler"},
 {"area": [52.3, 7.1, 53.7, 7.5], "label": "Emsland"},
-{"area": [31.4, 35.4, 31.6, 35.5], "label": "Dead Sea"}
+{"area": [31.4, 35.4, 31.6, 35.5], "label": "Dead Sea"},
+{"area": [-90, -180, 90, 180], "label": "The World"}
 ]}
