@@ -123,14 +123,11 @@ def get_max_height_from_h5file(i_ll, j_ll, i_ur, j_ur):
     return (location_max, round(float(h_max), 1), counter)
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
-    h_max = NODATA
-    location_max = []
-    counter = 0
     if lon_ur >= 180 - CELLSIZE/2:
         lon_ur -= CELLSIZE
     # consider only correctly defined rectangle:
     if ((lat_ll > lat_ur) or (lon_ll > lon_ur)):
-        return (location_max, NODATA, counter)
+        return ([], NODATA, 0)
     # convert coordinates to data indices:
     i_ll = get_index_from_latitude(lat_ll)
     j_ll = get_index_from_longitude(lon_ll)
@@ -170,7 +167,106 @@ def get_max_height_old(lat_ll, lon_ll, lat_ur, lon_ur):
                     get_lon_from_index(j_ll+y[_index]))]
     return (location_max, round(float(h_max), 1), counter)
 
+def get_min_height_from_indices(i_ll, j_ll, i_ur, j_ur):
+    i_ur = i_ur + 1
+    j_ur = j_ur + 1
+    h_min = -NODATA
+    location_min = []
+    counter = 0
+    h5_results = []
+    if i_ll % 240 != 0:
+        i_ll_cache = i_ll + 240 - i_ll%240
+    else:
+        i_ll_cache = i_ll
+    if j_ll % 240 != 0:
+        j_ll_cache = j_ll + 240 - j_ll%240
+    else:
+        j_ll_cache = j_ll
+    i_ur_cache = i_ur - i_ur%240
+    j_ur_cache = j_ur - j_ur%240
+    if i_ll_cache >= i_ur_cache or j_ll_cache >= j_ur_cache:
+        return get_min_height_from_h5file(i_ll, j_ll, i_ur, j_ur)
+    else:
+        h5_results.append(get_min_height_from_h5file(i_ll, j_ll, i_ll_cache, j_ur))
+        h5_results.append(get_min_height_from_h5file(i_ur_cache, j_ll, i_ur, j_ur))
+        h5_results.append(get_min_height_from_h5file(i_ll_cache, j_ll, i_ur_cache,
+            j_ll_cache))
+        h5_results.append(get_min_height_from_h5file(i_ll_cache, j_ur_cache,
+            i_ur_cache, j_ur))
+        cache_result = get_min_height_from_cache(i_ll_cache//240,
+            j_ll_cache//240, i_ur_cache//240, j_ur_cache//240)
+        cache_location_min, cache_h_min, cache_counter = cache_result
+        for _cache_location in cache_location_min:
+            _i_ll = _cache_location[0] * 240
+            _j_ll = _cache_location[1] * 240
+            h5_results.append(get_min_height_from_h5file(_i_ll, _j_ll, _i_ll+240,
+                _j_ll+240))
+        for _result in h5_results:
+            _location_min, _h_min, _counter = _result
+            if not _location_min:
+                continue
+            if _h_min < h_min:
+                location_min = _location_min
+                h_min = _h_min
+                counter = _counter
+            elif _h_min == h_min:
+                location_min += _location_min
+                counter += _counter
+    return (location_min, round(float(h_min), 1), counter)
+
+def get_min_height_from_cache(i_ll, j_ll, i_ur, j_ur):
+    h_min = -NODATA
+    location_min = []
+    counter = 0
+    cache_file = os.path.join(path, cache_filename)
+    if os.path.isfile(cache_file) and i_ll < i_ur and j_ll < j_ur:
+        with open(cache_file, 'r') as f:
+            min_cache = np.array(json.load(f)['minimum'])
+            selection = min_cache[i_ll:i_ur, j_ll:j_ur]
+            h_min = selection.min()
+            x, y = np.where(selection==h_min)
+            counter = len(x)
+            for _index in range(counter):
+                location_min += [(i_ll+x[_index], j_ll+y[_index])]
+    return (location_min, round(float(h_min), 1), counter)
+
+def get_min_height_from_h5file(i_ll, j_ll, i_ur, j_ur):
+    h_min = -NODATA
+    location_min = []
+    counter = 0
+    file = os.path.join(path, filename)
+    if os.path.isfile(file) and i_ll < i_ur and j_ll < j_ur:
+        with h5py.File(file, 'r') as f:
+            selection = f['elevation'][i_ll:i_ur, j_ll:j_ur]
+            h_min = selection.min()
+            x, y = np.where(selection==h_min)
+            counter = len(x)
+            for _index in range(counter):
+                location_min += [(i_ll+x[_index], j_ll+y[_index])]
+    return (location_min, round(float(h_min), 1), counter)
+
 def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
+    if lon_ur >= 180 - CELLSIZE/2:
+        lon_ur -= CELLSIZE
+    # consider only correctly defined rectangle:
+    if ((lat_ll > lat_ur) or (lon_ll > lon_ur)):
+        return ([], NODATA, 0)
+    # convert coordinates to data indices:
+    i_ll = get_index_from_latitude(lat_ll)
+    j_ll = get_index_from_longitude(lon_ll)
+    i_ur = get_index_from_latitude(lat_ur)
+    j_ur = get_index_from_longitude(lon_ur)
+    location_min, h_min, counter = get_min_height_from_indices(
+        i_ll, j_ll, i_ur, j_ur)
+    location_min = [[get_lat_from_index(_x), get_lon_from_index(_y)]
+        for (_x, _y) in location_min]
+    if h_min == -NODATA:
+        h_min = NODATA
+    return (location_min, round(float(h_min), 1), counter)
+
+# this method remains here for comparison until the cached_search is fully
+# implemented
+def get_min_height_old(lat_ll, lon_ll, lat_ur, lon_ur):
     location_min = []
     counter = 0
     if lon_ur >= 180 - CELLSIZE/2:
