@@ -183,7 +183,19 @@ function loadLowLocations() {
     xhr.send();
 }
 
-myMarker.on('move', requestHeight);
+const throttle = (func, limit) => {
+    let inThrottle
+    return function() {
+        const args = arguments
+        const context = this
+        if (!inThrottle) {
+            func.apply(context, args)
+            inThrottle = true
+            setTimeout(() => inThrottle = false, limit)
+        }
+    }
+}
+myMarker.on('move', throttle(requestHeight, 100));
 map.on('click', requestHeight);
 loadSevenSummits();
 loadLowLocations();
