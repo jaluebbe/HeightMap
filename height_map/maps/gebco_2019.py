@@ -64,10 +64,12 @@ def get_max_height_from_indices(i_ll, j_ll, i_ur, j_ur):
     if i_ll_cache >= i_ur_cache or j_ll_cache >= j_ur_cache:
         return get_max_height_from_h5file(i_ll, j_ll, i_ur, j_ur)
     else:
-        h5_results.append(get_max_height_from_h5file(i_ll, j_ll, i_ll_cache, j_ur))
-        h5_results.append(get_max_height_from_h5file(i_ur_cache, j_ll, i_ur, j_ur))
-        h5_results.append(get_max_height_from_h5file(i_ll_cache, j_ll, i_ur_cache,
-            j_ll_cache))
+        h5_results.append(get_max_height_from_h5file(i_ll, j_ll, i_ll_cache,
+            j_ur))
+        h5_results.append(get_max_height_from_h5file(i_ur_cache, j_ll, i_ur,
+            j_ur))
+        h5_results.append(get_max_height_from_h5file(i_ll_cache, j_ll,
+            i_ur_cache, j_ll_cache))
         h5_results.append(get_max_height_from_h5file(i_ll_cache, j_ur_cache,
             i_ur_cache, j_ur))
         cache_result = get_max_height_from_cache(i_ll_cache//240,
@@ -76,8 +78,8 @@ def get_max_height_from_indices(i_ll, j_ll, i_ur, j_ur):
         for _cache_location in cache_location_max:
             _i_ll = _cache_location[0] * 240
             _j_ll = _cache_location[1] * 240
-            h5_results.append(get_max_height_from_h5file(_i_ll, _j_ll, _i_ll+240,
-                _j_ll+240))
+            h5_results.append(get_max_height_from_h5file(_i_ll, _j_ll,
+                _i_ll+240, _j_ll+240))
         for _result in h5_results:
             _location_max, _h_max, _counter = _result
             if not _location_max:

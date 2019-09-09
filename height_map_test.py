@@ -82,7 +82,6 @@ def test_max(area, sources, name=''):
                   ''.format(source.attribution_name, duration, locations[:3],
                   elevation, counter))
 
-
 def test_min(area, sources, name=''):
 
     print('min_height in {} {}'.format(name, area))
