@@ -182,19 +182,21 @@ function loadLowLocations() {
     };
     xhr.send();
 }
+var throttle = function throttle(func, limit) {
+  var inThrottle;
+  return function () {
+    var args = arguments;
+    var context = this;
 
-const throttle = (func, limit) => {
-    let inThrottle
-    return function() {
-        const args = arguments
-        const context = this
-        if (!inThrottle) {
-            func.apply(context, args)
-            inThrottle = true
-            setTimeout(() => inThrottle = false, limit)
-        }
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(function () {
+        return inThrottle = false;
+      }, limit);
     }
-}
+  };
+};
 myMarker.on('move', throttle(requestHeight, 100));
 map.on('click', requestHeight);
 loadSevenSummits();
