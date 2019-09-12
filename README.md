@@ -4,7 +4,7 @@
 
 ### conda/apt
 
-flask gunicorn cython numpy
+flask gunicorn cython numpy h5py
 
 ### pip
 
