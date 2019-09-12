@@ -1,5 +1,15 @@
 # HeightMap
 
+## Software requirements
+
+### conda/apt
+
+flask gunicorn cython numpy
+
+### pip
+
+pygeodesy geojson fastapi uvicorn aiofiles
+
 ## Data Sources
 
 ### DGM200 (Germany, 200m grid):
@@ -38,3 +48,15 @@ Put http://ddfe.curtin.edu.au/models/Earth2014/data_1min/topo_grids/Earth2014.TB
 https://www.gebco.net/data_and_products/gridded_bathymetry_data/
 
 Download the global GEBCO_2019_Grid in netCDF format, unpack it and put GEBCO_2019.nc to height_map/maps/gebco_2019/ .
+
+## Startup of the web interface
+
+The web interface and API can be run either using Flask or FastAPI 
+
+### Flask
+
+gunicorn -w8 -b 0.0.0.0:5000 backend_flask:app
+
+### FastAPI
+
+gunicorn -w8 -b 0.0.0.0:5000 backend_fastapi:app -k uvicorn.workers.UvicornWorker

@@ -22,11 +22,13 @@ def api_get_height():
     latitude = request.args.get('lat', None)
     longitude = request.args.get('lon', None)
     if None in (latitude, longitude):
-        abort(404)
-    (altitude, source, source_lat, source_lon, distance, attribution
-        ) = hi.get_height(float(latitude), float(longitude), water=False)
-    return jsonify(altitude_m=altitude, source=source, latitude=source_lat,
-        longitude=source_lon, distance_m=distance, attribution=attribution)
+        abort(400)
+    latitude = float(latitude)
+    longitude = float(longitude)
+    if (latitude < -90 or latitude > 90 or longitude < -180 or
+            longitude > 180):
+        abort(400)
+    return jsonify(hi.get_height(latitude, longitude, water=False))
 
 if __name__ == '__main__':
 
