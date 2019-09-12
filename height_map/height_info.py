@@ -1,9 +1,9 @@
 import os
-import height_map.maps.srtm1 as srtm1
-import height_map.maps.dgm200 as dgm200
-import height_map.maps.terr50 as terr50
-import height_map.maps.earth2014 as earth2014
-import height_map.maps.gebco_2019 as gebco_2019
+import height_map.srtm1 as srtm1
+import height_map.dgm200 as dgm200
+import height_map.terr50 as terr50
+import height_map.earth2014 as earth2014
+import height_map.gebco_2019 as gebco_2019
 
 NODATA = float('nan')
 
