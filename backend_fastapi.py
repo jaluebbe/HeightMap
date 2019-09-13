@@ -4,7 +4,7 @@ from starlette.responses import FileResponse
 import height_map.height_info as hi
 
 app = FastAPI(
-    openapi_prefix='.',
+    openapi_prefix='',
     title='HeightMap',
     description='Combination of several elevation data sources.'
     )
