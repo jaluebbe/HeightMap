@@ -55,14 +55,15 @@ Download the global GEBCO_2019_Grid in netCDF format, unpack it and put GEBCO_20
 The web interface and API can be run either using Flask or FastAPI 
 
 ### Flask
-
+```
 gunicorn -w8 -b 0.0.0.0:5000 backend_flask:app
-
+```
 ### FastAPI
-
+```
 gunicorn -w8 -b 0.0.0.0:5000 backend_fastapi:app -k uvicorn.workers.UvicornWorker
-
+```
 ### Build and run as a Docker container
-
+```
 docker build -t height_map_docker ./
 docker run -d -p 80:80 --mount src=`pwd`/height_map/maps,target=/app/height_map/maps,type=bind height_map_docker
+```
