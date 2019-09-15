@@ -10,6 +10,7 @@ attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,
     attribution_name)        
 path = 'height_map/maps/gebco_2019'
 filename = 'GEBCO_2019.nc'
+cache_path = 'height_map'
 cache_filename = 'gebco_2019_cache.json'
 NCOLS = 86400
 NROWS = 43200
@@ -97,7 +98,7 @@ def get_max_height_from_cache(i_ll, j_ll, i_ur, j_ur):
     h_max = NODATA
     location_max = []
     counter = 0
-    cache_file = os.path.join(path, cache_filename)
+    cache_file = os.path.join(cache_path, cache_filename)
     if os.path.isfile(cache_file) and i_ll < i_ur and j_ll < j_ur:
         with open(cache_file, 'r') as f:
             max_cache = np.array(json.load(f)['maximum'])
@@ -194,7 +195,7 @@ def get_min_height_from_cache(i_ll, j_ll, i_ur, j_ur):
     h_min = -NODATA
     location_min = []
     counter = 0
-    cache_file = os.path.join(path, cache_filename)
+    cache_file = os.path.join(cache_path, cache_filename)
     if os.path.isfile(cache_file) and i_ll < i_ur and j_ll < j_ur:
         with open(cache_file, 'r') as f:
             min_cache = np.array(json.load(f)['minimum'])

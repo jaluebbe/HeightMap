@@ -19,5 +19,5 @@ for _x in range(180):
 
 min_max_cache = {'minimum': np.around(z_min, 1).tolist(),
     'maximum': np.around(z_max, 1).tolist()}
-with open(os.path.join(gebco_2019.path, cache_filename), 'w') as f:
+with open(os.path.join(gebco_2019.cache_path, cache_filename), 'w') as f:
     json.dump(cache, f)
