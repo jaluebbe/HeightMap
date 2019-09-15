@@ -15,7 +15,8 @@ attribution_url = ('https://www.ordnancesurvey.co.uk/business-and-government/'
 attribution_name = 'OS Terrain 50'
 attribution = ('<a href="{}">Contains OS data &copy; Crown copyright and '
     'database right 2019</a>').format(attribution_url)
-map_cache_filename = os.path.join(path, 'map_cache.json')
+cache_path = 'height_map'
+map_cache_filename = os.path.join(cache_path, 'terr50_map_cache.json')
 if os.path.isfile(map_cache_filename):
     with open(map_cache_filename) as json_cache_file:
         try:
@@ -124,10 +125,6 @@ def check_max_list(file_list):
     h_max = NODATA
     for filename, list_item in file_list.items():
         cache_data = map_cache.get(filename)
-        if cache_data is None:
-            cache_data = create_cache_entry(filename)
-            print('gererated cache data for {} with {}.'.format(filename,
-                                                                cache_data))
         if list_item['complete']:
             h_max = max(h_max, cache_data['h_max'])
     for filename in list(file_list.keys()):
@@ -140,10 +137,6 @@ def check_min_list(file_list):
     h_min = -NODATA
     for filename, list_item in file_list.items():
         cache_data = map_cache.get(filename)
-        if cache_data is None:
-            cache_data = create_cache_entry(filename)
-            print('generated cache data for {} with {}.'.format(filename,
-                                                                cache_data))
         if list_item['complete']:
             if (NODATA < cache_data['h_min'] < h_min):
                 h_min = cache_data['h_min']
@@ -226,54 +219,6 @@ def check_min_files(file_list):
     if h_min == -NODATA:
         h_min = NODATA
     return (osgr_list, h_min, counter)
-
-def create_cache_entry(filename, overwrite=False):
-    if not overwrite and map_cache.get(filename) is not None:
-        return
-    full_path = os.path.join(path, filename[:2].lower(), filename)
-    x_ll = 0
-    y_ll = NROWS - 1
-    x_ur = NCOLS - 1
-    y_ur = 0
-    counter_max = 0
-    counter_min = 0
-    h_max = NODATA
-    osgr_max = []
-    h_min = -NODATA
-    osgr_min = []
-    # start in the upper left edge of the target area
-    y_pos = y_ur
-    x_pos = x_ll
-    if os.path.isfile(full_path):
-        with open(full_path, "rb") as f:
-            while(y_ur <= y_pos <= y_ll):
-                f.seek((y_pos * NCOLS + x_pos) * 4)
-                num_values = x_ur - x_ll + 1
-                buf = f.read(num_values * 4)
-                values = struct.unpack('>{:d}f'.format(num_values), buf)
-                while(x_ll <= x_pos <=x_ur):
-                    if values[x_pos - x_ll] > h_max:
-                        h_max = values[x_pos - x_ll]
-                        counter_max = 1
-                    elif values[x_pos - x_ll] == h_max:
-                        counter_max += 1
-                    if (NODATA < values[x_pos - x_ll] < h_min):
-                        h_min = values[x_pos - x_ll]
-                        counter_min = 1
-                    elif (NODATA < values[x_pos - x_ll] == h_min):
-                        counter_min += 1
-                    x_pos += 1
-                x_pos = x_ll
-                y_pos += 1
-        if h_min == -NODATA:
-            h_min = NODATA
-        map_cache[filename] = {
-            'counter_max': counter_max, 'counter_min': counter_min,
-            'h_max': h_max, 'h_min': h_min}
-        json_output = json.dumps(map_cache)
-        with open(map_cache_filename, 'w') as target_file:
-            target_file.write(json_output+'\n')
-    return map_cache[filename]
 
 def create_filelist(osgr_ll, osgr_ur, file_list):
     # obtain the coordinates of the tile containing the lower left

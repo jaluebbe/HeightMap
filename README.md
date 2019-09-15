@@ -22,6 +22,7 @@ Put http://sg.geodatenzentrum.de/web_download/dgm/dgm200/utm32s/gridascii/dgm200
 
 Download ASCII Grid version of OS Terrain 50 from
 https://www.ordnancesurvey.co.uk/business-and-government/products/terrain-50.html to downloads/ and call terr50_data_conversion.py .
+Finally, call create_terr50_min_max_cache.py to generate a cache of min/max values.
 
 ### SRTM (tiles of each 1 arc minute coverage with 30m resolution, registration required):
 
