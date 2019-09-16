@@ -2,6 +2,7 @@ import h5py
 import os
 import json
 import numpy as np
+from height_map.dgm200 import calculate_distance
 
 attribution_url = ('https://www.gebco.net/data_and_products/'
     'gridded_bathymetry_data/gebco_2019/gebco_2019_info.html')
@@ -39,11 +40,14 @@ def get_height(lat, lon):
     if os.path.isfile(file):
         i = get_index_from_latitude(lat)
         j = get_index_from_longitude(lon)
-        lat = get_lat_from_index(i)
-        lon = get_lon_from_index(j)
+        lat_found = get_lat_from_index(i)
+        lon_found = get_lon_from_index(j)
         with h5py.File(file, 'r') as f:
             val = round(float(f['elevation'][i][j]), 1)
-    return (val, lat, lon)
+    return {
+        'altitude_m': val, 'source': attribution_name, 'latitude': lat_found,
+        'lon': lon_found, 'distance_m': calculate_distance(lat, lon, lat_found,
+        lon_found), 'attribution': attribution}
 
 def get_max_height_from_indices(i_ll, j_ll, i_ur, j_ur):
     i_ur = i_ur + 1

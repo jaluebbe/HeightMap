@@ -1,5 +1,6 @@
 import struct
 import os
+from height_map.dgm200 import calculate_distance
 
 # original file header:
 #header={
@@ -46,11 +47,13 @@ def get_height(lat, lon, ice=True):
         filename = filename_bed
     file = os.path.join(path, filename)
     val = NODATA
+    lat_found = lat
+    lon_found = lon
     if os.path.isfile(file):
         i = get_index_from_latitude(lat)
         j = get_index_from_longitude(lon)
-        lat = get_lat_from_index(i)
-        lon = get_lon_from_index(j)
+        lat_found = get_lat_from_index(i)
+        lon_found = get_lon_from_index(j)
         with open(file, "rb") as f:
             # go to the right spot,
             f.seek((i*NCOLS + j) * 2)
@@ -58,7 +61,10 @@ def get_height(lat, lon, ice=True):
             buf = f.read(2)
             # "<h" is a signed two byte integer
             val = struct.unpack('<h', buf)[0]
-    return (val, lat, lon)
+    return {
+        'altitude_m': val, 'source': attribution_name, 'latitude': lat_found,
+        'lon': lon_found, 'distance_m': calculate_distance(lat, lon, lat_found,
+        lon_found), 'attribution': attribution}
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=True):
     h_max = NODATA

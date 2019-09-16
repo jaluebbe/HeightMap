@@ -2,6 +2,7 @@ import struct
 from math import floor, ceil
 import json
 import os
+from height_map.dgm200 import calculate_distance
 
 NCOLS = 3601
 NROWS = 3601
@@ -213,6 +214,8 @@ def get_height(lat, lon):
     file_name = get_filename(yllcenter, xllcenter)
     fullpath = os.path.join(path, file_name)
     val = NODATA
+    lat_found = lat
+    lon_found = lon
     if os.path.isfile(fullpath):
         # verified with 
         # gdallocationinfo N52W002.hgt -wgs84 -1.215090 52.925315
@@ -226,11 +229,14 @@ def get_height(lat, lon):
             # ">h" is a signed two byte integer
             val = struct.unpack('>h', buf)[0]
             # turn indices back to coordinates
-            lat = get_lat_from_index(i, yllcenter)
-            lon = get_lon_from_index(j, xllcenter)
+            lat_found = get_lat_from_index(i, yllcenter)
+            lon_found = get_lon_from_index(j, xllcenter)
 #    elif not (lat > 60 or lat < -56) and file_name in srtm1_file_list:
 #        print('SRTM1: missing file', file_name)
-    return (val, lat, lon)
+    return {
+        'altitude_m': val, 'source': attribution_name, 'latitude': lat_found,
+        'lon': lon_found, 'distance_m': calculate_distance(lat, lon, lat_found,
+        lon_found), 'attribution': attribution}
 
 def get_filename(yllcenter, xllcenter):
     if (xllcenter >= 0):

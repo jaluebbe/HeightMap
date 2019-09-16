@@ -165,7 +165,10 @@ def get_height(double latitude, double longitude):
     cdef double val
     val = NODATA
     if x == -1 or y == -1:
-        return (NODATA, latitude, longitude)
+        return {
+            'altitude_m': NODATA, 'source': attribution_name,
+            'latitude': latitude, 'lon': longitude, 'distance_m': 0,
+            'attribution': attribution}
     file_name = os.path.join(path, grid_file)
     with open(file_name, "rb") as f:
         f.seek((y*NCOLS + x) * 4)  # go to the right spot,
@@ -173,7 +176,10 @@ def get_height(double latitude, double longitude):
         val = struct.unpack('>f', buf)[0]  # ">f" is a four byte float
     cdef double lat, lon
     (lat, lon) = get_latlon_from_indices(x, y)
-    return (round(val * 100) / 100, lat, lon)
+    return {
+        'altitude_m': round(val * 100) / 100, 'source': attribution_name,
+        'latitude': lat, 'lon': lon, 'distance_m': get_distance(latitude,
+        longitude, lat, lon), 'attribution': attribution}
 
 cdef double _deg2rad = M_PI / 180.0
 cdef double _rad2deg = 180.0 / M_PI

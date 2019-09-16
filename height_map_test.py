@@ -8,61 +8,59 @@ import height_map.dgm200 as dgm200
 import height_map.terr50 as terr50
 import height_map.gebco_2019 as gebco_2019
 import height_map.earth2014 as earth2014
-import height_map.height_info as heightInfo
+import height_map.height_info as height_info
 
-def get_height(lat,lon):
+def get_height(lat, lon):
 
-    h_srtm1 = srtm1.get_height(lat,lon)
-    h_terr50 = terr50.get_height(lat, lon)[0]
-    h_dgm200, lat_dgm200, lon_dgm200 = dgm200.get_height(lat, lon)
-    h_etopo1 = etopo1.get_height(lat,lon)[0]
-    h_etopo1bed = etopo1.get_height(lat,lon,ice=False)[0]
-    h_earth2014 = earth2014.get_height(lat,lon)[0]
-    h_gebco_2019 = gebco_2019.get_height(lat,lon)[0]
+    srtm1_result = srtm1.get_height(lat,lon)
+    terr50_result = terr50.get_height(lat, lon)
+    dgm200_result = dgm200.get_height(lat, lon)
+    etopo1_result = etopo1.get_height(lat,lon)
+    etopo1bed_result = etopo1.get_height(lat,lon,ice=False)
+    earth2014_result = earth2014.get_height(lat,lon)
+    gebco_2019_result = gebco_2019.get_height(lat,lon)
 
-    return_string='-> '
-    if h_srtm1!=srtm1.NODATA:
-        return_string+='SRTM1: '+str(h_srtm1)+'m, '
-    if h_terr50 != terr50.NODATA:
-        return_string+='TERR50: '+str(h_terr50)+'m, '
-    if h_dgm200!=dgm200.NODATA:
-        return_string+='DGM200: '+str(round(h_dgm200,2))+'m (dist: '+str(
-            dgm200.get_closest_distance(lat, lon)[0])+'m), '
-    if h_etopo1!=etopo1.NODATA:
-        return_string+='ETOPO1: '+str(h_etopo1)+'m, '
-    if h_etopo1!=h_etopo1bed:
-        return_string+='ETOPO1_bed: '+str(h_etopo1bed)+'m, '
-    if h_earth2014 != earth2014.NODATA:
-        return_string += 'Earth2014: '+str(h_earth2014)+'m, '
-    if h_gebco_2019 != gebco_2019.NODATA:
-        return_string += 'GEBCO_2019: '+str(h_gebco_2019)+'m, '
-    return_string += str(heightInfo.get_height(lat,lon))
-    return return_string  
+    results = {'request': {'latitude': lat, 'longitude': lon}}
+    if srtm1_result['altitude_m'] != srtm1.NODATA:
+        results['SRTM1'] = srtm1_result
+    if terr50_result['altitude_m'] != terr50.NODATA:
+        results['TERR50'] = terr50_result
+    if dgm200_result['altitude_m'] != dgm200.NODATA:
+        results['DGM200'] = dgm200_result
+    h_etopo1 = etopo1_result['altitude_m']
+    h_etopo1bed = etopo1bed_result['altitude_m']
+    if h_etopo1 != etopo1.NODATA:
+        results['ETOPO1'] = etopo1_result
+    if h_etopo1 != h_etopo1bed:
+        results['ETOPO1_bed'] = etopo1bed_result
+    if earth2014_result['altitude_m'] != earth2014.NODATA:
+        results['Earth2014'] = earth2014_result
+    if gebco_2019_result['altitude_m'] != gebco_2019.NODATA:
+        results['GEBCO_2019'] = gebco_2019_result
+    results['height_info'] = height_info.get_height(lat,lon)
+    return results
 
 def test_height(lat, lon, sources, name=''):
 
-    print('height at {} ({}, {})'.format(name, lat, lon))
+    print('##### height at {} ({}, {}) #####'.format(name, lat, lon))
     for source in sources:
         t = time.time()
         try:
-            results = source.get_height(lat, lon)
+            result = source.get_height(lat, lon)
         except ValueError as e:
             print (source, e)
             continue
         duration = time.time() - t
-        if results[0] != source.NODATA:
-            print('    {0!r}: {2:.2f}m at ({3:.5f}, {4:.5f}) in {1:.3f}s'
-                  ''.format(source.attribution_name, duration, *results))
+        if result['altitude_m'] != source.NODATA:
+            print('{1} in {0:.3f}s'.format(duration, str(result)))
     try:
-        water_results = heightInfo.get_height(lat, lon, water=True)
-        seafloor_results = heightInfo.get_height(lat, lon, water=False)
-        print('    {0!r}: {1:.2f}m ({2})'.format(heightInfo.__name__,
-                                                 *water_results))
-        if water_results[0] != seafloor_results[0]:
-            print('    {0!r}, seafloor: {1:.2f}m ({2})'.format(
-                  heightInfo.__name__, *seafloor_results))
+        water_results = height_info.get_height(lat, lon, water=True)
+        seafloor_results = height_info.get_height(lat, lon, water=False)
+        print(water_results)
+        if water_results['altitude_m'] != seafloor_results['altitude_m']:
+            print(seafloor_results)
     except ValueError as e:
-        print ('heightInfo:', e)
+        print ('height_info:', e)
 
 def test_max(area, sources, name=''):
 
@@ -111,7 +109,7 @@ if __name__ == "__main__":
         lat = location['lat']
         lon = location['lon']
         results = test_height(lat, lon, sources, name=label)
-    sources = [etopo1, earth2014, dgm200, terr50, gebco_2019, heightInfo]
+    sources = [etopo1, earth2014, dgm200, terr50, gebco_2019, height_info]
     for location in locations['areas']:
         label = location['label']
         area = location['area']

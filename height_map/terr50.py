@@ -4,6 +4,7 @@ import json
 import time
 from pygeodesy import ellipsoidalVincenty as eV
 from pygeodesy import toOsgr, parseOSGR, Osgr
+from height_map.dgm200 import calculate_distance
     
 CELLSIZE = 50
 NCOLS = 200
@@ -54,7 +55,9 @@ def get_height(lat, lon):
     try:
         osgr = toOsgr(eV.LatLon(lat, lon))
     except ValueError as e:
-        return (NODATA, lat, lon)
+        return {
+            'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,
+            'lon': lon, 'distance_m': 0, 'attribution': attribution}
     filename = get_filename(osgr)
     full_path = os.path.join(path, filename[:2].lower(), filename)
     if os.path.isfile(full_path):
@@ -67,10 +70,16 @@ def get_height(lat, lon):
             buf = f.read(4)
             # ">f" is a four byte float
             val = struct.unpack('>f', buf)[0]
-            (lat, lon) = get_lat_lon_from_indices(x, y, filename)
-            return (round(val, 1), lat, lon)
+            (lat_found, lon_found) = get_lat_lon_from_indices(x, y, filename)
+            return {
+                'altitude_m': round(val, 1), 'source': attribution_name,
+                'latitude': lat_found, 'lon': lon_found,
+                'distance_m': calculate_distance(lat, lon, lat_found,
+                lon_found), 'attribution': attribution}
     else:
-        return (NODATA, lat, lon)
+        return {
+            'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,
+            'lon': lon, 'distance_m': 0, 'attribution': attribution}
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
     # consider only correctly defined rectangle:
