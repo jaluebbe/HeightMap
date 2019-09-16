@@ -18,7 +18,7 @@ def root():
     return app.send_static_file('heightmap.html')
 
 @app.route('/gps')
-def root():
+def gps():
     return app.send_static_file('heightmap_gps.html')
 
 @app.route('/api/get_height')
