@@ -17,6 +17,10 @@ app = Flask(__name__)
 def root():
     return app.send_static_file('heightmap.html')
 
+@app.route('/gps')
+def root():
+    return app.send_static_file('heightmap_gps.html')
+
 @app.route('/api/get_height')
 def api_get_height():
     latitude = request.args.get('lat', None)

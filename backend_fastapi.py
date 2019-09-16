@@ -15,6 +15,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def root():
     return FileResponse('static/heightmap.html')
 
+@app.get("/gps", include_in_schema=False)
+async def root():
+    return FileResponse('static/heightmap_gps.html')
+
 @app.get("/api/get_height")
 def get_height(
     lat: float = Query(..., ge=-90, le=90),
