@@ -17,6 +17,7 @@ var throttle = function throttle(func, limit) {
 var info = L.control({position: 'bottomright'});
 info.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.showText('No geolocation information available.');
     return this._div;
 };
 info.showText = function(infoText) {
@@ -69,4 +70,4 @@ function requestHeight(e) {
 
 map.setZoom(14)
 map.on('locationfound', requestHeight);
-map.locate({watch:true});
+map.locate({watch: true, enableHighAccuracy: true});
