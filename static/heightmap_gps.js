@@ -68,6 +68,6 @@ function requestHeight(e) {
     xhr.send();
 }
 
-map.setZoom(14)
+map.setZoom(9)
 map.on('locationfound', requestHeight);
 map.locate({watch: true, enableHighAccuracy: true});
