@@ -63,8 +63,8 @@ def get_height(lat, lon, ice=True):
             val = struct.unpack('<h', buf)[0]
     return {
         'altitude_m': val, 'source': attribution_name, 'latitude': lat_found,
-        'lon': lon_found, 'distance_m': calculate_distance(lat, lon, lat_found,
-        lon_found), 'attribution': attribution}
+        'longitude': lon_found, 'distance_m': calculate_distance(lat, lon,
+        lat_found, lon_found), 'attribution': attribution}
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=True):
     h_max = NODATA

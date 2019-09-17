@@ -46,8 +46,8 @@ def get_height(lat, lon):
             val = round(float(f['elevation'][i][j]), 1)
     return {
         'altitude_m': val, 'source': attribution_name, 'latitude': lat_found,
-        'lon': lon_found, 'distance_m': calculate_distance(lat, lon, lat_found,
-        lon_found), 'attribution': attribution}
+        'longitude': lon_found, 'distance_m': calculate_distance(lat, lon,
+        lat_found, lon_found), 'attribution': attribution}
 
 def get_max_height_from_indices(i_ll, j_ll, i_ur, j_ur):
     i_ur = i_ur + 1

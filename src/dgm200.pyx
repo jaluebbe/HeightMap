@@ -178,7 +178,7 @@ def get_height(double latitude, double longitude):
     (lat, lon) = get_latlon_from_indices(x, y)
     return {
         'altitude_m': round(val * 100) / 100, 'source': attribution_name,
-        'latitude': lat, 'lon': lon, 'distance_m': get_distance(latitude,
+        'latitude': lat, 'longitude': lon, 'distance_m': get_distance(latitude,
         longitude, lat, lon), 'attribution': attribution}
 
 cdef double _deg2rad = M_PI / 180.0

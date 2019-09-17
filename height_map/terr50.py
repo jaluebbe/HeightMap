@@ -79,7 +79,7 @@ def get_height(lat, lon):
     else:
         return {
             'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,
-            'lon': lon, 'distance_m': 0, 'attribution': attribution}
+            'longitude': lon, 'distance_m': 0, 'attribution': attribution}
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
     # consider only correctly defined rectangle:

@@ -235,8 +235,8 @@ def get_height(lat, lon):
 #        print('SRTM1: missing file', file_name)
     return {
         'altitude_m': val, 'source': attribution_name, 'latitude': lat_found,
-        'lon': lon_found, 'distance_m': calculate_distance(lat, lon, lat_found,
-        lon_found), 'attribution': attribution}
+        'longitude': lon_found, 'distance_m': calculate_distance(lat, lon,
+        lat_found, lon_found), 'attribution': attribution}
 
 def get_filename(yllcenter, xllcenter):
     if (xllcenter >= 0):

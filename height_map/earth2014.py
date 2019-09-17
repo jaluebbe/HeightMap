@@ -171,5 +171,5 @@ def get_height(lat, lon, ice=None, water=None):
             val = struct.unpack('>h', buf)[0]
     return {
         'altitude_m': val, 'source': attribution_name, 'latitude': lat_found,
-        'lon': lon_found, 'distance_m': calculate_distance(lat, lon, lat_found,
-        lon_found), 'attribution': attribution}
+        'longitude': lon_found, 'distance_m': calculate_distance(lat, lon,
+        lat_found, lon_found), 'attribution': attribution}
