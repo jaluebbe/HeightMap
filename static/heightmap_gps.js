@@ -28,39 +28,36 @@ info.updateElevation = function(altitude_m, source) {
         + altitude_m + "&nbsp;m</b></div>" + source;
 };
 info.addTo(map);
-var myMarker = L.marker([50, 8.6], {
+var myMarker = L.marker([], {
     draggable: false,
     zIndexOffset: 1000
 });
-var myCircle = L.circle(myMarker.getLatLng(), {
+var myCircle = L.circle([], {
     radius: 0
 });
-myMarker.bindTooltip("", {
-    direction: 'top'
+var myPolyline = L.polyline([], {
+    color: 'red'
 });
 
 function requestHeight(e) {
     var xhr = new XMLHttpRequest();
-    var latlng = e.latlng.wrap();
-    xhr.open('GET', './api/get_height' + '?lat=' + latlng.lat + '&lon=' + latlng.lng);
+    xhr.open('GET', './api/get_height' + '?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function() {
         if (xhr.status === 200) {
             var height_info = JSON.parse(xhr.responseText);
-            if (e.type == 'click' || e.type == 'locationfound') {
-                myMarker.setLatLng(latlng);
-                if (!map.hasLayer(myMarker)) {
-                    myMarker.addTo(map);
-                    myCircle.addTo(map);
-                }
-                if (!map.getBounds().contains(myMarker.getLatLng())) {
-                    map.setView(myMarker.getLatLng());
-                }
+            myMarker.setLatLng(e.latlng);
+            myCircle.setLatLng(e.latlng);
+            myCircle.setRadius(e.accuracy);
+            if (!map.hasLayer(myMarker)) {
+                myMarker.addTo(map);
+                myCircle.addTo(map);
+                myPolyline.addTo(map);
             }
-            myMarker._tooltip.setContent("<div style='text-align: right;'><b>"
-                + height_info.altitude_m + "&nbsp;m</b></div>" + height_info.source);
-            myCircle.setLatLng([height_info.latitude, height_info.longitude]);
-            myCircle.setRadius(height_info.distance_m);
+            if (!map.getBounds().contains(myMarker.getLatLng())) {
+                map.setView(myMarker.getLatLng());
+            }
+            myPolyline.setLatLngs([e.latlng, [height_info.latitude, height_info.longitude]]);
 	    info.updateElevation(height_info.altitude_m, height_info.source);
             map.attributionControl.addAttribution(height_info.attribution);
         }
@@ -69,5 +66,13 @@ function requestHeight(e) {
 }
 
 map.setZoom(9)
+
+function onLocationError(e) {
+    info.showText('No geolocation information available.');
+}
 map.on('locationfound', requestHeight);
-map.locate({watch: true, enableHighAccuracy: true});
+map.on('locationerror', onLocationError);
+map.locate({
+    watch: true,
+    enableHighAccuracy: true
+});
