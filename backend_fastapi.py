@@ -33,7 +33,10 @@ def get_max_height(
     lat_ur: float = Query(..., ge=-90, le=90),
     lon_ur: float = Query(..., ge=-180, le=180)
     ):
-    return hi.get_max_height(lat_ll, lon_ll, lat_ur, lon_ur)
+    (location_max, h_max, counter) = hi.get_max_height(lat_ll, lon_ll, lat_ur,
+        lon_ur)
+    return {'location_max': location_max, 'altitude_m': h_max,
+        'counter': counter}
 
 @app.get("/api/get_min_height")
 def get_min_height(
@@ -42,4 +45,7 @@ def get_min_height(
     lat_ur: float = Query(..., ge=-90, le=90),
     lon_ur: float = Query(..., ge=-180, le=180)
     ):
-    return hi.get_min_height(lat_ll, lon_ll, lat_ur, lon_ur)
+    (location_min, h_min, counter) = hi.get_min_height(lat_ll, lon_ll, lat_ur,
+        lon_ur)
+    return {'location_min': location_min, 'altitude_m': h_min,
+        'counter': counter}
