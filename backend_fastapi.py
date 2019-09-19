@@ -25,3 +25,21 @@ def get_height(
     lon: float = Query(..., ge=-180, le=180)
     ):
     return hi.get_height(lat, lon, water=False)
+
+@app.get("/api/get_max_height")
+def get_max_height(
+    lat_ll: float = Query(..., ge=-90, le=90),
+    lon_ll: float = Query(..., ge=-180, le=180),
+    lat_ur: float = Query(..., ge=-90, le=90),
+    lon_ur: float = Query(..., ge=-180, le=180)
+    ):
+    return hi.get_max_height(lat_ll, lon_ll, lat_ur, lon_ur)
+
+@app.get("/api/get_min_height")
+def get_min_height(
+    lat_ll: float = Query(..., ge=-90, le=90),
+    lon_ll: float = Query(..., ge=-180, le=180),
+    lat_ur: float = Query(..., ge=-90, le=90),
+    lon_ur: float = Query(..., ge=-180, le=180)
+    ):
+    return hi.get_min_height(lat_ll, lon_ll, lat_ur, lon_ur)
