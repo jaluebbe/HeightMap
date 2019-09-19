@@ -3,12 +3,12 @@ from geojson import Feature, Point, FeatureCollection
 
 rms_titanic_wreck = Feature(
     geometry=Point((41.7325, -49.946944)[::-1]), properties={
-    "name": "Wreck of the RMS Titanic", "elevation_m": 3784,
+    "name": "Wreck of the RMS Titanic", "elevation_m": -3784,
     "url": "https://en.wikipedia.org/wiki/RMS_Titanic", "type": "shipwreck"})
 
 challenger_deep = Feature(
     geometry=Point((11.373333, 142.591667)[::-1]), properties={
-    "name": "Challenger Deep", "elevation_m": 10920,
+    "name": "Challenger Deep", "elevation_m": -10920,
     "url": "https://en.wikipedia.org/wiki/Challenger_Deep",
     "type": "subsea_depression"})
 
