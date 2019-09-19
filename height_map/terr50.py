@@ -73,7 +73,7 @@ def get_height(lat, lon):
             (lat_found, lon_found) = get_lat_lon_from_indices(x, y, filename)
             return {
                 'altitude_m': round(val, 1), 'source': attribution_name,
-                'latitude': lat_found, 'lon': lon_found,
+                'latitude': lat_found, 'longitude': lon_found,
                 'distance_m': calculate_distance(lat, lon, lat_found,
                 lon_found), 'attribution': attribution}
     else:
