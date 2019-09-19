@@ -1,19 +1,3 @@
-var throttle = function throttle(func, limit) {
-  var inThrottle;
-  return function () {
-    var args = arguments;
-    var context = this;
-
-    if (!inThrottle) {
-      func.apply(context, args);
-      inThrottle = true;
-      setTimeout(function () {
-        return inThrottle = false;
-      }, limit);
-    }
-  };
-};
-
 var info = L.control({position: 'bottomright'});
 info.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
@@ -29,7 +13,6 @@ info.updateElevation = function(altitude_m, source) {
 };
 info.addTo(map);
 var myMarker = L.marker([], {
-    draggable: false,
     zIndexOffset: 1000
 });
 var myCircle = L.circle([], {
@@ -54,8 +37,8 @@ function requestHeight(e) {
                 myCircle.addTo(map);
                 myPolyline.addTo(map);
             }
-            if (!map.getBounds().contains(myMarker.getLatLng())) {
-                map.setView(myMarker.getLatLng());
+            if (!map.getBounds().contains(e.latlng)) {
+                map.setView(e.latlng);
             }
             myPolyline.setLatLngs([e.latlng, [height_info.latitude, height_info.longitude]]);
 	    info.updateElevation(height_info.altitude_m, height_info.source);
