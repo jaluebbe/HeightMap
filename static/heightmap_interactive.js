@@ -84,9 +84,9 @@ function requestMinMaxHeight(bounds) {
     xhr.open('GET', './api/get_min_max_height' + '?lat_ll=' + bounds._southWest.lat +
         '&lon_ll=' + bounds._southWest.lng + '&lat_ur=' + bounds._northEast.lat +
         '&lon_ur=' + bounds._northEast.lng);
+    minMaxLocations.clearLayers();
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function() {
-        minMaxLocations.clearLayers();
         if (xhr.status === 200) {
             minMaxLocations.addData(JSON.parse(xhr.responseText));
             if (!map.hasLayer(minMaxLocations)) {
