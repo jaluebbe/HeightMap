@@ -83,13 +83,12 @@ def get_max_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
         return ([], NODATA, 0)
     #
     cdef double h_max = NODATA
-    cdef int x_max = x_ll
-    cdef int y_max = y_ur
     cdef int counter = 0
     # start in the upper left edge of the target area
     cdef int x_pos = x_ll
     cdef int y_pos = y_ur
     file_name = os.path.join(path, grid_file)
+    locations = []
     with open(file_name, "rb") as f:
         while(y_ur <= y_pos <= y_ll):
             #
@@ -101,17 +100,16 @@ def get_max_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
                 val = values[x_pos - x_ll]
                 if val > h_max:
                     h_max = val
-                    y_max = y_pos
-                    x_max = x_pos
+                    locations.clear()
+                    locations.append(get_latlon_from_indices(x_pos, y_pos))
                     counter = 1
                 elif val == h_max:
+                    locations.append(get_latlon_from_indices(x_pos, y_pos))
                     counter += 1
                 x_pos += 1
             x_pos = x_ll
             y_pos += 1
-    # turn indices back to coordinates
-    location = [get_latlon_from_indices(x_max, y_max)]
-    return (location, h_max, counter)
+    return (locations, h_max, counter)
 
 def get_min_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
     # consider only correctly defined rectangle:
@@ -127,13 +125,12 @@ def get_min_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
         return ([], NODATA, 0)
     #
     cdef double h_min = -NODATA
-    cdef int x_min = x_ll
-    cdef int y_min = y_ur
     cdef int counter = 0
     # start in the upper left edge of the target area
     cdef int x_pos = x_ll
     cdef int y_pos = y_ur
     file_name = os.path.join(path, grid_file)
+    locations = []
     with open(file_name, "rb") as f:
         while(y_ur <= y_pos <= y_ll):
             #
@@ -145,19 +142,18 @@ def get_min_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
                 val = values[x_pos - x_ll]
                 if (NODATA < val < h_min):
                     h_min = val
-                    y_min = y_pos
-                    x_min = x_pos
+                    locations.clear()
+                    locations.append(get_latlon_from_indices(x_pos, y_pos))
                     counter = 1
                 elif (NODATA < val == h_min):
+                    locations.append(get_latlon_from_indices(x_pos, y_pos))
                     counter += 1
                 x_pos += 1
             x_pos = x_ll
             y_pos += 1
     if h_min == -NODATA:
         h_min = NODATA
-    # turn indices back to coordinates
-    location = [get_latlon_from_indices(x_min, y_min)]
-    return (location, h_min, counter)
+    return (locations, h_min, counter)
 
 def get_height(double latitude, double longitude):
     cdef int x, y
