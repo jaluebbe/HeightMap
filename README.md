@@ -4,7 +4,7 @@
 
 ### conda/apt
 
-flask gunicorn cython numpy h5py
+gunicorn cython numpy h5py
 
 ### pip
 
@@ -52,12 +52,8 @@ Download the global GEBCO_2019_Grid in netCDF format, unpack it and put GEBCO_20
 
 ## Startup of the web interface
 
-The web interface and API can be run either using Flask or FastAPI 
+The web interface and API is hosted using FastAPI. It could also be run as a Docker container.
 
-### Flask
-```
-gunicorn -w8 -b 0.0.0.0:5000 backend_flask:app
-```
 ### FastAPI
 ```
 gunicorn -w8 -b 0.0.0.0:5000 backend_fastapi:app -k uvicorn.workers.UvicornWorker
