@@ -39,6 +39,17 @@ myMarker.bindTooltip("", {
     direction: 'top'
 });
 
+var minMaxLocations = L.geoJSON(null, {
+    onEachFeature: function(feature, layer) {
+        var tooltipContent =
+            '' + feature.properties.type + "<br>" +
+            feature.properties.elevation_m + "&nbsp;m";
+        layer.bindTooltip(tooltipContent, {
+            direction: "top"
+        });
+    }
+});
+
 function requestHeight(e) {
     var xhr = new XMLHttpRequest();
     var latlng = e.latlng.wrap();
@@ -68,6 +79,40 @@ function requestHeight(e) {
     xhr.send();
 }
 
+function requestMinMaxHeight(bounds) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', './api/get_min_max_height' + '?lat_ll=' + bounds._southWest.lat +
+        '&lon_ll=' + bounds._southWest.lng + '&lat_ur=' + bounds._northEast.lat +
+        '&lon_ur=' + bounds._northEast.lng);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        minMaxLocations.clearLayers();
+        if (xhr.status === 200) {
+            minMaxLocations.addData(JSON.parse(xhr.responseText));
+            if (!map.hasLayer(minMaxLocations)) {
+                minMaxLocations.addTo(map);
+            }
+        }
+    };
+    xhr.send();
+}
+L.Map.BoxZoom.prototype._onMouseUp = function(e) {
+    if ((e.which !== 1) && (e.button !== 1)) {
+        return;
+    }
+    this._finish();
+    if (!this._moved) {
+        return;
+    }
+    setTimeout(L.bind(this._resetState, this), 0);
+    var bounds = new L.LatLngBounds(
+        this._map.containerPointToLatLng(this._startPoint),
+        this._map.containerPointToLatLng(this._point));
+    requestMinMaxHeight(bounds);
+    this._map.fire('boxzoomend', {
+        boxZoomBounds: bounds
+    });
+}
 myMarker.on('move', throttle(requestHeight, 100));
 map.on('click', requestHeight);
 map.on('locationfound', requestHeight);
