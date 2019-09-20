@@ -54,6 +54,8 @@ def get_osgr_from_indices(x, y, filename):
 def get_height(lat, lon):
     try:
         osgr = toOsgr(eV.LatLon(lat, lon))
+        if len(osgr.toStr()) == 0:
+            raise ValueError('not a valid OSGR coordinate')
     except ValueError as e:
         return {
             'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,
@@ -87,10 +89,14 @@ def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
         return ([], NODATA, 0)
     try:
         osgr_ll = toOsgr(eV.LatLon(lat_ll, lon_ll))
+        if len(osgr_ll.toStr()) == 0:
+            raise ValueError('not a valid OSGR coordinate')
     except ValueError as e:
         return ([], NODATA, 0)
     try:
         osgr_ur = toOsgr(eV.LatLon(lat_ur, lon_ur))
+        if len(osgr_ur.toStr()) == 0:
+            raise ValueError('not a valid OSGR coordinate')
     except ValueError as e:
         return ([], NODATA, 0)
     file_list = {}
@@ -111,10 +117,14 @@ def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
         return ([], NODATA, 0)
     try:
         osgr_ll = toOsgr(eV.LatLon(lat_ll, lon_ll))
+        if len(osgr_ll.toStr()) == 0:
+            raise ValueError('not a valid OSGR coordinate')
     except ValueError as e:
         return ([], NODATA, 0)
     try:
         osgr_ur = toOsgr(eV.LatLon(lat_ur, lon_ur))
+        if len(osgr_ur.toStr()) == 0:
+            raise ValueError('not a valid OSGR coordinate')
     except ValueError as e:
         return ([], NODATA, 0)
     file_list = {}
