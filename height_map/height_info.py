@@ -2,6 +2,7 @@ import os
 import height_map.srtm1 as srtm1
 import height_map.dgm200 as dgm200
 import height_map.terr50 as terr50
+import height_map.bd_alti75 as bd_alti75
 import height_map.earth2014 as earth2014
 import height_map.gebco_2019 as gebco_2019
 attribution_name = 'height_info'
@@ -23,6 +24,12 @@ def get_height(lat, lon, ice=True, water=True):
         h_gebco_2019 >= 0 or h_terr50 > 0 or h_gebco_2019 > h_terr50):
         # prefer sea floor bathymetry if possible
         return terr50_result
+    bd_alti75_result = bd_alti75.get_height(lat, lon)
+    h_bd_alti75 = bd_alti75_result['altitude_m']
+    if h_bd_alti75 != bd_alti75.NODATA and (h_gebco_2019 == gebco_2019.NODATA or
+        h_gebco_2019 >= 0 or h_bd_alti75 > 0 or h_gebco_2019 > h_bd_alti75):
+        # prefer sea floor bathymetry if possible
+        return bd_alti75_result
     srtm1_result = srtm1.get_height(lat, lon)
     if srtm1_result['altitude_m'] not in (srtm1.NODATA, 0):
         # avoid sea surface at 0m being returned instead of sea floor bathymetry
@@ -41,14 +48,14 @@ def get_height(lat, lon, ice=True, water=True):
             'distance_m': 0, 'source': 'NODATA'}
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
-    for source in [terr50, dgm200, gebco_2019, earth2014]:
+    for source in [terr50, bd_alti75, dgm200, gebco_2019, earth2014]:
         result = source.get_max_height(lat_ll, lon_ll, lat_ur, lon_ur)
         (location_max, h_max, counter) = result
         if h_max != source.NODATA:
             return result
     
 def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
-    for source in [terr50, dgm200, gebco_2019, earth2014]:
+    for source in [terr50, bd_alti75, dgm200, gebco_2019, earth2014]:
         result = source.get_min_height(lat_ll, lon_ll, lat_ur, lon_ur)
         (location_min, h_min, counter) = result
         if h_min != source.NODATA:
