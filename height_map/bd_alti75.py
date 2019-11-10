@@ -15,7 +15,7 @@ NODATA = -99999.00
 path = 'height_map/maps/bd_alti75'
 attribution_url = ('http://professionnels.ign.fr/bdalti')
 attribution_name = 'BD ALTI 75m'
-attribution = ('<a href="{}">BD ALTI&copy;</a>').format(attribution_url)
+attribution = ('<a href="{}">BD ALTI&reg;</a>').format(attribution_url)
 cache_path = 'height_map'
 map_cache_filename = os.path.join(cache_path, 'bd_alti_75_map_cache.json')
 if os.path.isfile(map_cache_filename):
