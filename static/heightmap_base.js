@@ -1,9 +1,17 @@
 var map = L.map('map').setView([50.0, 8.0], 5);
 map.attributionControl.addAttribution(
     '<a href="https://github.com/jaluebbe/HeightMap">Source on GitHub</a>');
-// add link to privacy statement
-map.attributionControl.addAttribution(
-    '<a href="static/datenschutz.html" target="_blank">Datenschutzerkl&auml;rung</a>');
+// add link to an imprint and a privacy statement if the file is available.
+function addPrivacyStatement() {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', "./static/datenschutz.html", false);
+    http.send();
+    if (http.status != 404)
+        map.attributionControl.addAttribution(
+            '<a href="./static/datenschutz.html" target="_blank">Impressum & Datenschutzerkl&auml;rung</a>'
+        );
+}
+addPrivacyStatement();
 var wmsLayer = L.tileLayer.wms('https://sgx.geodatenzentrum.de/wms_topplus_open', {
     layers: 'web',
     format: 'image/png',
