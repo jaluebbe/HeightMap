@@ -10,7 +10,8 @@ CELLSIZE = 50
 NCOLS = 200
 NROWS = 200
 NODATA = -32768
-path = 'height_map/maps/os_terr50_gb'
+pwd = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(pwd, 'maps/os_terr50_gb')
 attribution_url = ('https://www.ordnancesurvey.co.uk/business-and-government/'
     'products/terrain-50.html')
 attribution_name = 'OS Terrain 50'

@@ -18,7 +18,8 @@ CELLSIZE = 1./60
 XLLCENTER = -180.0
 YLLCENTER = -90.0
 NODATA = -32768
-path = 'height_map/maps/etopo1'
+pwd = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(pwd, 'maps/etopo1')
 attribution_url = 'https://dx.doi.org/10.7289/V5C8276M'
 attribution_name = 'ETOPO1'
 attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,

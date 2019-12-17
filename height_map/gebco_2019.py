@@ -8,10 +8,11 @@ attribution_url = ('https://www.gebco.net/data_and_products/'
     'gridded_bathymetry_data/gebco_2019/gebco_2019_info.html')
 attribution_name = 'The GEBCO Grid'
 attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,
-    attribution_name)        
-path = 'height_map/maps/gebco_2019'
+    attribution_name)
+pwd = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(pwd, 'maps/gebco_2019')
 filename = 'GEBCO_2019.nc'
-cache_path = 'height_map'
+cache_path = pwd
 cache_filename = 'gebco_2019_cache.json'
 NCOLS = 86400
 NROWS = 43200

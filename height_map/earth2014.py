@@ -12,7 +12,8 @@ CELLSIZE = 1./60
 XLLCENTER = -180.0 + CELLSIZE / 2
 YLLCENTER = -90.0 + CELLSIZE / 2
 NODATA = -32768
-path = 'height_map/maps/earth2014'
+pwd = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join('maps/earth2014')
 attribution_url = 'http://ddfe.curtin.edu.au/models/Earth2014/'
 attribution_name = 'EARTH2014'
 attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,

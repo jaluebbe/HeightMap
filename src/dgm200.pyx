@@ -10,7 +10,8 @@ CELLSIZE = 200
 NCOLS = 3207
 NROWS = 4331
 NODATA = -9999
-path = 'height_map/maps/dgm200'
+pwd = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join('maps/dgm200')
 attribution_url = 'http://www.bkg.bund.de'
 attribution_name = 'DGM200'
 attribution = '&copy GeoBasis-DE / <a href="{}">BKG</a> 2019'.format(

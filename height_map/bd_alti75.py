@@ -12,7 +12,8 @@ CELLSIZE = 75
 NCOLS = 1000
 NROWS = 1000
 NODATA = -99999.00
-path = 'height_map/maps/bd_alti75'
+pwd = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(pwd, 'maps/bd_alti75')
 attribution_url = ('http://professionnels.ign.fr/bdalti')
 attribution_name = 'BD ALTI 75m'
 attribution = ('<a href="{}">BD ALTI&reg;</a>').format(attribution_url)

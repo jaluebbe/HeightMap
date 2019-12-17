@@ -8,7 +8,8 @@ NCOLS = 3601
 NROWS = 3601
 CELLSIZE = 1./3600
 NODATA = -32768
-path = 'height_map/maps/srtm1'
+pwd = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join('maps/srtm1')
 attribution_url = 'https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003'
 attribution_name = 'SRTMGL1'
 attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,
