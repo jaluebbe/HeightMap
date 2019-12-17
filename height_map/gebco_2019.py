@@ -37,6 +37,8 @@ def get_height(lat, lon):
         raise ValueError('invalid coordinates ({}, {})'.format(lat, lon))
     file = os.path.join(path, filename)
     val = NODATA
+    lat_found = lat
+    lon_found = lon
     if os.path.isfile(file):
         i = get_index_from_latitude(lat)
         j = get_index_from_longitude(lon)
