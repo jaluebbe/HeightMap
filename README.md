@@ -85,5 +85,6 @@ Simply use jaluebbe/heightmap or jaluebbe/heightmap:alpine as image to run.
 
 You'll find an interative map at http://127.0.0.1:8000. Click anywhere on the map to obtain the local elevation from the most precise data source. 
 You may drag the marker on the map. 
+If you hold down shift and drag a rectangle on the map, A search for minimum and maximum elevation will be perfomed within the selected area. 
 The map at http://127.0.0.1:8000/gps is using the position data of your mobile device. 
 Documentation of the API is available at http://127.0.0.1:8000/docs (you can try out the API) and http://127.0.0.1:8000/redoc (more information but less interactive).
