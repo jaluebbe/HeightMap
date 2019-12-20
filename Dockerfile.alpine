@@ -18,4 +18,3 @@ RUN apk --no-cache add hdf5 hdf5-dev libffi-dev --repository http://dl-cdn.alpin
     && pip uninstall cython -y \
     && apk del --purge hdf5-dev libffi-dev .build-dep \
     && rm -rf ~/.cache/pip/*
-#RUN cd src && sh compile.sh && cd ..
