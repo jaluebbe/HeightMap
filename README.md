@@ -30,7 +30,8 @@ http://professionnels.ign.fr/bdalti
 
 Put https://wxs-telechargement.ign.fr/jvam1hsjm11u8voorw81v2xb/telechargement/prepackage/BDALTI-75M_PACK_FXX_2018-01-24$BDALTIV2_2-0_75M_ASC_LAMB93-IGN69_FRANCE_2018-01-15/file/BDALTIV2_2-0_75M_ASC_LAMB93-IGN69_FRANCE_2018-01-15.7z to downloads/ and unpack its content. 
 Call bd_alti75_data_conversion.py for conversion of ASCII to binary data. 
-Finally, call create_bd_alti75_min_max_cache.py to generate a cache of min/max values. 
+You may call create_bd_alti75_min_max_cache.py to generate a cache of min/max values. 
+The cache for the recent version mentioned here is already included in the repository.
 
 ### SRTM (tiles of each 1 arc minute coverage with 30m resolution, registration required):
 
@@ -64,10 +65,22 @@ The web interface and API is hosted using FastAPI. It could also be run as a Doc
 
 ### FastAPI
 ```
-gunicorn -w8 -b 0.0.0.0:5000 backend_fastapi:app -k uvicorn.workers.UvicornWorker
+gunicorn -w8 -b 0.0.0.0:8000 backend_fastapi:app -k uvicorn.workers.UvicornWorker
 ```
 ### Build and run as a Docker container
 ```
 docker build -t heightmap ./
-docker run -d -p 80:80 --mount src=`pwd`/height_map/maps,target=/app/height_map/maps,type=bind heightmap
+docker run -d -p 8000:80 --mount src=`pwd`/height_map/maps,target=/app/height_map/maps,type=bind heightmap
 ```
+or for the alpine based image which consumes less disk space:
+```
+docker build -t heightmap:alpine -f Dockerfile.alpine ./
+docker run -d -p 8000:80 --mount src=`pwd`/height_map/maps,target=/app/height_map/maps,type=bind heightmap:alpine
+```
+
+## Accessing the API and web interface
+
+You'll find an interative map at http://127.0.0.1:8000. Click anywhere on the map to obtain the local elevation from the most precise data source. 
+You may drag the marker on the map. 
+The map at http://127.0.0.1:8000/gps is using the position data of your mobile device. 
+Documentation of the API is available at http://127.0.0.1:8000/docs (you can try out the API) and http://127.0.0.1:8000/redoc (more information but less interactive).
