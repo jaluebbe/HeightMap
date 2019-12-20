@@ -77,6 +77,9 @@ or for the alpine based image which consumes less disk space:
 docker build -t heightmap:alpine -f Dockerfile.alpine ./
 docker run -d -p 8000:80 --mount src=`pwd`/height_map/maps,target=/app/height_map/maps,type=bind heightmap:alpine
 ```
+### Downloading images from hub.docker.com
+Instead of building the image, you may try to download it from hub.docker.com. 
+Simply use jaluebbe/heightmap or jaluebbe/heightmap:alpine as image to run.
 
 ## Accessing the API and web interface
 
