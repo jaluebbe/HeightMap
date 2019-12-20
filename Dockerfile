@@ -15,4 +15,5 @@ COPY height_map /app/height_map
 COPY static /app/static
 COPY backend_fastapi.py /app/main.py
 COPY src /app/src
-RUN cd src && sh compile.sh && cd ..
+RUN cd src && sh compile.sh && cd .. && create_seven_summits_collection.py
+    && create_low_locations_collection.py
