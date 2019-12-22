@@ -63,8 +63,9 @@ def get_height(lat, lon, ice=True):
             # "<h" is a signed two byte integer
             val = struct.unpack('<h', buf)[0]
     return {
-        'altitude_m': val, 'source': attribution_name, 'latitude': lat_found,
-        'longitude': lon_found, 'distance_m': calculate_distance(lat, lon,
+        'latitude': lat, 'longitude': lon, 'latitude_found': lat_found,
+        'longitude_found': lon_found, 'altitude_m': val,
+        'source': attribution_name, 'distance_m': calculate_distance(lat, lon,
         lat_found, lon_found), 'attribution': attribution}
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=True):

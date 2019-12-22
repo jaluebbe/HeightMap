@@ -79,10 +79,10 @@ def get_height(lat, lon):
             val = struct.unpack('>f', buf)[0]
             (lat_found, lon_found) = get_lat_lon_from_indices(x, y, filename)
             return {
-                'altitude_m': round(val, 1), 'source': attribution_name,
-                'latitude': lat_found, 'longitude': lon_found,
-                'distance_m': calculate_distance(lat, lon, lat_found,
-                lon_found), 'attribution': attribution}
+                'latitude': lat, 'longitude': lon, 'latitude_found': lat_found,
+                'longitude_found': lon_found, 'altitude_m': round(val, 2),
+                'source': attribution_name, 'distance_m': calculate_distance(
+                lat, lon, lat_found, lon_found), 'attribution': attribution}
     else:
         return {
             'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,

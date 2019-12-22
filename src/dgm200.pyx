@@ -171,12 +171,14 @@ def get_height(double latitude, double longitude):
         f.seek((y*NCOLS + x) * 4)  # go to the right spot,
         buf = f.read(4)  # read four bytes and convert them:
         val = struct.unpack('>f', buf)[0]  # ">f" is a four byte float
-    cdef double lat, lon
-    (lat, lon) = get_latlon_from_indices(x, y)
+    cdef double lat_found, lon_found
+    (lat_found, lon_found) = get_latlon_from_indices(x, y)
     return {
+        'latitude_found': lat_found, 'longitude_found': lon_found,
         'altitude_m': round(val * 100) / 100, 'source': attribution_name,
-        'latitude': lat, 'longitude': lon, 'distance_m': get_distance(latitude,
-        longitude, lat, lon), 'attribution': attribution}
+        'latitude': latitude, 'longitude': longitude,
+        'distance_m': get_distance(latitude, longitude, lat_found, lon_found),
+        'attribution': attribution}
 
 cdef double _deg2rad = M_PI / 180.0
 cdef double _rad2deg = 180.0 / M_PI
