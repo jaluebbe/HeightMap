@@ -45,7 +45,7 @@ def get_filename(lcc):
 
 def get_lat_lon_from_indices(x, y, filename):
     latlon = get_lcc_from_indices(x, y, filename).toLatLon()
-    return (latlon.lat, latlon.lon)
+    return (latlon[0], latlon[1])
 
 def get_lcc_from_indices(x, y, filename):
     result = re.search(
