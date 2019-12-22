@@ -48,14 +48,14 @@ def get_height(lat, lon, ice=True, water=True):
             'distance_m': 0, 'source': 'NODATA'}
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
-    for source in [terr50, bd_alti75, dgm200, gebco_2019, earth2014]:
+    for source in [terr50, bd_alti75, srtm1, dgm200, gebco_2019, earth2014]:
         result = source.get_max_height(lat_ll, lon_ll, lat_ur, lon_ur)
         (location_max, h_max, counter) = result
         if h_max != source.NODATA:
             return result
 
 def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
-    for source in [terr50, bd_alti75, dgm200, gebco_2019, earth2014]:
+    for source in [terr50, bd_alti75, srtm1, dgm200, gebco_2019, earth2014]:
         result = source.get_min_height(lat_ll, lon_ll, lat_ur, lon_ur)
         (location_min, h_min, counter) = result
         if h_min != source.NODATA:
