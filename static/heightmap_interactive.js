@@ -70,7 +70,7 @@ function requestHeight(e) {
             }
             myMarker._tooltip.setContent("<div style='text-align: right;'><b>"
                 + height_info.altitude_m + "&nbsp;m</b></div>" + height_info.source);
-            myCircle.setLatLng([height_info.latitude, height_info.longitude]);
+            myCircle.setLatLng([height_info.latitude_found, height_info.longitude_found]);
             myCircle.setRadius(height_info.distance_m);
 	    info.updateElevation(height_info.altitude_m, height_info.source);
             map.attributionControl.addAttribution(height_info.attribution);
