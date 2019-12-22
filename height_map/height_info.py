@@ -6,7 +6,7 @@ import height_map.bd_alti75 as bd_alti75
 import height_map.earth2014 as earth2014
 import height_map.gebco_2019 as gebco_2019
 attribution_name = 'height_info'
-NODATA = float('nan')
+NODATA = -32768
 
 def get_height(lat, lon, ice=True, water=True):
     gebco_2019_result = gebco_2019.get_height(lat, lon)
@@ -53,7 +53,7 @@ def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
         (location_max, h_max, counter) = result
         if h_max != source.NODATA:
             return result
-    
+
 def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
     for source in [terr50, bd_alti75, dgm200, gebco_2019, earth2014]:
         result = source.get_min_height(lat_ll, lon_ll, lat_ur, lon_ur)
