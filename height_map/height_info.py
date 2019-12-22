@@ -19,31 +19,28 @@ def get_height(lat, lon, water=True):
     """
     gebco_2019_result = gebco_2019.get_height(lat, lon, water=water)
     h_gebco_2019 = gebco_2019_result['altitude_m']
+    is_water = gebco_2019_result.get('tid')
     dist_dgm200 = dgm200.get_closest_distance(lat, lon)[0]
     dgm200_result = dgm200.get_height(lat, lon)
     if (dgm200_result['distance_m'] < 25) and (
-        dgm200_result['altitude_m'] != dgm200.NODATA) and (
-        h_gebco_2019 == gebco_2019.NODATA or h_gebco_2019 >= 0):
+        dgm200_result['altitude_m'] != dgm200.NODATA) and not is_water:
         # prefer sea floor bathymetry if possible
         return dgm200_result
     terr50_result = terr50.get_height(lat, lon)
     h_terr50 = terr50_result['altitude_m']
-    if h_terr50 != terr50.NODATA and (h_gebco_2019 == gebco_2019.NODATA or
-        h_gebco_2019 >= 0 or h_terr50 > 0 or h_gebco_2019 > h_terr50):
+    if h_terr50 != terr50.NODATA and not is_water:
         # prefer sea floor bathymetry if possible
         return terr50_result
     bd_alti75_result = bd_alti75.get_height(lat, lon)
     h_bd_alti75 = bd_alti75_result['altitude_m']
-    if h_bd_alti75 != bd_alti75.NODATA and (h_gebco_2019 == gebco_2019.NODATA or
-        h_gebco_2019 >= 0 or h_bd_alti75 > 0 or h_gebco_2019 > h_bd_alti75):
+    if h_bd_alti75 != bd_alti75.NODATA and not is_water:
         # prefer sea floor bathymetry if possible
         return bd_alti75_result
     srtm1_result = srtm1.get_height(lat, lon)
-    if srtm1_result['altitude_m'] not in (srtm1.NODATA, 0):
-        # avoid sea surface at 0m being returned instead of sea floor bathymetry
+    if srtm1_result['altitude_m'] != srtm1.NODATA and not is_water::
+        # prefer sea floor bathymetry if possible
         return srtm1_result
-    if dgm200_result['altitude_m'] != dgm200.NODATA and (
-        h_gebco_2019 == gebco_2019.NODATA or h_gebco_2019 >= 0):
+    if dgm200_result['altitude_m'] != dgm200.NODATA and not is_water:
         # prefer sea floor bathymetry if possible
         return dgm200_result
     if gebco_2019_result['altitude_m'] != gebco_2019.NODATA:
