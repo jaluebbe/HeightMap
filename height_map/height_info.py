@@ -8,7 +8,7 @@ import height_map.gebco_2019 as gebco_2019
 attribution_name = 'height_info'
 NODATA = -32768
 
-def get_height(lat, lon, ice=True, water=True):
+def get_height(lat, lon, water=True):
     gebco_2019_result = gebco_2019.get_height(lat, lon)
     h_gebco_2019 = gebco_2019_result['altitude_m']
     dist_dgm200 = dgm200.get_closest_distance(lat, lon)[0]
@@ -40,7 +40,7 @@ def get_height(lat, lon, ice=True, water=True):
         return dgm200_result
     if gebco_2019_result['altitude_m'] != gebco_2019.NODATA:
         return gebco_2019_result
-    earth2014_result = earth2014.get_height(lat, lon, ice=ice, water=water)
+    earth2014_result = earth2014.get_height(lat, lon, water=water)
     if earth2014_result['altitude_m'] != earth2014.NODATA:
         return earth2014_result
     else:
