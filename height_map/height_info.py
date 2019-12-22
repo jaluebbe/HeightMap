@@ -37,7 +37,7 @@ def get_height(lat, lon, water=True):
         # prefer sea floor bathymetry if possible
         return bd_alti75_result
     srtm1_result = srtm1.get_height(lat, lon)
-    if srtm1_result['altitude_m'] != srtm1.NODATA and not is_water::
+    if srtm1_result['altitude_m'] != srtm1.NODATA and not is_water:
         # prefer sea floor bathymetry if possible
         return srtm1_result
     if dgm200_result['altitude_m'] != dgm200.NODATA and not is_water:
