@@ -9,7 +9,7 @@ NROWS = 3601
 CELLSIZE = 1./3600
 NODATA = -32768
 pwd = os.path.dirname(os.path.abspath(__file__))
-path = os.path.join('maps/srtm1')
+path = os.path.join(pwd, 'maps/srtm1')
 attribution_url = 'https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003'
 attribution_name = 'SRTMGL1'
 attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,
@@ -235,8 +235,9 @@ def get_height(lat, lon):
 #    elif not (lat > 60 or lat < -56) and file_name in srtm1_file_list:
 #        print('SRTM1: missing file', file_name)
     return {
-        'altitude_m': val, 'source': attribution_name, 'latitude': lat_found,
-        'longitude': lon_found, 'distance_m': calculate_distance(lat, lon,
+        'latitude': lat, 'longitude': lon, 'latitude_found': lat_found,
+        'longitude_found': lon_found, 'altitude_m': val,
+        'source': attribution_name, 'distance_m': calculate_distance(lat, lon,
         lat_found, lon_found), 'attribution': attribution}
 
 def get_filename(yllcenter, xllcenter):
