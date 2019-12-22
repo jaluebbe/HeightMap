@@ -9,7 +9,15 @@ attribution_name = 'height_info'
 NODATA = -32768
 
 def get_height(lat, lon, water=True):
-    gebco_2019_result = gebco_2019.get_height(lat, lon)
+    """
+    Get the elevation of the given location from the best available data source.
+
+    :param lat: float -- latitude.
+    :param lon: float -- longitude.
+    :param water: bool -- Should water surface be reported as 0m?
+    :returns: dict
+    """
+    gebco_2019_result = gebco_2019.get_height(lat, lon, water=water)
     h_gebco_2019 = gebco_2019_result['altitude_m']
     dist_dgm200 = dgm200.get_closest_distance(lat, lon)[0]
     dgm200_result = dgm200.get_height(lat, lon)
