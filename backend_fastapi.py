@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from starlette.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 import geojson
@@ -25,7 +25,10 @@ def get_height(
     lat: float = Query(..., ge=-90, le=90),
     lon: float = Query(..., ge=-180, le=180)
     ):
-    return hi.get_height(lat, lon, water=False)
+    response = hi.get_height(lat, lon, water=False)
+    if response['source'] == 'NODATA':
+        raise HTTPException(status_code=404, detail="no data available")
+    return response
 
 @app.get("/api/get_max_height")
 def get_max_height(
