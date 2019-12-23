@@ -55,7 +55,8 @@ def get_height(lat, lon, water=False):
         elif os.path.isfile(tid_file):
             with h5py.File(tid_file, 'r') as tf:
                 tid = int(tf['tid'][i][j])
-            if water and tid != 0:
+            # 0 is land, 41 may be land (interpolated data)
+            if water and tid not in [0, 41]:
                 val = 0
     return {
         'latitude': lat, 'longitude': lon, 'latitude_found': lat_found,
