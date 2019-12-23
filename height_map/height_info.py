@@ -19,7 +19,8 @@ def get_height(lat, lon, water=True):
     """
     gebco_2019_result = gebco_2019.get_height(lat, lon, water=water)
     h_gebco_2019 = gebco_2019_result['altitude_m']
-    is_water = gebco_2019_result.get('tid')
+    is_water = gebco_2019_result.get('tid') not in [0, 41]
+    print(is_water, gebco_2019_result.get('tid'))
     dist_dgm200 = dgm200.get_closest_distance(lat, lon)[0]
     dgm200_result = dgm200.get_height(lat, lon)
     if (dgm200_result['distance_m'] < 25) and (
@@ -28,16 +29,17 @@ def get_height(lat, lon, water=True):
         return dgm200_result
     terr50_result = terr50.get_height(lat, lon)
     h_terr50 = terr50_result['altitude_m']
-    if h_terr50 != terr50.NODATA and not is_water:
+    if h_terr50 != terr50.NODATA and not is_water or h_terr50 > 0:
         # prefer sea floor bathymetry if possible
         return terr50_result
     bd_alti75_result = bd_alti75.get_height(lat, lon)
     h_bd_alti75 = bd_alti75_result['altitude_m']
-    if h_bd_alti75 != bd_alti75.NODATA and not is_water:
+    if h_bd_alti75 != bd_alti75.NODATA and not is_water or h_bd_alti75 > 0:
         # prefer sea floor bathymetry if possible
         return bd_alti75_result
     srtm1_result = srtm1.get_height(lat, lon)
-    if srtm1_result['altitude_m'] != srtm1.NODATA and not is_water:
+    h_srtm1 = srtm1_result['altitude_m']
+    if h_srtm1 != srtm1.NODATA and not is_water or h_srtm1 > 0:
         # prefer sea floor bathymetry if possible
         return srtm1_result
     if dgm200_result['altitude_m'] != dgm200.NODATA and not is_water:
