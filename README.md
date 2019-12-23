@@ -24,15 +24,6 @@ Download ASCII Grid version of OS Terrain 50 from
 https://www.ordnancesurvey.co.uk/business-and-government/products/terrain-50.html to downloads/ and call terr50_data_conversion.py .
 Finally, call create_terr50_min_max_cache.py to generate a cache of min/max values.
 
-### BD ALTI 75m (France, 75m grid):
-
-http://professionnels.ign.fr/bdalti
-
-Put https://wxs-telechargement.ign.fr/jvam1hsjm11u8voorw81v2xb/telechargement/prepackage/BDALTI-75M_PACK_FXX_2018-01-24$BDALTIV2_2-0_75M_ASC_LAMB93-IGN69_FRANCE_2018-01-15/file/BDALTIV2_2-0_75M_ASC_LAMB93-IGN69_FRANCE_2018-01-15.7z to downloads/ and unpack its content. 
-Call bd_alti75_data_conversion.py for conversion of ASCII to binary data. 
-You may call create_bd_alti75_min_max_cache.py to generate a cache of min/max values. 
-The cache for the recent version mentioned here is already included in the repository.
-
 ### SRTM (tiles of each 1 arc minute coverage with 30m resolution, registration required):
 
 https://lpdaac.usgs.gov/products/srtmgl1v003/
