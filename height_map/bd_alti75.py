@@ -191,7 +191,7 @@ def check_max_files(file_list):
                         counter = 1
                     elif values[x_pos - x_ll] == h_max:
                         lcc_list += [get_lcc_from_indices(x_pos, y_pos,
-                                                            filename)]
+                            filename)]
                         counter += 1
                     x_pos += 1
                 x_pos = x_ll
@@ -226,7 +226,7 @@ def check_min_files(file_list):
                         counter = 1
                     elif (NODATA < values[x_pos - x_ll] == h_min):
                         lcc_list += [get_lcc_from_indices(x_pos, y_pos,
-                                                            filename)]
+                            filename)]
                         counter += 1
                     x_pos += 1
                 x_pos = x_ll
