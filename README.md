@@ -28,7 +28,11 @@ Finally, call create_terr50_min_max_cache.py to generate a cache of min/max valu
 
 https://lpdaac.usgs.gov/products/srtmgl1v003/
 
-Download required tiles from https://dwtkns.com/srtm30m/ , unpack and put them to height_map/maps/srtm1/
+Download required tiles from https://dwtkns.com/srtm30m/ , unpack and put them to height_map/maps/srtm1/ .
+
+#### Replacement of SRTM .hgt files with improved data
+
+The SRTM tiles could be replaced by .hgt files available from https://data.opendataportal.at/dataset/dtm-europe where SRTM data is replaced by LiDAR where open data sources are available.
 
 ### World wide coverage of ocean and terrain
 
