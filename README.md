@@ -76,6 +76,22 @@ docker run -d -p 8000:80 --mount src=`pwd`/height_map/maps,target=/app/height_ma
 Instead of building the image, you may try to download it from hub.docker.com. 
 Simply use jaluebbe/heightmap or jaluebbe/heightmap:alpine as image to run.
 
+### Additional mounting options
+You may add you own imprint and/or privacy statement by adding
+```
+--mount src=`pwd`/imprint_privacy_statement.html,target=/app/static/datenschutz.html,type=bind,readonly
+```
+to your docker run command.
+
+If you would like to use your own mapbox access token to display additional map layers, use 
+```
+--mount src=`pwd`/mapboxAccessToken.js,target=/app/static/mapboxAccessToken.js,type=bind,readonly
+```
+where mapboxAccessToken.js contains a line like
+```
+var mapboxAccessToken = '<your_mapbox_token>'
+```
+
 ## Accessing the API and web interface
 
 You'll find an interative map at http://127.0.0.1:8000. Click anywhere on the map to obtain the local elevation from the most precise data source. 
