@@ -30,7 +30,13 @@ info.updateElevation = function(altitude_m, source) {
 info.addTo(map);
 var myMarker = L.marker([50, 8.6], {
     draggable: true,
-    zIndexOffset: 1000
+    zIndexOffset: 1000,
+    icon: L.icon({
+        iconUrl: 'static/level_staff.svg',
+        iconSize: [10, 112],
+        iconAnchor: [5, 112],
+        tooltipAnchor: [0, -112]
+    })
 });
 var myCircle = L.circle(myMarker.getLatLng(), {
     radius: 0
