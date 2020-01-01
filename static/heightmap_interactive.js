@@ -32,7 +32,7 @@ var myMarker = L.marker([50, 8.6], {
     draggable: true,
     zIndexOffset: 1000,
     icon: L.icon({
-        iconUrl: 'static/level_staff.svg',
+        iconUrl: 'static/level_staff_sharp.svg',
         iconSize: [10, 112],
         iconAnchor: [5, 112],
         tooltipAnchor: [0, -112]
