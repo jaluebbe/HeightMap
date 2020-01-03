@@ -32,10 +32,13 @@ var myMarker = L.marker([50, 8.6], {
     draggable: true,
     zIndexOffset: 1000,
     icon: L.icon({
-        iconUrl: 'static/level_staff_sharp.svg',
-        iconSize: [10, 112],
-        iconAnchor: [5, 112],
-        tooltipAnchor: [0, -112]
+        iconUrl: 'static/level_staff_red.svg',
+        shadowUrl: 'static/level_staff_shadow.png',
+        shadowSize: [46, 66],
+        shadowAnchor: [0, 66],
+        iconSize: [10, 121],
+        iconAnchor: [5, 121],
+        tooltipAnchor: [0, -121]
     })
 });
 var myCircle = L.circle(myMarker.getLatLng(), {
@@ -53,6 +56,26 @@ var minMaxLocations = L.geoJSON(null, {
         layer.bindTooltip(tooltipContent, {
             direction: "top"
         });
+    },
+    pointToLayer: function(feature, latlng) {
+        if (feature.properties.type == 'minimum')
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: 'static/level_staff_yellow.svg',
+                    iconSize: [10, 121],
+                    iconAnchor: [5, 121],
+                    tooltipAnchor: [0, -121]
+                })
+            });
+        else
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: 'static/level_staff_white.svg',
+                    iconSize: [10, 121],
+                    iconAnchor: [5, 121],
+                    tooltipAnchor: [0, -121]
+                })
+            });
     }
 });
 
