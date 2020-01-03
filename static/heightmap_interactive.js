@@ -61,19 +61,19 @@ var minMaxLocations = L.geoJSON(null, {
         if (feature.properties.type == 'minimum')
             return L.marker(latlng, {
                 icon: L.icon({
-                    iconUrl: 'static/level_staff_yellow.svg',
-                    iconSize: [10, 121],
-                    iconAnchor: [5, 121],
-                    tooltipAnchor: [0, -121]
+                    iconUrl: 'static/minimum_marker.svg',
+                    iconSize: [20, 97],
+                    iconAnchor: [10, 97],
+                    tooltipAnchor: [0, -97]
                 })
             });
         else
             return L.marker(latlng, {
                 icon: L.icon({
-                    iconUrl: 'static/level_staff_white.svg',
-                    iconSize: [10, 121],
-                    iconAnchor: [5, 121],
-                    tooltipAnchor: [0, -121]
+                    iconUrl: 'static/maximum_marker.svg',
+                    iconSize: [20, 105],
+                    iconAnchor: [10, 105],
+                    tooltipAnchor: [0, -105]
                 })
             });
     }
