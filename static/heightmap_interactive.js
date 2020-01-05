@@ -23,9 +23,13 @@ info.onAdd = function (map) {
 info.showText = function(infoText) {
     this._div.innerHTML = infoText;
 };
-info.updateElevation = function(altitude_m, source) {
-    this._div.innerHTML = "<div style='text-align: right;'><b>"
-        + altitude_m + "&nbsp;m</b></div>" + source;
+info.updateElevation = function(altitude_m, source, wb_label) {
+    var txt = "<div style='text-align: right;'><b>"
+        + altitude_m + "&nbsp;m</b></div>";
+    if (wb_label)
+        txt += "<div style='text-align: right;'>" + wb_label + "</div>";
+    txt += source;
+    this._div.innerHTML = txt;
 };
 info.addTo(map);
 var myMarker = L.marker([50, 8.6], {
@@ -101,7 +105,7 @@ function requestHeight(e) {
                 + height_info.altitude_m + "&nbsp;m</b></div>" + height_info.source);
             myCircle.setLatLng([height_info.latitude_found, height_info.longitude_found]);
             myCircle.setRadius(height_info.distance_m);
-	    info.updateElevation(height_info.altitude_m, height_info.source);
+	    info.updateElevation(height_info.altitude_m, height_info.source, height_info.wb_label);
             map.attributionControl.addAttribution(height_info.attribution);
         }
     };
