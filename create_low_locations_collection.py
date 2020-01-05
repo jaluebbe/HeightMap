@@ -105,11 +105,24 @@ diamantina_deep = Feature(
     "url": "https://en.wikipedia.org/wiki/Diamantina_Deep",
     "type": "subsea_depression"})
 
+lake_enriquillo = Feature(
+    geometry=Point((18.5, -71.583333)[::-1]), properties={
+    "name": "Lake Enriquillo", "elevation_m": -46,
+    "url": "https://en.wikipedia.org/wiki/Lake_Enriquillo",
+    "type": "depression"})
+
+sabkhat_ghuzayyil = Feature(
+    geometry=Point((29.833333, 19.75)[::-1]), properties={
+    "name": "Sabkhat Ghuzayyil", "elevation_m": -47, 
+    "url": "https://en.wikipedia.org/wiki/Sabkhat_Ghuzayyil",
+    "type": "depression"})
+
 low_locations = FeatureCollection([
     rms_titanic_wreck, challenger_deep, badwater_basin, laguna_del_carbon,
     hambach_surface_mine, dead_sea, qattara_depression, karagiye, ayding_lake,
     danakil_depression, lake_assal, sea_of_galilee, calypso_deep, manila_trench,
-    litke_deep, south_sandwich_trench, cayman_trough, diamantina_deep    
+    litke_deep, south_sandwich_trench, cayman_trough, diamantina_deep,
+    lake_enriquillo, sabkhat_ghuzayyil
     ])
 
 file_name = 'static/low_locations.json'
