@@ -12,7 +12,6 @@ attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,
 pwd = os.path.dirname(os.path.abspath(__file__))
 path = os.path.join(pwd, 'maps/gebco_2019')
 filename = 'GEBCO_2019.nc'
-tid_filename = 'GEBCO_2019_TID.nc'
 cache_path = pwd
 cache_filename = 'gebco_2019_cache.json'
 NCOLS = 86400
@@ -34,13 +33,11 @@ def get_lat_from_index(i):
 def get_lon_from_index(j):
     return j*CELLSIZE + XLLCENTER
 
-def get_height(lat, lon, water=False):
+def get_height(lat, lon):
     if not (-90 <= lat <= 90 and -180 <= 90 <= 180):
         raise ValueError('invalid coordinates ({}, {})'.format(lat, lon))
     file = os.path.join(path, filename)
-    tid_file = os.path.join(path, tid_filename)
     val = NODATA
-    tid = None
     lat_found = lat
     lon_found = lon
     if os.path.isfile(file):
@@ -50,17 +47,9 @@ def get_height(lat, lon, water=False):
         lon_found = get_lon_from_index(j)
         with h5py.File(file, 'r') as f:
             val = round(float(f['elevation'][i][j]), 2)
-        if val > 0:
-            tid = 0
-        elif os.path.isfile(tid_file):
-            with h5py.File(tid_file, 'r') as tf:
-                tid = int(tf['tid'][i][j])
-            # 0 is land, 41 may be land (interpolated data)
-            if water and tid not in [0, 41]:
-                val = 0
     return {
         'latitude': lat, 'longitude': lon, 'latitude_found': lat_found,
-        'longitude_found': lon_found, 'altitude_m': val, 'tid': tid,
+        'longitude_found': lon_found, 'altitude_m': val,
         'source': attribution_name, 'distance_m': calculate_distance(lat, lon,
         lat_found, lon_found), 'attribution': attribution}
 
