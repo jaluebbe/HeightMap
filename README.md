@@ -54,6 +54,16 @@ https://www.gebco.net/data_and_products/gridded_bathymetry_data/
 
 Download the global GEBCO_2019_Grid in netCDF format, unpack it and put GEBCO_2019.nc to height_map/maps/gebco_2019/ .
 
+#### CCI Water Bodies v4.0
+
+World wide map of ocean, water and land bodies in 150m resolution.
+
+https://www.mdpi.com/2072-4292/9/1/36
+
+http://maps.elie.ucl.ac.be/CCI/viewer/download.php
+
+Download ftp://geo10.elie.ucl.ac.be/v207/ESACCI-LC-L4-WB-Ocean-Land-Map-150m-P13Y-2000-v4.0.tif and put it to height_map/maps/cci_wb4 .
+
 ## Startup of the web interface
 
 The web interface and API is hosted using FastAPI. It could also be run as a Docker container.
@@ -102,4 +112,4 @@ Documentation of the API is available at http://127.0.0.1:8000/docs (you can try
 
 ## Acknowledgements
 
-Thanks to Andrea Y. Niemeyer for providing the marker icon.
+Thanks to Andrea Y. Niemeyer for providing the marker icons.
