@@ -14,7 +14,7 @@ class WaterBodies:
     def __init__(self):
         self.gth = GeoTiffHandler(os.path.join(self.path,
             'ESACCI-LC-L4-WB-Ocean-Land-Map-150m-P13Y-2000-v4.0.tif'))
-        self.legend = {'0': 'ocean', '1': 'land', '2': 'water'}
+        self.legend = {'0': 'Ocean', '1': 'Land', '2': 'Water'}
 
     def get_value_at_position(self, lat, lon):
         return self.gth.get_value_at_position(lat, lon)
