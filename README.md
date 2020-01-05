@@ -4,7 +4,7 @@
 
 ### conda/apt
 
-gunicorn cython numpy h5py
+gunicorn cython numpy h5py gdal
 
 ### pip
 
