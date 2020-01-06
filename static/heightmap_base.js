@@ -83,9 +83,12 @@ var sevenSummits = L.geoJSON(null, {
 
     },
     pointToLayer: function(feature, latlng) {
-        return L.circleMarker(latlng, {
-            color: 'green',
-            fillColor: 'green'
+        return L.marker(latlng, {
+            icon: L.icon({
+                iconUrl: 'static/peak.svg',
+                iconSize: [22, 17],
+                tooltipAnchor: [11, -8.5]
+            })
         });
     }
 });
@@ -100,10 +103,43 @@ var lowLocations = L.geoJSON(null, {
 
     },
     pointToLayer: function(feature, latlng) {
-        return L.circleMarker(latlng, {
-            color: 'red',
-            fillColor: 'red'
-        });
+        if (feature.properties.type == 'depression')
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: 'static/depression.svg',
+                    iconSize: [22, 8],
+                    tooltipAnchor: [11, -4]
+                })
+            });
+        else if (feature.properties.type == 'subsea_depression')
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: 'static/subsea_depression.svg',
+                    iconSize: [22, 8],
+                    tooltipAnchor: [11, -4]
+                })
+            });
+        else if (feature.properties.type == 'surface_mine')
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: 'static/mining.svg',
+                    iconSize: [22, 19.343],
+                    tooltipAnchor: [11, -10]
+                })
+            });
+        else if (feature.properties.type == 'shipwreck')
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: 'static/shipwreck.svg',
+                    iconSize: [22, 12],
+                    tooltipAnchor: [11, -6]
+                })
+            });
+        else
+            return L.circleMarker(latlng, {
+                color: 'red',
+                fillColor: 'red'
+            });
     }
 });
 var openSeaMap = L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
