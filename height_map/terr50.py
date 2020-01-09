@@ -5,7 +5,6 @@ import time
 from pygeodesy import ellipsoidalVincenty as eV
 from pygeodesy import toOsgr, parseOSGR, Osgr
 from height_map.dgm200 import calculate_distance
-    
 CELLSIZE = 50
 NCOLS = 200
 NROWS = 200
@@ -31,10 +30,14 @@ else:
 precision = 4.0  # RMS error
 
 def get_x(osgr):
-    return round(osgr.easting % (NCOLS * CELLSIZE)) // CELLSIZE
+    return int(osgr.easting % (NCOLS * CELLSIZE) // CELLSIZE)
 
 def get_y(osgr):
-    return NROWS - 1 - round(osgr.northing % (NROWS * CELLSIZE)) // CELLSIZE
+    return int(NROWS - 1 - osgr.northing % (NROWS * CELLSIZE) // CELLSIZE)
+
+def osgr_to_grid(osgr):
+    return Osgr(osgr.easting - (osgr.easting % CELLSIZE),
+        osgr.northing - (osgr.northing % CELLSIZE))
 
 def get_filename(osgr):
     filename = osgr.toStr(prec=2, sep='') + '.bin'
@@ -61,28 +64,31 @@ def get_height(lat, lon):
         return {
             'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,
             'lon': lon, 'distance_m': 0, 'attribution': attribution}
+    # fit request to the grid
+    osgr = osgr_to_grid(osgr)
+    latlon = osgr.toLatLon(eV.LatLon)
+    lat_found = latlon.lat
+    lon_found = latlon.lon
     filename = get_filename(osgr)
     full_path = os.path.join(path, filename[:2].lower(), filename)
-    if os.path.isfile(full_path):
-        x = get_x(osgr)
-        y = get_y(osgr)
-        with open(full_path, "rb") as f:
-            # go to the right spot,
-            f.seek((y * NCOLS + x) * 4)
-            # read four bytes and convert them:
-            buf = f.read(4)
-            # ">f" is a four byte float
-            val = struct.unpack('>f', buf)[0]
-            (lat_found, lon_found) = get_lat_lon_from_indices(x, y, filename)
-            return {
-                'latitude': lat, 'longitude': lon, 'latitude_found': lat_found,
-                'longitude_found': lon_found, 'altitude_m': round(val, 2),
-                'source': attribution_name, 'distance_m': calculate_distance(
-                lat, lon, lat_found, lon_found), 'attribution': attribution}
-    else:
+    if not os.path.isfile(full_path):
         return {
             'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,
             'longitude': lon, 'distance_m': 0, 'attribution': attribution}
+    x = get_x(osgr)
+    y = get_y(osgr)
+    with open(full_path, "rb") as f:
+        # go to the right spot,
+        f.seek((y * NCOLS + x) * 4)
+        # read four bytes and convert them:
+        buf = f.read(4)
+        # ">f" is a four byte float
+        val = struct.unpack('>f', buf)[0]
+        return {
+            'latitude': lat, 'longitude': lon, 'latitude_found': lat_found,
+            'longitude_found': lon_found, 'altitude_m': round(val, 2),
+            'source': attribution_name, 'distance_m': calculate_distance(
+            lat, lon, lat_found, lon_found), 'attribution': attribution}
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
     # consider only correctly defined rectangle:
