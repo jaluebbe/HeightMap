@@ -28,6 +28,8 @@ cdef double get_distance(double lat1, double lon1, double lat2, double lon2):
 
 # expose get_distance
 def calculate_distance(lat1, lon1, lat2, lon2):
+    if lat1 == lat2 and lon1 == lon2:
+        return 0
     return get_distance(lat1, lon1, lat2, lon2)
 
 # calculate the distance to the closest DGM200 reference point
