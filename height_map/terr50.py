@@ -16,7 +16,7 @@ attribution_url = ('https://www.ordnancesurvey.co.uk/business-and-government/'
 attribution_name = 'OS Terrain 50'
 attribution = ('<a href="{}">Contains OS data &copy; Crown copyright and '
     'database right 2019</a>').format(attribution_url)
-cache_path = 'height_map'
+cache_path = pwd
 map_cache_filename = os.path.join(cache_path, 'terr50_map_cache.json')
 if os.path.isfile(map_cache_filename):
     with open(map_cache_filename) as json_cache_file:
