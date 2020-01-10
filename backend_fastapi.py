@@ -1,8 +1,11 @@
 from fastapi import FastAPI, Query, HTTPException
 from starlette.staticfiles import StaticFiles
 from starlette.responses import FileResponse
+from pydantic import BaseModel, confloat
+from typing import List
 import geojson
 import height_map.height_info as hi
+from height_map.dgm200 import calculate_distance
 
 app = FastAPI(
     openapi_prefix='',
@@ -75,3 +78,18 @@ def get_min_max_height(
             geometry=geojson.Point(location_max[_index][::-1]), properties={
                 "type": "maximum", "elevation_m": round(h_max, 1)}))
     return geojson.FeatureCollection(extreme_locations)
+
+class Location(BaseModel):
+    lat: confloat(ge=-90, le=90)
+    lon: confloat(ge=-180, le=180)
+
+@app.post("/api/get_track_length")
+def post_get_track_length(track: List[Location]):
+    distance = 0
+    old_location = None
+    for _location in track:
+        if old_location:
+            distance += calculate_distance(old_location.lat, old_location.lon,
+                 _location.lat, _location.lon)
+        old_location = _location
+    return round(distance, 2)
