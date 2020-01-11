@@ -63,10 +63,11 @@ def get_height(lat, lon, ice=True):
             # "<h" is a signed two byte integer
             val = struct.unpack('<h', buf)[0]
     return {
-        'latitude': lat, 'longitude': lon, 'latitude_found': lat_found,
-        'longitude_found': lon_found, 'altitude_m': val,
-        'source': attribution_name, 'distance_m': calculate_distance(lat, lon,
-        lat_found, lon_found), 'attribution': attribution}
+        'latitude': lat, 'longitude': lon,
+        'latitude_found': round(lat_found, 6),
+        'longitude_found': round(lon_found, 6), 'altitude_m': val,
+        'source': attribution_name, 'distance_m': round(calculate_distance(lat,
+        lon, lat_found, lon_found), 3), 'attribution': attribution}
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=True):
     h_max = NODATA

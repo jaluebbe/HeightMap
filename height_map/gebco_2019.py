@@ -48,10 +48,10 @@ def get_height(lat, lon):
         with h5py.File(file, 'r') as f:
             val = round(float(f['elevation'][i][j]), 2)
     return {
-        'latitude': lat, 'longitude': lon, 'latitude_found': lat_found,
-        'longitude_found': lon_found, 'altitude_m': val,
-        'source': attribution_name, 'distance_m': calculate_distance(lat, lon,
-        lat_found, lon_found), 'attribution': attribution}
+        'latitude': lat, 'longitude': lon, 'latitude_found': round(lat_found, 6),
+        'longitude_found': round(lon_found, 6), 'altitude_m': val,
+        'source': attribution_name, 'distance_m': round(calculate_distance(lat,
+        lon, lat_found, lon_found), 3), 'attribution': attribution}
 
 def get_max_height_from_indices(i_ll, j_ll, i_ur, j_ur):
     i_ur = i_ur + 1
