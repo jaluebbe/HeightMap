@@ -55,3 +55,22 @@ for distance in [0, 250e3, 500e3, 1e4, 1485833.003, 1485833.004, 1500e3]:
         print(r.json())
     else:
         print(r.status_code)
+
+print('### Testing /api/get_track_elevation ###')
+url = 'http://127.0.0.1:8000/api/get_track_elevation'
+
+print('# simple_test_track:')
+payload = simple_test_track
+r = requests.post(url, json=payload)
+if r.status_code == 200:
+    print(f'{r.json()} m')
+else:
+    print(r.status_code)
+
+print('# test_track:')
+payload = test_track
+r = requests.post(url, json=payload)
+if r.status_code == 200:
+    print(f'{r.json()} m')
+else:
+    print(r.status_code)

@@ -114,3 +114,13 @@ def post_get_track_position(data: PositionRequest):
             distance += segment_length
         old_location = current_location
     return {}
+
+@app.post("/api/get_track_elevation")
+def post_get_track_elevation(track: List[Location]):
+    new_track = []
+    for _location in track:
+        response = hi.get_height(_location.lat, _location.lon, water=False)
+        for key in ['attribution',]:
+            del response[key]
+        new_track.append(response)
+    return new_track
