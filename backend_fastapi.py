@@ -4,8 +4,8 @@ from starlette.responses import FileResponse
 from pydantic import BaseModel, confloat
 from typing import List
 import geojson
+import pygeodesy.ellipsoidalVincenty as eV
 import height_map.height_info as hi
-from height_map.dgm200 import calculate_distance
 
 app = FastAPI(
     openapi_prefix='',
@@ -83,13 +83,34 @@ class Location(BaseModel):
     lat: confloat(ge=-90, le=90)
     lon: confloat(ge=-180, le=180)
 
+class PositionRequest(BaseModel):
+    track: List[Location]
+    distance: confloat(ge=0)
+
 @app.post("/api/get_track_length")
 def post_get_track_length(track: List[Location]):
     distance = 0
     old_location = None
     for _location in track:
+        current_location = eV.LatLon(_location.lat, _location.lon)
         if old_location:
-            distance += calculate_distance(old_location.lat, old_location.lon,
-                 _location.lat, _location.lon)
-        old_location = _location
-    return round(distance, 2)
+            distance += old_location.distanceTo(current_location)
+        old_location = current_location
+    return round(distance, 3)
+
+@app.post("/api/get_track_position")
+def post_get_track_position(data: PositionRequest):
+    distance = 0
+    old_location = None
+    for _location in data.track:
+        current_location = eV.LatLon(_location.lat, _location.lon)
+        if old_location:
+            segment_length, bearing = old_location.distanceTo3(current_location
+                )[:2]
+            if distance + segment_length >= data.distance:
+                position = old_location.destination(data.distance - distance,
+                    bearing).latlon2(ndigits=6)
+                return {'lat': position.lat, 'lon': position.lon}
+            distance += segment_length
+        old_location = current_location
+    return {}
