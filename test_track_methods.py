@@ -63,7 +63,7 @@ print('# simple_test_track:')
 payload = simple_test_track
 r = requests.post(url, json=payload)
 if r.status_code == 200:
-    print(f'{r.json()} m')
+    print(f'{r.json()}')
 else:
     print(r.status_code)
 
@@ -71,6 +71,6 @@ print('# test_track:')
 payload = test_track
 r = requests.post(url, json=payload)
 if r.status_code == 200:
-    print(f'{r.json()} m')
+    print(f'{r.json()}')
 else:
     print(r.status_code)
