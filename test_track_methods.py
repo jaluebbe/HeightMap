@@ -1,6 +1,8 @@
 import requests
 import json
 
+host = 'http://127.0.0.1:8000'
+
 simple_test_track = [
     {'lat': 52.1346, 'lon': 7.6848},
     {'lat': 51.5, 'lon': -0.12}]
@@ -17,7 +19,8 @@ test_track = [
     {'lat': 51.5, 'lon': -0.12}]
 
 print('### Testing /api/get_track_length ###')
-url = 'http://127.0.0.1:8000/api/get_track_length'
+endpoint = '/api/get_track_length'
+url = host + endpoint
 
 print('# simple_test_track:')
 payload = simple_test_track
@@ -36,7 +39,8 @@ else:
     print(r.status_code)
 
 print('### Testing /api/get_track_position ###')
-url = 'http://127.0.0.1:8000/api/get_track_position'
+endpoint = '/api/get_track_position'
+url = host + endpoint
 
 print('# simple_test_track:')
 for distance in [0, 250e3, 542538.395, 542538.396, 600e3]:
@@ -57,7 +61,8 @@ for distance in [0, 250e3, 500e3, 1e4, 1485833.003, 1485833.004, 1500e3]:
         print(r.status_code)
 
 print('### Testing /api/get_track_elevation ###')
-url = 'http://127.0.0.1:8000/api/get_track_elevation'
+endpoint = '/api/get_track_elevation'
+url = host + endpoint
 
 print('# simple_test_track:')
 payload = simple_test_track
@@ -76,7 +81,8 @@ else:
     print(r.status_code)
 
 print('### Testing /api/get_simplified_track ###')
-url = 'http://127.0.0.1:8000/api/get_simplified_track'
+endpoint = '/api/get_simplified_track'
+url = host + endpoint
 
 straight_track_segments = [
     {'lat': 51, 'lon': 8},
@@ -148,7 +154,8 @@ for epsilon in [0.1, 0.01, 0.001, 1e-4, 1e-5, 1e-6, 1e-7, 0]:
         print(r.status_code)
 
 print('### Testing /api/get_resampled_track ###')
-url = 'http://127.0.0.1:8000/api/get_resampled_track'
+endpoint = '/api/get_resampled_track'
+url = host + endpoint
 
 print('# simple_test_track (include_existing_points=True):')
 for step in [100e3, 542538, 542539]:
