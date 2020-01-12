@@ -387,7 +387,7 @@ RUN apk add --no-cache \
     && apk add libc6-compat geos \
     && apk --no-cache add hdf5-dev py3-numpy-dev libffi-dev --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
     && pip install --upgrade pip \
-    && pip install uvicorn gunicorn fastapi aiofiles shapely pygeodesy cython \
+    && pip install uvicorn gunicorn fastapi aiofiles shapely pygeodesy cython rdp \
     pytest h5py numpy geojson \
     && cd /app/src && sh compile.sh && cd .. \
     && pip uninstall cython -y \
