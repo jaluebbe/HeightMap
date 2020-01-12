@@ -136,3 +136,44 @@ def post_get_simplified_track(data: SimplifyRequest):
     simplified_track = rdp(input_track, epsilon=data.epsilon)
     output_track = [{'lat': y,'lon': x} for x, y in simplified_track]
     return output_track
+
+class ResamplingRequest(BaseModel):
+    track: List[Location]
+    step: confloat(gt=0)
+    include_existing_points: bool = True
+
+@app.post("/api/get_resampled_track")
+def post_get_resampled_track(data: ResamplingRequest):
+    new_track = []
+    distance = 0
+    target_distance = data.step
+    old_location = None
+    for _location in data.track:
+        current_location = eV.LatLon(_location.lat, _location.lon)
+        if old_location:
+            segment_length, bearing = old_location.distanceTo3(current_location
+                )[:2]
+            segment_end = distance + segment_length
+            while segment_end >= target_distance:
+                old_location = old_location.destination(
+                    target_distance - distance, bearing)
+                track_item = old_location.latlon2(ndigits=6)
+                new_track.append({'lat': track_item.lat, 'lon': track_item.lon})
+                distance = target_distance
+                target_distance += data.step
+            remaining_distance, bearing = old_location.distanceTo3(
+                current_location)[:2]
+            distance += remaining_distance
+            existing_point = current_location.latlon2(ndigits=6)
+            if data.include_existing_points and existing_point != track_item:
+                target_distance = distance + data.step
+                track_item = existing_point
+                new_track.append({'lat': track_item.lat, 'lon': track_item.lon})
+        else:
+            track_item = current_location.latlon2(ndigits=6)
+            new_track.append({'lat': track_item.lat, 'lon': track_item.lon})
+        old_location = current_location
+    last_item = old_location.latlon2(ndigits=6)
+    if not data.include_existing_points and track_item != last_item:
+        new_track.append({'lat': last_item.lat, 'lon': last_item.lon})
+    return new_track

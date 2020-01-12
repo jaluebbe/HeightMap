@@ -146,3 +146,44 @@ for epsilon in [0.1, 0.01, 0.001, 1e-4, 1e-5, 1e-6, 1e-7, 0]:
         print(f'epsilon={epsilon}, remaining points={len(r.json())}')
     else:
         print(r.status_code)
+
+print('### Testing /api/get_resampled_track ###')
+url = 'http://127.0.0.1:8000/api/get_resampled_track'
+
+print('# simple_test_track (include_existing_points=True):')
+for step in [100e3, 542538, 542539]:
+    payload = {'track': simple_test_track, 'step': step}
+    r = requests.post(url, json=payload)
+    if r.status_code == 200:
+        print(f'step={step}: {r.json()}')
+    else:
+        print(r.status_code)
+
+print('# simple_test_track (include_existing_points=False):')
+for step in [100e3, 542538, 542539]:
+    payload = {'track': simple_test_track, 'step': step,
+        'include_existing_points': False}
+    r = requests.post(url, json=payload)
+    if r.status_code == 200:
+        print(f'step={step}: {r.json()}')
+    else:
+        print(r.status_code)
+
+print('# test_track (include_existing_points=True):')
+for step in [100e3, 542538, 542539, 1485832, 1485833, 1485834]:
+    payload = {'track': test_track, 'step': step}
+    r = requests.post(url, json=payload)
+    if r.status_code == 200:
+        print(f'step={step}: {r.json()}')
+    else:
+        print(r.status_code)
+
+print('# test_track (include_existing_points=False):')
+for step in [100e3, 542538, 542539, 1485832, 1485833, 1485834]:
+    payload = {'track': test_track, 'step': step,
+        'include_existing_points': False}
+    r = requests.post(url, json=payload)
+    if r.status_code == 200:
+        print(f'step={step}: {r.json()}')
+    else:
+        print(r.status_code)
