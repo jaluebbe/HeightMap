@@ -5,6 +5,7 @@ from pydantic import BaseModel, confloat
 from typing import List
 import geojson
 import pygeodesy.ellipsoidalVincenty as eV
+from rdp import rdp
 import height_map.height_info as hi
 
 app = FastAPI(
@@ -124,3 +125,14 @@ def post_get_track_elevation(track: List[Location]):
             del response[key]
         new_track.append(response)
     return new_track
+
+class SimplifyRequest(BaseModel):
+    track: List[Location]
+    epsilon: confloat(ge=0) = 0
+
+@app.post("/api/get_simplified_track")
+def post_get_simplified_track(data: SimplifyRequest):
+    input_track = [[_t.lon, _t.lat] for _t in data.track]
+    simplified_track = rdp(input_track, epsilon=data.epsilon)
+    output_track = [{'lat': y,'lon': x} for x, y in simplified_track]
+    return output_track
