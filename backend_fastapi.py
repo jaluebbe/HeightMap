@@ -116,11 +116,15 @@ def post_get_track_position(data: PositionRequest):
         old_location = current_location
     return {}
 
+class ElevationRequest(BaseModel):
+    track: List[Location]
+    water: bool=False
+
 @app.post("/api/get_track_elevation")
-def post_get_track_elevation(track: List[Location]):
+def post_get_track_elevation(data: ElevationRequest):
     new_track = []
-    for _location in track:
-        response = hi.get_height(_location.lat, _location.lon, water=False)
+    for _location in data.track:
+        response = hi.get_height(_location.lat, _location.lon, water=data.water)
         for key in ['attribution',]:
             del response[key]
         new_track.append(response)
