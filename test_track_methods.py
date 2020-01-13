@@ -65,7 +65,7 @@ endpoint = '/api/get_track_elevation'
 url = host + endpoint
 
 print('# simple_test_track:')
-payload = simple_test_track
+payload = {'track': simple_test_track}
 r = requests.post(url, json=payload)
 if r.status_code == 200:
     print(f'{r.json()}')
@@ -73,7 +73,7 @@ else:
     print(r.status_code)
 
 print('# test_track:')
-payload = test_track
+payload = {'track': test_track}
 r = requests.post(url, json=payload)
 if r.status_code == 200:
     print(f'{r.json()}')
