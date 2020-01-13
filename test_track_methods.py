@@ -115,9 +115,9 @@ longitude_disturbed_track = [
     {'lat': 39, 'lon': 0},
     {'lat': 40, 'lon': 0.0000012},  # 0.1m off the straight line
     {'lat': 41, 'lon': 0},
-    {'lat': 42, 'lon': -0.000012},  # 1m off the stright line
+    {'lat': 42, 'lon': -0.000012},  # 1m off the straight line
     {'lat': 43, 'lon': 0},
-    {'lat': 44, 'lon': 0.00013},  # 10m off the stright line
+    {'lat': 44, 'lon': 0.00013},  # 10m off the straight line
     {'lat': 45, 'lon': 0},
     {'lat': 46, 'lon': -0.00129},  # 100m off the straight line
     {'lat': 47, 'lon': 0},
