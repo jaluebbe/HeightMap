@@ -5,18 +5,21 @@ function getHeightGraphData(feature) {
     xhr.open('POST', './api/geojson/get_height_graph_data');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function() {
+        map.spin(false);
         if (xhr.status === 200) {
             console.log(JSON.parse(xhr.responseText));
 //            nzRailwayMap.addData(JSON.parse(xhr.responseText));
         }
     };
+    map.spin(true);
     xhr.send(JSON.stringify(feature));
 }
 var activeTrackSegment = L.geoJSON(null, {
     onEachFeature: function(feature, layer) {
         var tooltipContent =
             '' + feature.properties.LINESECTIO + "<br>" +
-            'Line code: ' + feature.properties.LINECODE;
+            'Line code: ' + feature.properties.LINECODE + "<br>" +
+            'Length: ' + feature.properties.length_km + '&nbsp;km';
         layer.bindTooltip(tooltipContent, {
             sticky: true,
             direction: "top",
@@ -42,6 +45,7 @@ function trackClicked(eo) {
             closestLineString = currentFeature;
         }
     });
+    closestLineString.properties.length_km = Math.round(1e3 * turf.length(closestLineString)) / 1e3;
     activeTrackSegment.clearLayers()
     activeTrackSegment.addData(closestLineString);
     getHeightGraphData(closestLineString);
