@@ -118,9 +118,7 @@ class GeoJSONRequest(BaseModel):
     geometry: GeoJSONLineString
 
 def geojson_get_height_graph_data(data: GeoJSONRequest):
-#    track = [{'lat': pt[1], 'lon': pt[0]} for pt in data.geometry.coordinates]
     track = [Location(lat=pt[1], lon=pt[0]) for pt in data.geometry.coordinates]
-#    return track
     track = get_simplified_track(SimplifyRequest(track=track, epsilon=0.001))
     result = get_track_elevation(ElevationRequest(track=track))
     return [[round(pt['lon'], 6), round(pt['lat'], 6), pt['altitude_m']
