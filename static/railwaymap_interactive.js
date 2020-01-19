@@ -1,6 +1,16 @@
 var hg;
 function getHeightGraphData(feature) {
     console.log(feature);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', './api/geojson/get_height_graph_data');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            console.log(JSON.parse(xhr.responseText));
+//            nzRailwayMap.addData(JSON.parse(xhr.responseText));
+        }
+    };
+    xhr.send(JSON.stringify(feature));
 }
 var activeTrackSegment = L.geoJSON(null, {
     onEachFeature: function(feature, layer) {

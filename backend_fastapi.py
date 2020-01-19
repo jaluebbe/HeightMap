@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Query, HTTPException
 from starlette.staticfiles import StaticFiles
 from starlette.responses import FileResponse
-from pydantic import BaseModel, confloat
+from pydantic import BaseModel, confloat, constr, conlist
 from typing import List
 import geojson
 import pygeodesy.ellipsoidalVincenty as eV
@@ -191,3 +191,16 @@ def post_get_resampled_track(data: ResamplingRequest):
     if not data.include_existing_points and track_item != last_item:
         new_track.append({'lat': last_item.lat, 'lon': last_item.lon})
     return new_track
+
+class GeoJSONLineString(BaseModel):
+    type: constr(regex='LineString')
+    coordinates: List[conlist(float, min_items=2, max_items=3)]
+
+class GeoJSONRequest(BaseModel):
+    type: constr(regex='Feature')
+    properties: dict
+    geometry: GeoJSONLineString
+
+@app.post("/api/geojson/get_height_graph_data")
+def post_geojson_get_height_graph_data(data: GeoJSONRequest):
+    return data
