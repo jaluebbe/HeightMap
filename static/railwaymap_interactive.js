@@ -1,14 +1,28 @@
 var hg;
 function getHeightGraphData(feature) {
-    console.log(feature);
     var xhr = new XMLHttpRequest();
     xhr.open('POST', './api/geojson/get_height_graph_data');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function() {
         map.spin(false);
         if (xhr.status === 200) {
-            console.log(JSON.parse(xhr.responseText));
-//            nzRailwayMap.addData(JSON.parse(xhr.responseText));
+            var geojson = JSON.parse(xhr.responseText);
+            if (hg !== undefined)
+                hg.remove();
+            hg = L.control.heightgraph({
+                width: 640,
+                height: 200,
+                margins: {
+                    top: 10,
+                    right: 30,
+                    bottom: 55,
+                    left: 50
+                },
+                expand: true,
+                position: "bottomright"
+            });
+            hg.addTo(map);
+            hg.addData(geojson);
         }
     };
     map.spin(true);
