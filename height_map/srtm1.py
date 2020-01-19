@@ -2,6 +2,7 @@ import struct
 from math import floor, ceil
 import json
 import os
+import logging
 from height_map.dgm200 import calculate_distance
 
 NCOLS = 3601
@@ -232,8 +233,8 @@ def get_height(lat, lon):
             # turn indices back to coordinates
             lat_found = get_lat_from_index(i, yllcenter)
             lon_found = get_lon_from_index(j, xllcenter)
-#    elif not (lat > 60 or lat < -56) and file_name in srtm1_file_list:
-#        print('SRTM1: missing file', file_name)
+    elif not (lat > 60 or lat < -56) and file_name in srtm1_file_list:
+        logging.debug(f'SRTM1: missing file {file_name} for ({lat}, {lon})')
     return {
         'latitude': lat, 'longitude': lon,
         'latitude_found': round(lat_found, 6),
@@ -242,8 +243,12 @@ def get_height(lat, lon):
         lon, lat_found, lon_found), 3), 'attribution': attribution}
 
 def get_filename(yllcenter, xllcenter):
-    if (xllcenter >= 0):
+    if yllcenter >= 0 and xllcenter >= 0:
         filename = "N{:02.0f}E{:03.0f}.hgt".format(yllcenter, xllcenter)
-    else:
+    elif yllcenter >= 0 and xllcenter < 0:
         filename = "N{:02.0f}W{:03.0f}.hgt".format(yllcenter, -xllcenter)
-    return filename    
+    elif yllcenter < 0 and xllcenter >= 0:
+        filename = "S{:02.0f}E{:03.0f}.hgt".format(-yllcenter, xllcenter)
+    elif yllcenter < 0 and xllcenter < 0:
+        filename = "S{:02.0f}W{:03.0f}.hgt".format(-yllcenter, -xllcenter)
+    return filename
