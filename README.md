@@ -64,6 +64,12 @@ http://maps.elie.ucl.ac.be/CCI/viewer/download.php
 
 Download ftp://geo10.elie.ucl.ac.be/v207/ESACCI-LC-L4-WB-Ocean-Land-Map-150m-P13Y-2000-v4.0.tif and put it to height_map/maps/cci_wb4 .
 
+### NZ Railway Network
+
+A GeoJSON shapefile describing the New Zealand railway network published by KiwiRail. 
+
+https://catalogue.data.govt.nz/dataset/nz-railway-network
+
 ## Startup of the web interface
 
 The web interface and API is hosted using FastAPI. It could also be run as a Docker container.
