@@ -8,7 +8,7 @@ gunicorn cython numpy h5py gdal shapely
 
 ### pip
 
-pygeodesy geojson fastapi uvicorn aiofiles rdp
+pygeodesy geojson fastapi uvicorn aiofiles simplification
 
 ## Data Sources
 

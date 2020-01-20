@@ -3,7 +3,7 @@ FROM debian:buster
 RUN apt-get -y update &&  \
     apt-get -y install python3-pip python3-gdal wget && \
     pip3 install uvicorn gunicorn fastapi aiofiles shapely geojson numpy \
-    pygeodesy cython h5py rdp
+    pygeodesy cython h5py simplification
 COPY ./start.sh /start.sh
 RUN chmod +x /start.sh
 

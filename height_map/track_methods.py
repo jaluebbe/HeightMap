@@ -1,9 +1,14 @@
+import time
+import logging
 from pydantic import BaseModel, confloat, constr, conlist
 from typing import List
 from geojson import FeatureCollection, Feature, LineString
 import pygeodesy.ellipsoidalVincenty as eV
-from rdp import rdp
+from simplification.cutil import simplify_coords
 import height_map.height_info as hi
+from height_map.timeit import timeit
+
+logger = logging.getLogger(__name__)
 
 class Location(BaseModel):
     lat: confloat(ge=-90, le=90)
@@ -13,6 +18,7 @@ class PositionRequest(BaseModel):
     track: List[Location]
     distance: confloat(ge=0)
 
+@timeit
 def get_track_length(track: List[Location]):
     distance = 0
     old_location = None
@@ -23,6 +29,7 @@ def get_track_length(track: List[Location]):
         old_location = current_location
     return round(distance, 3)
 
+@timeit
 def get_track_position(data: PositionRequest):
     distance = 0
     old_location = None
@@ -44,6 +51,7 @@ class ElevationRequest(BaseModel):
     water: bool=False
     short_latlon: bool=True
 
+@timeit
 def get_track_elevation(data: ElevationRequest):
     new_track = []
     replacements = {'latitude': 'lat', 'longitude': 'lon',
@@ -62,9 +70,10 @@ class SimplifyRequest(BaseModel):
     track: List[Location]
     epsilon: confloat(ge=0) = 0
 
+@timeit
 def get_simplified_track(data: SimplifyRequest):
     input_track = [[_t.lon, _t.lat] for _t in data.track]
-    simplified_track = rdp(input_track, epsilon=data.epsilon)
+    simplified_track = simplify_coords(input_track, epsilon=data.epsilon)
     output_track = [{'lat': y,'lon': x} for x, y in simplified_track]
     return output_track
 
@@ -73,6 +82,7 @@ class ResamplingRequest(BaseModel):
     step: confloat(gt=0)
     include_existing_points: bool = True
 
+@timeit
 def get_resampled_track(data: ResamplingRequest):
     new_track = []
     distance = 0
@@ -117,6 +127,7 @@ class GeoJSONRequest(BaseModel):
     properties: dict
     geometry: GeoJSONLineString
 
+@timeit
 def geojson_get_height_graph_data(data: GeoJSONRequest):
     track = [Location(lat=pt[1], lon=pt[0]) for pt in data.geometry.coordinates]
     _track = get_simplified_track(SimplifyRequest(track=track, epsilon=0.0001))
