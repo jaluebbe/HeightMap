@@ -5,6 +5,7 @@ import height_map.terr50 as terr50
 import height_map.earth2014 as earth2014
 import height_map.gebco_2019 as gebco_2019
 from height_map.cci_water_bodies_v4 import WaterBodies
+
 wb = WaterBodies()
 attribution_name = 'height_info'
 NODATA = -32768
@@ -18,8 +19,6 @@ def get_height(lat, lon, water=True):
     :param water: bool -- Should water surface be reported as 0m?
     :returns: dict
     """
-    gebco_2019_result = gebco_2019.get_height(lat, lon)
-    h_gebco_2019 = gebco_2019_result['altitude_m']
     wb_label = wb.get_data_at_position(lat, lon)['label']
     is_ocean = wb_label == 'Ocean'
     dist_dgm200 = dgm200.get_closest_distance(lat, lon)[0]
@@ -45,6 +44,7 @@ def get_height(lat, lon, water=True):
         # prefer sea floor bathymetry if possible
         dgm200_result['wb_label'] = wb_label
         return dgm200_result
+    gebco_2019_result = gebco_2019.get_height(lat, lon)
     if gebco_2019_result['altitude_m'] != gebco_2019.NODATA:
         gebco_2019_result['wb_label'] = wb_label
         return gebco_2019_result
