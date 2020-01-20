@@ -5,6 +5,7 @@ import time
 from pygeodesy import ellipsoidalVincenty as eV
 from pygeodesy import toOsgr, parseOSGR, Osgr
 from height_map.dgm200 import calculate_distance
+
 CELLSIZE = 50
 NCOLS = 200
 NROWS = 200
@@ -56,6 +57,10 @@ def get_osgr_from_indices(x, y, filename):
     return osgr
 
 def get_height(lat, lon):
+    if lat < 49.7 or lat > 62 or lon < -10 or lon > 4:
+        return {
+            'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,
+            'lon': lon, 'distance_m': 0, 'attribution': attribution}
     try:
         osgr = toOsgr(eV.LatLon(lat, lon))
         if len(osgr.toStr()) == 0:
