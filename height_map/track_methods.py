@@ -59,7 +59,7 @@ def get_track_elevation(data: ElevationRequest):
     for _location in data.track:
         response = hi.get_height(_location.lat, _location.lon, water=data.water)
         for key in ['attribution',]:
-            del response[key]
+            response.pop(key, None)
         if data.short_latlon:
             for old_key, new_key in replacements.items():
                 response[new_key] = response.pop(old_key)
