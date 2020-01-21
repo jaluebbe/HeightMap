@@ -20,6 +20,7 @@ CELLSIZE = 1./240
 XLLCENTER = -180.
 YLLCENTER = -90.
 NODATA = -32768
+old_data = {}
 
 def get_index_from_latitude(lat):
     return max(min(int(round((lat - YLLCENTER) / CELLSIZE)), (NROWS - 1)), 0)
@@ -40,15 +41,20 @@ def get_height(lat, lon):
     val = NODATA
     lat_found = lat
     lon_found = lon
-    if os.path.isfile(file):
-        i = get_index_from_latitude(lat)
-        j = get_index_from_longitude(lon)
-        lat_found = get_lat_from_index(i)
-        lon_found = get_lon_from_index(j)
+    i = get_index_from_latitude(lat)
+    j = get_index_from_longitude(lon)
+    lat_found = get_lat_from_index(i)
+    lon_found = get_lon_from_index(j)
+    if old_data.get('i') == i and old_data.get('j') == j:
+        # same grid position, file access not necessary
+        val = old_data['val']
+    elif os.path.isfile(file):
         with h5py.File(file, 'r') as f:
             val = round(float(f['elevation'][i][j]), 2)
+        old_data.update({'i': i, 'j': j, 'val': val})
     return {
-        'latitude': lat, 'longitude': lon, 'latitude_found': round(lat_found, 6),
+        'latitude': lat, 'longitude': lon,
+        'latitude_found': round(lat_found, 6),
         'longitude_found': round(lon_found, 6), 'altitude_m': val,
         'source': attribution_name, 'distance_m': round(calculate_distance(lat,
         lon, lat_found, lon_found), 3), 'attribution': attribution}
