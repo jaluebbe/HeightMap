@@ -83,14 +83,9 @@ gunicorn -w8 -b 0.0.0.0:8000 backend_fastapi:app -k uvicorn.workers.UvicornWorke
 docker build -t heightmap ./
 docker run -d -p 8000:80 --mount src=`pwd`/height_map/maps,target=/app/height_map/maps,type=bind heightmap
 ```
-or for the alpine based image which consumes less disk space:
-```
-docker build -t heightmap:alpine -f Dockerfile.alpine ./
-docker run -d -p 8000:80 --mount src=`pwd`/height_map/maps,target=/app/height_map/maps,type=bind heightmap:alpine
-```
 ### Downloading images from hub.docker.com
 Instead of building the image, you may try to download it from hub.docker.com. 
-Simply use jaluebbe/heightmap or jaluebbe/heightmap:alpine as image to run.
+Simply use jaluebbe/heightmap as image to run.
 
 ### Additional mounting options
 You may add you own imprint and/or privacy statement by adding
