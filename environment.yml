@@ -1,0 +1,16 @@
+name: heightmap
+dependencies:
+  - python=3
+  - gunicorn
+  - cython
+  - numpy
+  - h5py
+  - gdal
+  - pip
+  - pip:
+    - pygeodesy
+    - geojson
+    - fastapi
+    - uvicorn
+    - aiofiles
+    - simplification
