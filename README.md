@@ -85,7 +85,7 @@ gunicorn -w8 -b 0.0.0.0:8000 backend_fastapi:app -k uvicorn.workers.UvicornWorke
 ### Build and run as a Docker container
 ```
 docker build -t heightmap ./
-docker run -d -p 8000:80 --mount src=`pwd`/height_map/maps,target=/app/height_map/maps,type=bind heightmap
+docker run -d -p 8000:80 --mount src=`pwd`/height_map/maps,target=/app/height_map/maps,type=bind,consistency=cached heightmap
 ```
 ### Downloading images from hub.docker.com
 Instead of building the image, you may try to download it from hub.docker.com. 
