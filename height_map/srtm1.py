@@ -17,6 +17,7 @@ attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,
     attribution_name)
 
 precision = 16.0  # 16m SRTM vertical error
+old_file = {'file': None, 'file_name': None}
 
 if os.path.isfile(os.path.join(path, 'srtm1_files.json')):
     with open(os.path.join(path, 'srtm1_files.json')) as srtm1_list_file:
@@ -223,16 +224,21 @@ def get_height(lat, lon):
         # gdallocationinfo N52W002.hgt -wgs84 -1.215090 52.925315
         i = get_index_from_latitude(lat, yllcenter)
         j = get_index_from_longitude(lon, xllcenter)
-        with open(fullpath, "rb") as f:
-            # go to the right spot,
-            f.seek((i*NCOLS + j) * 2)
-            # read two bytes and convert them:
-            buf = f.read(2)
-            # ">h" is a signed two byte integer
-            val = struct.unpack('>h', buf)[0]
-            # turn indices back to coordinates
-            lat_found = get_lat_from_index(i, yllcenter)
-            lon_found = get_lon_from_index(j, xllcenter)
+        if old_file['file_name'] == file_name:
+            f = old_file['file']
+        else:
+            f = open(fullpath, "rb")
+            old_file['file_name'] = file_name
+            old_file['file'] = f
+        # go to the right spot,
+        f.seek((i*NCOLS + j) * 2)
+        # read two bytes and convert them:
+        buf = f.read(2)
+        # ">h" is a signed two byte integer
+        val = struct.unpack('>h', buf)[0]
+        # turn indices back to coordinates
+        lat_found = get_lat_from_index(i, yllcenter)
+        lon_found = get_lon_from_index(j, xllcenter)
     elif not (lat > 60 or lat < -56) and file_name in srtm1_file_list:
         logging.debug(f'SRTM1: missing file {file_name} for ({lat}, {lon})')
     return {
