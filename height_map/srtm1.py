@@ -38,6 +38,8 @@ def get_lon_from_index(j, xllcenter):
     return j*CELLSIZE + xllcenter
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
+    old_file['file_name'] = None
+    old_file['file'] = None
     xllcenter = floor(lon_ll)
     yllcenter = floor(lat_ll)
     total_location = []
@@ -122,6 +124,8 @@ def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
     return (total_location, total_h_max, total_counter)
 
 def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
+    old_file['file_name'] = None
+    old_file['file'] = None
     xllcenter = floor(lon_ll)
     yllcenter = floor(lat_ll)
     total_location = []
