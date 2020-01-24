@@ -6,7 +6,7 @@ if __name__ == "__main__":
     print('London, riverside:', wb.get_data_at_position(51.5, -0.12)['label'])
     print('Black Forest:', wb.get_data_at_position(47.94, 8.3)['label'])
     print('high moor in Emsland region:', wb.get_data_at_position(52.8, 7.4)['label'])
-    print('Naples harbour:', wb.get_data_at_position(40.836346,14.261627)['label'])
+    print('Naples harbour:', wb.get_data_at_position(40.836346, 14.261627)['label'])
     print('precision test:', wb.get_data_at_position(52.123456, 8.123456)['label'])
     print('Salt Lake City:', wb.get_data_at_position(40.8, -112)['label'])
     print('Tokyo:', wb.get_data_at_position(35.68, 139.77)['label'])
