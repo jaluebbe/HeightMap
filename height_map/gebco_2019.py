@@ -42,6 +42,12 @@ class Gebco2019:
     cache_path = pwd
     cache_filename = 'gebco_2019_cache.json'
     old_data = {}
+    h5_file = None
+
+    def __init__(self):
+        file = os.path.join(self.path, self.filename)
+        if os.path.isfile(file):
+            self.h5_file = h5py.File(file, 'r')
 
     def get_height(self, lat, lon):
         if not (-90 <= lat <= 90 and -180 <= 90 <= 180):
@@ -52,12 +58,13 @@ class Gebco2019:
         j = get_index_from_longitude(lon)
         lat_found = get_lat_from_index(i)
         lon_found = get_lon_from_index(j)
-        if self.old_data.get('i') == i and self.old_data.get('j') == j:
+        if self.h5_file is None:
+            pass
+        elif self.old_data.get('i') == i and self.old_data.get('j') == j:
             # same grid position, file access not necessary
             val = self.old_data['val']
-        elif os.path.isfile(file):
-            with h5py.File(file, 'r') as f:
-                val = round(float(f['elevation'][i][j]), 2)
+        else:
+            val = round(float(self.h5_file['elevation'][i][j]), 2)
             self.old_data.update({'i': i, 'j': j, 'val': val})
         return {
             'lat': lat, 'lon': lon, 'lat_found': round(lat_found, 6),
@@ -137,15 +144,13 @@ class Gebco2019:
         h_max = NODATA
         location_max = []
         counter = 0
-        file = os.path.join(self.path, self.filename)
-        if os.path.isfile(file) and i_ll < i_ur and j_ll < j_ur:
-            with h5py.File(file, 'r') as f:
-                selection = f['elevation'][i_ll:i_ur, j_ll:j_ur]
-                h_max = selection.max()
-                x, y = np.where(selection == h_max)
-                counter = len(x)
-                for _index in range(counter):
-                    location_max += [(i_ll+x[_index], j_ll+y[_index])]
+        if self.h5_file is not None and i_ll < i_ur and j_ll < j_ur:
+            selection = self.h5_file['elevation'][i_ll:i_ur, j_ll:j_ur]
+            h_max = selection.max()
+            x, y = np.where(selection == h_max)
+            counter = len(x)
+            for _index in range(counter):
+                location_max += [(i_ll+x[_index], j_ll+y[_index])]
         return location_max, round(float(h_max), 1), counter
 
     def get_max_height(self, lat_ll, lon_ll, lat_ur, lon_ur):
@@ -236,15 +241,13 @@ class Gebco2019:
         h_min = -NODATA
         location_min = []
         counter = 0
-        file = os.path.join(self.path, self.filename)
-        if os.path.isfile(file) and i_ll < i_ur and j_ll < j_ur:
-            with h5py.File(file, 'r') as f:
-                selection = f['elevation'][i_ll:i_ur, j_ll:j_ur]
-                h_min = selection.min()
-                x, y = np.where(selection == h_min)
-                counter = len(x)
-                for _index in range(counter):
-                    location_min += [(i_ll+x[_index], j_ll+y[_index])]
+        if self.h5_file is not None and i_ll < i_ur and j_ll < j_ur:
+            selection = self.h5_file['elevation'][i_ll:i_ur, j_ll:j_ur]
+            h_min = selection.min()
+            x, y = np.where(selection == h_min)
+            counter = len(x)
+            for _index in range(counter):
+                location_min += [(i_ll+x[_index], j_ll+y[_index])]
         return location_min, round(float(h_min), 1), counter
 
     def get_min_height(self, lat_ll, lon_ll, lat_ur, lon_ur):
