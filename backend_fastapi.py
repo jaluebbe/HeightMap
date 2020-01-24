@@ -88,30 +88,30 @@ def get_min_max_height(
 
 
 @app.post("/api/get_track_length")
-def post_get_track_length(track: List[Location]):
+def post_get_track_length(track: tm.List[tm.Location]):
     return tm.get_track_length(track)
 
 
 @app.post("/api/get_track_position")
-def post_get_track_position(data: PositionRequest):
+def post_get_track_position(data: tm.PositionRequest):
     return tm.get_track_position(data)
 
 
 @app.post("/api/get_track_elevation")
-def post_get_track_elevation(data: ElevationRequest):
+def post_get_track_elevation(data: tm.ElevationRequest):
     return tm.get_track_elevation(data)
 
 
 @app.post("/api/get_simplified_track")
-def post_get_simplified_track(data: SimplifyRequest):
+def post_get_simplified_track(data: tm.SimplifyRequest):
     return tm.get_simplified_track(data)
 
 
 @app.post("/api/get_resampled_track")
-def post_get_resampled_track(data: ResamplingRequest):
+def post_get_resampled_track(data: tm.ResamplingRequest):
     return tm.get_resampled_track(data)
 
 
 @app.post("/api/geojson/get_height_graph_data")
-def post_geojson_get_height_graph_data(data: GeoJSONRequest):
+def post_geojson_get_height_graph_data(data: tm.GeoJSONRequest):
     return tm.geojson_get_height_graph_data(data)
