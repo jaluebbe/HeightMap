@@ -12,15 +12,15 @@ import height_map.height_info as height_info
 
 def get_height(lat, lon):
 
-    srtm1_result = srtm1.get_height(lat,lon)
+    srtm1_result = srtm1.get_height(lat, lon)
     terr50_result = terr50.get_height(lat, lon)
     dgm200_result = dgm200.get_height(lat, lon)
-    etopo1_result = etopo1.get_height(lat,lon)
-    etopo1bed_result = etopo1.get_height(lat,lon,ice=False)
-    earth2014_result = earth2014.get_height(lat,lon)
-    gebco_2019_result = gebco_2019.get_height(lat,lon)
+    etopo1_result = etopo1.get_height(lat, lon)
+    etopo1bed_result = etopo1.get_height(lat, lon, ice=False)
+    earth2014_result = earth2014.get_height(lat, lon)
+    gebco_2019_result = gebco_2019.get_height(lat, lon)
 
-    results = {'request': {'latitude': lat, 'longitude': lon}}
+    results = {'request': {'lat': lat, 'lon': lon}}
     if srtm1_result['altitude_m'] != srtm1.NODATA:
         results['SRTM1'] = srtm1_result
     if terr50_result['altitude_m'] != terr50.NODATA:
@@ -37,7 +37,7 @@ def get_height(lat, lon):
         results['Earth2014'] = earth2014_result
     if gebco_2019_result['altitude_m'] != gebco_2019.NODATA:
         results['GEBCO_2019'] = gebco_2019_result
-    results['height_info'] = height_info.get_height(lat,lon)
+    results['height_info'] = height_info.get_height(lat, lon)
     return results
 
 def test_height(lat, lon, sources, name=''):

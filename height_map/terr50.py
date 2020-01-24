@@ -59,7 +59,7 @@ def get_osgr_from_indices(x, y, filename):
 def get_height(lat, lon):
     if lat < 49.7 or lat > 62 or lon < -10 or lon > 4:
         return {
-            'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,
+            'altitude_m': NODATA, 'source': attribution_name, 'lat': lat,
             'lon': lon, 'distance_m': 0, 'attribution': attribution}
     try:
         osgr = toOsgr(eV.LatLon(lat, lon))
@@ -67,7 +67,7 @@ def get_height(lat, lon):
             raise ValueError('not a valid OSGR coordinate')
     except ValueError as e:
         return {
-            'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,
+            'altitude_m': NODATA, 'source': attribution_name, 'lat': lat,
             'lon': lon, 'distance_m': 0, 'attribution': attribution}
     # fit request to the grid
     osgr = osgr_to_grid(osgr)
@@ -78,8 +78,8 @@ def get_height(lat, lon):
     full_path = os.path.join(path, filename[:2].lower(), filename)
     if not os.path.isfile(full_path):
         return {
-            'altitude_m': NODATA, 'source': attribution_name, 'latitude': lat,
-            'longitude': lon, 'distance_m': 0, 'attribution': attribution}
+            'altitude_m': NODATA, 'source': attribution_name, 'lat': lat,
+            'lon': lon, 'distance_m': 0, 'attribution': attribution}
     x = get_x(osgr)
     y = get_y(osgr)
     with open(full_path, "rb") as f:
@@ -90,9 +90,9 @@ def get_height(lat, lon):
         # ">f" is a four byte float
         val = struct.unpack('>f', buf)[0]
         return {
-            'latitude': lat, 'longitude': lon, 'latitude_found': round(
-            lat_found, 6), 'longitude_found': round(lon_found, 6),
-            'altitude_m': round(val, 2), 'source': attribution_name,
+            'lat': lat, 'lon': lon, 'lat_found': round(lat_found, 6),
+            'lon_found': round(lon_found, 6), 'altitude_m': round(val, 2),
+            'source': attribution_name,
             'distance_m': round(calculate_distance(lat, lon, lat_found,
             lon_found), 3), 'attribution': attribution}
 

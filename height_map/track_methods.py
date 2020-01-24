@@ -1,4 +1,3 @@
-import time
 import logging
 from pydantic import BaseModel, confloat, constr, conlist
 from typing import List
@@ -49,20 +48,14 @@ def get_track_position(data: PositionRequest):
 class ElevationRequest(BaseModel):
     track: List[Location]
     water: bool=False
-    short_latlon: bool=True
 
 @timeit
 def get_track_elevation(data: ElevationRequest):
     new_track = []
-    replacements = {'latitude': 'lat', 'longitude': 'lon',
-        'latitude_found': 'lat_found', 'longitude_found': 'lon_found'}
     for _location in data.track:
         response = hi.get_height(_location.lat, _location.lon, water=data.water)
         for key in ['attribution',]:
             response.pop(key, None)
-        if data.short_latlon:
-            for old_key, new_key in replacements.items():
-                response[new_key] = response.pop(old_key)
         new_track.append(response)
     return new_track
 

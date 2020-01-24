@@ -40,7 +40,7 @@ function requestHeight(e) {
             if (!map.getBounds().contains(e.latlng)) {
                 map.setView(e.latlng);
             }
-            myPolyline.setLatLngs([e.latlng, [height_info.latitude_found, height_info.longitude_found]]);
+            myPolyline.setLatLngs([e.latlng, [height_info.lat_found, height_info.lon_found]]);
 	    info.updateElevation(height_info.altitude_m, height_info.source);
             map.attributionControl.addAttribution(height_info.attribution);
         }

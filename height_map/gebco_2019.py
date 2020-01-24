@@ -53,9 +53,8 @@ def get_height(lat, lon):
             val = round(float(f['elevation'][i][j]), 2)
         old_data.update({'i': i, 'j': j, 'val': val})
     return {
-        'latitude': lat, 'longitude': lon,
-        'latitude_found': round(lat_found, 6),
-        'longitude_found': round(lon_found, 6), 'altitude_m': val,
+        'lat': lat, 'lon': lon, 'lat_found': round(lat_found, 6),
+        'lon_found': round(lon_found, 6), 'altitude_m': val,
         'source': attribution_name, 'distance_m': round(calculate_distance(lat,
         lon, lat_found, lon_found), 3), 'attribution': attribution}
 

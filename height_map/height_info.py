@@ -53,8 +53,8 @@ def get_height(lat, lon, water=True):
         earth2014_result['wb_label'] = wb_label
         return earth2014_result
     else:
-        return {'altitude_m': NODATA, 'latitude': lat, 'longitude': lon,
-            'distance_m': 0, 'source': 'NODATA', 'wb_label': wb_label}
+        return {'altitude_m': NODATA, 'lat': lat, 'lon': lon, 'distance_m': 0,
+            'source': 'NODATA', 'wb_label': wb_label}
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
     for source in [terr50, srtm1, dgm200, gebco_2019, earth2014]:

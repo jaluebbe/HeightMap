@@ -246,9 +246,8 @@ def get_height(lat, lon):
     elif not (lat > 60 or lat < -56) and file_name in srtm1_file_list:
         logging.debug(f'SRTM1: missing file {file_name} for ({lat}, {lon})')
     return {
-        'latitude': lat, 'longitude': lon,
-        'latitude_found': round(lat_found, 6),
-        'longitude_found': round(lon_found,6), 'altitude_m': val,
+        'lat': lat, 'lon': lon, 'lat_found': round(lat_found, 6),
+        'lon_found': round(lon_found, 6), 'altitude_m': val,
         'source': attribution_name, 'distance_m': round(calculate_distance(lat,
         lon, lat_found, lon_found), 3), 'attribution': attribution}
 
