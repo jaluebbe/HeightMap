@@ -2,8 +2,10 @@ from fastapi import FastAPI, Query, HTTPException
 from starlette.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 import geojson
-import height_map.height_info as hi
-from height_map.track_methods import *
+from height_map.height_info import HeightInfo
+import height_map.track_methods as tm
+
+hi = HeightInfo()
 
 app = FastAPI(
     openapi_prefix='',
@@ -87,29 +89,29 @@ def get_min_max_height(
 
 @app.post("/api/get_track_length")
 def post_get_track_length(track: List[Location]):
-    return get_track_length(track)
+    return tm.get_track_length(track)
 
 
 @app.post("/api/get_track_position")
 def post_get_track_position(data: PositionRequest):
-    return get_track_position(data)
+    return tm.get_track_position(data)
 
 
 @app.post("/api/get_track_elevation")
 def post_get_track_elevation(data: ElevationRequest):
-    return get_track_elevation(data)
+    return tm.get_track_elevation(data)
 
 
 @app.post("/api/get_simplified_track")
 def post_get_simplified_track(data: SimplifyRequest):
-    return get_simplified_track(data)
+    return tm.get_simplified_track(data)
 
 
 @app.post("/api/get_resampled_track")
 def post_get_resampled_track(data: ResamplingRequest):
-    return get_resampled_track(data)
+    return tm.get_resampled_track(data)
 
 
 @app.post("/api/geojson/get_height_graph_data")
 def post_geojson_get_height_graph_data(data: GeoJSONRequest):
-    return geojson_get_height_graph_data(data)
+    return tm.geojson_get_height_graph_data(data)

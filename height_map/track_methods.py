@@ -4,10 +4,11 @@ from typing import List
 from geojson import FeatureCollection, Feature, LineString
 import pygeodesy.ellipsoidalVincenty as eV
 from simplification.cutil import simplify_coords
-import height_map.height_info as hi
+from height_map.height_info import HeightInfo
 from height_map.timeit import timeit
 
 logger = logging.getLogger(__name__)
+hi = HeightInfo()
 
 
 class Location(BaseModel):
