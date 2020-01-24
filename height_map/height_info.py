@@ -1,4 +1,3 @@
-import os
 import height_map.srtm1 as srtm1
 import height_map.dgm200 as dgm200
 import height_map.terr50 as terr50
@@ -9,6 +8,7 @@ from height_map.cci_water_bodies_v4 import WaterBodies
 wb = WaterBodies()
 attribution_name = 'height_info'
 NODATA = -32768
+
 
 def get_height(lat, lon, water=True):
     """
@@ -21,10 +21,9 @@ def get_height(lat, lon, water=True):
     """
     wb_label = wb.get_data_at_position(lat, lon)['label']
     is_ocean = wb_label == 'Ocean'
-    dist_dgm200 = dgm200.get_closest_distance(lat, lon)[0]
     dgm200_result = dgm200.get_height(lat, lon)
     if (dgm200_result['distance_m'] < 25) and (
-        dgm200_result['altitude_m'] != dgm200.NODATA) and not is_ocean:
+            dgm200_result['altitude_m'] != dgm200.NODATA) and not is_ocean:
         # prefer sea floor bathymetry if possible
         dgm200_result['wb_label'] = wb_label
         return dgm200_result
@@ -56,12 +55,14 @@ def get_height(lat, lon, water=True):
         return {'altitude_m': NODATA, 'lat': lat, 'lon': lon, 'distance_m': 0,
             'source': 'NODATA', 'wb_label': wb_label}
 
+
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
     for source in [terr50, srtm1, dgm200, gebco_2019, earth2014]:
         result = source.get_max_height(lat_ll, lon_ll, lat_ur, lon_ur)
         (location_max, h_max, counter) = result
         if h_max != source.NODATA:
             return result
+
 
 def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
     for source in [terr50, srtm1, dgm200, gebco_2019, earth2014]:

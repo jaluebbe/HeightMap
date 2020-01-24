@@ -9,13 +9,16 @@ from height_map.timeit import timeit
 
 logger = logging.getLogger(__name__)
 
+
 class Location(BaseModel):
     lat: confloat(ge=-90, le=90)
     lon: confloat(ge=-180, le=180)
 
+
 class PositionRequest(BaseModel):
     track: List[Location]
     distance: confloat(ge=0)
+
 
 @timeit
 def get_track_length(track: List[Location]):
@@ -27,6 +30,7 @@ def get_track_length(track: List[Location]):
             distance += old_location.distanceTo(current_location)
         old_location = current_location
     return round(distance, 3)
+
 
 @timeit
 def get_track_position(data: PositionRequest):
@@ -45,35 +49,41 @@ def get_track_position(data: PositionRequest):
         old_location = current_location
     return {}
 
+
 class ElevationRequest(BaseModel):
     track: List[Location]
-    water: bool=False
+    water: bool = False
+
 
 @timeit
 def get_track_elevation(data: ElevationRequest):
     new_track = []
     for _location in data.track:
         response = hi.get_height(_location.lat, _location.lon, water=data.water)
-        for key in ['attribution',]:
+        for key in ['attribution', ]:
             response.pop(key, None)
         new_track.append(response)
     return new_track
+
 
 class SimplifyRequest(BaseModel):
     track: List[Location]
     epsilon: confloat(ge=0) = 0
 
+
 @timeit
 def get_simplified_track(data: SimplifyRequest):
     input_track = [[_t.lon, _t.lat] for _t in data.track]
     simplified_track = simplify_coords(input_track, epsilon=data.epsilon)
-    output_track = [{'lat': y,'lon': x} for x, y in simplified_track]
+    output_track = [{'lat': y, 'lon': x} for x, y in simplified_track]
     return output_track
+
 
 class ResamplingRequest(BaseModel):
     track: List[Location]
     step: confloat(gt=0)
     include_existing_points: bool = True
+
 
 @timeit
 def get_resampled_track(data: ResamplingRequest):
@@ -111,14 +121,17 @@ def get_resampled_track(data: ResamplingRequest):
         new_track.append({'lat': last_item.lat, 'lon': last_item.lon})
     return new_track
 
+
 class GeoJSONLineString(BaseModel):
     type: constr(regex='LineString')
     coordinates: List[conlist(float, min_items=2, max_items=3)]
+
 
 class GeoJSONRequest(BaseModel):
     type: constr(regex='Feature')
     properties: dict
     geometry: GeoJSONLineString
+
 
 @timeit
 def geojson_get_height_graph_data(data: GeoJSONRequest):

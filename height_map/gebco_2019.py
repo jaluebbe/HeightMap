@@ -22,25 +22,28 @@ YLLCENTER = -90.
 NODATA = -32768
 old_data = {}
 
+
 def get_index_from_latitude(lat):
     return max(min(int(round((lat - YLLCENTER) / CELLSIZE)), (NROWS - 1)), 0)
+
 
 def get_index_from_longitude(lon):
     return int(round((lon - XLLCENTER) / CELLSIZE)) % NCOLS
 
+
 def get_lat_from_index(i):
     return i*CELLSIZE + YLLCENTER
 
+
 def get_lon_from_index(j):
     return j*CELLSIZE + XLLCENTER
+
 
 def get_height(lat, lon):
     if not (-90 <= lat <= 90 and -180 <= 90 <= 180):
         raise ValueError('invalid coordinates ({}, {})'.format(lat, lon))
     file = os.path.join(path, filename)
     val = NODATA
-    lat_found = lat
-    lon_found = lon
     i = get_index_from_latitude(lat)
     j = get_index_from_longitude(lon)
     lat_found = get_lat_from_index(i)
@@ -57,6 +60,7 @@ def get_height(lat, lon):
         'lon_found': round(lon_found, 6), 'altitude_m': val,
         'source': attribution_name, 'distance_m': round(calculate_distance(lat,
         lon, lat_found, lon_found), 3), 'attribution': attribution}
+
 
 def get_max_height_from_indices(i_ll, j_ll, i_ur, j_ur):
     i_ur = i_ur + 1
@@ -105,7 +109,8 @@ def get_max_height_from_indices(i_ll, j_ll, i_ur, j_ur):
             elif _h_max == h_max:
                 location_max += _location_max
                 counter += _counter
-    return (location_max, round(float(h_max), 1), counter)
+    return location_max, round(float(h_max), 1), counter
+
 
 def get_max_height_from_cache(i_ll, j_ll, i_ur, j_ur):
     h_max = NODATA
@@ -117,13 +122,14 @@ def get_max_height_from_cache(i_ll, j_ll, i_ur, j_ur):
             max_cache = np.array(json.load(f)['maximum'])
             selection = max_cache[i_ll:i_ur, j_ll:j_ur]
             h_max = selection.max()
-            x, y = np.where(selection==h_max)
+            x, y = np.where(selection == h_max)
             counter = len(x)
             for _index in range(counter):
                 location_max += [(i_ll+x[_index], j_ll+y[_index])]
     elif not os.path.isfile(cache_file):
         print('GEBCO_2019 min/max cache file is missing.')
-    return (location_max, round(float(h_max), 1), counter)
+    return location_max, round(float(h_max), 1), counter
+
 
 def get_max_height_from_h5file(i_ll, j_ll, i_ur, j_ur):
     h_max = NODATA
@@ -134,18 +140,19 @@ def get_max_height_from_h5file(i_ll, j_ll, i_ur, j_ur):
         with h5py.File(file, 'r') as f:
             selection = f['elevation'][i_ll:i_ur, j_ll:j_ur]
             h_max = selection.max()
-            x, y = np.where(selection==h_max)
+            x, y = np.where(selection == h_max)
             counter = len(x)
             for _index in range(counter):
                 location_max += [(i_ll+x[_index], j_ll+y[_index])]
-    return (location_max, round(float(h_max), 1), counter)
+    return location_max, round(float(h_max), 1), counter
+
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
     if lon_ur >= 180 - CELLSIZE/2:
         lon_ur -= CELLSIZE
     # consider only correctly defined rectangle:
-    if ((lat_ll > lat_ur) or (lon_ll > lon_ur)):
-        return ([], NODATA, 0)
+    if (lat_ll > lat_ur) or (lon_ll > lon_ur):
+        return [], NODATA, 0
     # convert coordinates to data indices:
     i_ll = get_index_from_latitude(lat_ll)
     j_ll = get_index_from_longitude(lon_ll)
@@ -155,7 +162,8 @@ def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
         i_ll, j_ll, i_ur, j_ur)
     location_max = [[get_lat_from_index(_x), get_lon_from_index(_y)]
         for (_x, _y) in location_max]
-    return (location_max, round(float(h_max), 1), counter)
+    return location_max, round(float(h_max), 1), counter
+
 
 def get_min_height_from_indices(i_ll, j_ll, i_ur, j_ur):
     i_ur = i_ur + 1
@@ -202,7 +210,8 @@ def get_min_height_from_indices(i_ll, j_ll, i_ur, j_ur):
             elif _h_min == h_min:
                 location_min += _location_min
                 counter += _counter
-    return (location_min, round(float(h_min), 1), counter)
+    return location_min, round(float(h_min), 1), counter
+
 
 def get_min_height_from_cache(i_ll, j_ll, i_ur, j_ur):
     h_min = -NODATA
@@ -214,13 +223,14 @@ def get_min_height_from_cache(i_ll, j_ll, i_ur, j_ur):
             min_cache = np.array(json.load(f)['minimum'])
             selection = min_cache[i_ll:i_ur, j_ll:j_ur]
             h_min = selection.min()
-            x, y = np.where(selection==h_min)
+            x, y = np.where(selection == h_min)
             counter = len(x)
             for _index in range(counter):
                 location_min += [(i_ll+x[_index], j_ll+y[_index])]
     elif not os.path.isfile(cache_file):
         print('GEBCO_2019 min/max cache file is missing.')
-    return (location_min, round(float(h_min), 1), counter)
+    return location_min, round(float(h_min), 1), counter
+
 
 def get_min_height_from_h5file(i_ll, j_ll, i_ur, j_ur):
     h_min = -NODATA
@@ -231,18 +241,19 @@ def get_min_height_from_h5file(i_ll, j_ll, i_ur, j_ur):
         with h5py.File(file, 'r') as f:
             selection = f['elevation'][i_ll:i_ur, j_ll:j_ur]
             h_min = selection.min()
-            x, y = np.where(selection==h_min)
+            x, y = np.where(selection == h_min)
             counter = len(x)
             for _index in range(counter):
                 location_min += [(i_ll+x[_index], j_ll+y[_index])]
-    return (location_min, round(float(h_min), 1), counter)
+    return location_min, round(float(h_min), 1), counter
+
 
 def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
     if lon_ur >= 180 - CELLSIZE/2:
         lon_ur -= CELLSIZE
     # consider only correctly defined rectangle:
-    if ((lat_ll > lat_ur) or (lon_ll > lon_ur)):
-        return ([], NODATA, 0)
+    if (lat_ll > lat_ur) or (lon_ll > lon_ur):
+        return [], NODATA, 0
     # convert coordinates to data indices:
     i_ll = get_index_from_latitude(lat_ll)
     j_ll = get_index_from_longitude(lon_ll)
@@ -254,4 +265,4 @@ def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
         for (_x, _y) in location_min]
     if h_min == -NODATA:
         h_min = NODATA
-    return (location_min, round(float(h_min), 1), counter)
+    return location_min, round(float(h_min), 1), counter

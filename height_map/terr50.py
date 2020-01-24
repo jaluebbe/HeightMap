@@ -30,24 +30,30 @@ else:
 
 precision = 4.0  # RMS error
 
+
 def get_x(osgr):
     return int(osgr.easting % (NCOLS * CELLSIZE) // CELLSIZE)
 
+
 def get_y(osgr):
     return int(NROWS - 1 - osgr.northing % (NROWS * CELLSIZE) // CELLSIZE)
+
 
 def osgr_to_grid(osgr):
     return Osgr(osgr.easting - (osgr.easting % CELLSIZE),
         osgr.northing - (osgr.northing % CELLSIZE))
 
+
 def get_filename(osgr):
     filename = osgr.toStr(prec=2, sep='') + '.bin'
     return filename
 
+
 def get_lat_lon_from_indices(x, y, filename):
     osgr = get_osgr_from_indices(x+1, y, filename)
     latlon = osgr.toLatLon(eV.LatLon)
-    return (latlon.lat, latlon.lon)
+    return latlon.lat, latlon.lon
+
 
 def get_osgr_from_indices(x, y, filename):
     easting = (x + int(filename[-6])*NCOLS) * CELLSIZE
@@ -55,6 +61,7 @@ def get_osgr_from_indices(x, y, filename):
     letters = filename[-8:-6]
     osgr = parseOSGR('{}{:05d}{:05d}'.format(letters, easting, northing))
     return osgr
+
 
 def get_height(lat, lon):
     if lat < 49.7 or lat > 62 or lon < -10 or lon > 4:
@@ -65,7 +72,7 @@ def get_height(lat, lon):
         osgr = toOsgr(eV.LatLon(lat, lon))
         if len(osgr.toStr()) == 0:
             raise ValueError('not a valid OSGR coordinate')
-    except ValueError as e:
+    except ValueError:
         return {
             'altitude_m': NODATA, 'source': attribution_name, 'lat': lat,
             'lon': lon, 'distance_m': 0, 'attribution': attribution}
@@ -96,61 +103,57 @@ def get_height(lat, lon):
             'distance_m': round(calculate_distance(lat, lon, lat_found,
             lon_found), 3), 'attribution': attribution}
 
+
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
     # consider only correctly defined rectangle:
-    if (lat_ll > lat_ur or lon_ll > lon_ur):
-        return ([], NODATA, 0)
+    if lat_ll > lat_ur or lon_ll > lon_ur:
+        return [], NODATA, 0
     try:
         osgr_ll = toOsgr(eV.LatLon(lat_ll, lon_ll))
         if len(osgr_ll.toStr()) == 0:
             raise ValueError('not a valid OSGR coordinate')
-    except ValueError as e:
-        return ([], NODATA, 0)
+    except ValueError:
+        return [], NODATA, 0
     try:
         osgr_ur = toOsgr(eV.LatLon(lat_ur, lon_ur))
         if len(osgr_ur.toStr()) == 0:
             raise ValueError('not a valid OSGR coordinate')
-    except ValueError as e:
-        return ([], NODATA, 0)
+    except ValueError:
+        return [], NODATA, 0
     file_list = {}
     create_filelist(osgr_ll, osgr_ur, file_list)
-    raw_length = len(file_list)
-    lowest_max = check_max_list(file_list)
-    new_length = len(file_list)
     (osgr_list, h_max, counter) = check_max_files(file_list)
     latlon_list = []
     for osgr in osgr_list:
         latlon = osgr.toLatLon(eV.LatLon)
         latlon_list += [(latlon.lat, latlon.lon)]
-    return (latlon_list, h_max, counter)
+    return latlon_list, h_max, counter
+
 
 def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
     # consider only correctly defined rectangle:
-    if (lat_ll > lat_ur or lon_ll > lon_ur):
-        return ([], NODATA, 0)
+    if lat_ll > lat_ur or lon_ll > lon_ur:
+        return [], NODATA, 0
     try:
         osgr_ll = toOsgr(eV.LatLon(lat_ll, lon_ll))
         if len(osgr_ll.toStr()) == 0:
             raise ValueError('not a valid OSGR coordinate')
-    except ValueError as e:
-        return ([], NODATA, 0)
+    except ValueError:
+        return [], NODATA, 0
     try:
         osgr_ur = toOsgr(eV.LatLon(lat_ur, lon_ur))
         if len(osgr_ur.toStr()) == 0:
             raise ValueError('not a valid OSGR coordinate')
-    except ValueError as e:
-        return ([], NODATA, 0)
+    except ValueError:
+        return [], NODATA, 0
     file_list = {}
     create_filelist(osgr_ll, osgr_ur, file_list)
-    raw_length = len(file_list)
-    largest_min = check_min_list(file_list)
-    new_length = len(file_list)
     (osgr_list, h_min, counter) = check_min_files(file_list)
     latlon_list = []
     for osgr in osgr_list:
         latlon = osgr.toLatLon(eV.LatLon)
         latlon_list += [(latlon.lat, latlon.lon)]
-    return (latlon_list, h_min, counter)
+    return latlon_list, h_min, counter
 
 
 def check_max_list(file_list):
@@ -165,12 +168,13 @@ def check_max_list(file_list):
             del file_list[filename]
     return h_max
 
+
 def check_min_list(file_list):
     h_min = -NODATA
     for filename, list_item in file_list.items():
         cache_data = map_cache.get(filename)
         if list_item['complete']:
-            if (NODATA < cache_data['h_min'] < h_min):
+            if NODATA < cache_data['h_min'] < h_min:
                 h_min = cache_data['h_min']
     for filename in list(file_list.keys()):
         cache_data = map_cache.get(filename)
@@ -179,6 +183,7 @@ def check_min_list(file_list):
     if h_min == -NODATA:
         h_min = NODATA
     return h_min
+
 
 def check_max_files(file_list):
     h_max = NODATA
@@ -193,12 +198,12 @@ def check_max_files(file_list):
         y_pos = y_ur
         full_path = os.path.join(path, filename[:2].lower(), filename)
         with open(full_path, "rb") as f:
-            while(y_ur <= y_pos <= y_ll):
+            while y_ur <= y_pos <= y_ll:
                 f.seek((y_pos * NCOLS + x_pos) * 4)
                 num_values = x_ur - x_ll + 1
                 buf = f.read(num_values * 4)
                 values = struct.unpack('>{:d}f'.format(num_values), buf)
-                while(x_ll <= x_pos <=x_ur):
+                while x_ll <= x_pos <= x_ur:
                     # if current height value larger than previous maximum
                     if values[x_pos - x_ll] > h_max:
                         # store current height
@@ -213,7 +218,8 @@ def check_max_files(file_list):
                     x_pos += 1
                 x_pos = x_ll
                 y_pos += 1
-    return (osgr_list, h_max, counter)
+    return osgr_list, h_max, counter
+
 
 def check_min_files(file_list):
     h_min = -NODATA
@@ -228,20 +234,20 @@ def check_min_files(file_list):
         y_pos = y_ur
         full_path = os.path.join(path, filename[:2].lower(), filename)
         with open(full_path, "rb") as f:
-            while(y_ur <= y_pos <= y_ll):
+            while y_ur <= y_pos <= y_ll:
                 f.seek((y_pos * NCOLS + x_pos) * 4)
                 num_values = x_ur - x_ll + 1
                 buf = f.read(num_values * 4)
                 values = struct.unpack('>{:d}f'.format(num_values), buf)
-                while(x_ll <= x_pos <=x_ur):
+                while x_ll <= x_pos <= x_ur:
                     # if current height value larger than previous maximum
-                    if (NODATA < values[x_pos - x_ll] < h_min):
+                    if NODATA < values[x_pos - x_ll] < h_min:
                         # store current height
                         h_min = values[x_pos - x_ll]
                         osgr_list = [get_osgr_from_indices(x_pos, y_pos,
                             filename)]
                         counter = 1
-                    elif (NODATA < values[x_pos - x_ll] == h_min):
+                    elif NODATA < values[x_pos - x_ll] == h_min:
                         osgr_list += [get_osgr_from_indices(x_pos, y_pos,
                                                             filename)]
                         counter += 1
@@ -250,7 +256,8 @@ def check_min_files(file_list):
                 y_pos += 1
     if h_min == -NODATA:
         h_min = NODATA
-    return (osgr_list, h_min, counter)
+    return osgr_list, h_min, counter
+
 
 def create_filelist(osgr_ll, osgr_ur, file_list):
     # obtain the coordinates of the tile containing the lower left
@@ -281,5 +288,4 @@ def create_filelist(osgr_ll, osgr_ur, file_list):
         complete = (y_ur == 0 and x_ll == 0 and x_ur == NCOLS - 1
                     and y_ll == NROWS - 1)
         file_list[filename] = {'x_ll': x_ll, 'y_ll': y_ll, 'x_ur': x_ur,
-                               'y_ur': y_ur, 'complete': complete}
-
+            'y_ur': y_ur, 'complete': complete}

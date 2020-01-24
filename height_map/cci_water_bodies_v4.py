@@ -1,14 +1,14 @@
 import os
-import json
 from height_map.geotiff_handler import GeoTiffHandler
+
 
 class WaterBodies:
 
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
         'maps/cci_wb4')
-    attribution_url = ('https://www.mdpi.com/2072-4292/9/1/36')
+    attribution_url = 'https://www.mdpi.com/2072-4292/9/1/36'
     attribution_name = 'CCI Water Bodies v4.0'
-    attribution = ('&copy <a href="{}">{}</a>').format(attribution_url,
+    attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,
         attribution_name)
 
     def __init__(self):

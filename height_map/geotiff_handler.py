@@ -2,18 +2,19 @@ import gdal
 import gdalconst
 import struct
 
+
 class GeoTiffHandler:
 
     def __init__(self, file_name):
         self._fmttypes = {
-	    gdalconst.GDT_Byte: 'B',
-	    gdalconst.GDT_Int16: 'h',
-	    gdalconst.GDT_UInt16: 'H',
-	    gdalconst.GDT_Int32: 'i',
-	    gdalconst.GDT_UInt32: 'I',
-	    gdalconst.GDT_Float32: 'f',
-	    gdalconst.GDT_Float64: 'f'
-	    }
+            gdalconst.GDT_Byte: 'B',
+            gdalconst.GDT_Int16: 'h',
+            gdalconst.GDT_UInt16: 'H',
+            gdalconst.GDT_Int32: 'i',
+            gdalconst.GDT_UInt32: 'I',
+            gdalconst.GDT_Float32: 'f',
+            gdalconst.GDT_Float64: 'f'
+        }
         self.ds = gdal.Open(file_name, gdalconst.GA_ReadOnly)
         if self.ds is None:
             raise FileNotFoundError(file_name)
@@ -28,7 +29,6 @@ class GeoTiffHandler:
 
     def get_value_at_position(self, lat, lon, raster_band=1):
         band = self.ds.GetRasterBand(raster_band)
-        bandtype = gdal.GetDataTypeName(band.DataType)
         nodata_value = band.GetNoDataValue()
         fmt = self._pt2fmt(band.DataType)
         px, py = gdal.ApplyGeoTransform(self.inv_geo_transform, lon, lat)
@@ -46,8 +46,7 @@ class GeoTiffHandler:
             else:
                 return None
         else:
-            result = value[0]
-        return value[0]
+            return value[0]
 
     def get_values_at_position(self, lat, lon):
         results = []

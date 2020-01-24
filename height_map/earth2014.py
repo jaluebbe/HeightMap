@@ -25,14 +25,18 @@ WATER_DEFAULT = False
 def get_index_from_latitude(lat):
     return max(min(int(round((lat - YLLCENTER) / CELLSIZE)), (NROWS - 1)), 0)
 
+
 def get_index_from_longitude(lon):
-    return (int(round((lon - XLLCENTER) / CELLSIZE)) ) % NCOLS
+    return (int(round((lon - XLLCENTER) / CELLSIZE))) % NCOLS
+
 
 def get_lat_from_index(i):
     return i*CELLSIZE + YLLCENTER
 
+
 def get_lon_from_index(j):
     return j*CELLSIZE + XLLCENTER
+
 
 def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=None, water=None):
     if ice is None:
@@ -45,8 +49,8 @@ def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=None, water=None):
     if lon_ur == 180:
         lon_ur -= CELLSIZE / 2 
     # consider only correctly defined rectangle:
-    if ((lat_ll > lat_ur) or (lon_ll > lon_ur)): 
-        return (location_max, h_max, counter)
+    if (lat_ll > lat_ur) or (lon_ll > lon_ur):
+        return location_max, h_max, counter
     # convert coordinates to data indices:
     i_ll = get_index_from_latitude(lat_ll)
     j_ll = get_index_from_longitude(lon_ll)
@@ -65,12 +69,12 @@ def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=None, water=None):
     file = os.path.join(path, filename)
     if os.path.isfile(file): 
         with open(file, "rb") as f:
-            while(i_ur >= i_pos >= i_ll):
+            while i_ur >= i_pos >= i_ll:
                 f.seek((i_pos*NCOLS + j_pos) * 2)
                 num_values = j_ur - j_ll + 1
                 buf = f.read(num_values * 2)
                 values = struct.unpack('>{:d}h'.format(num_values), buf)
-                while(j_ll <= j_pos <= j_ur):
+                while j_ll <= j_pos <= j_ur:
                     val = values[j_pos - j_ll]
                     # if current height value larger than previous maximum
                     if val > h_max:
@@ -78,16 +82,17 @@ def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=None, water=None):
                         h_max = val
                         # and position indices
                         location_max = [(get_lat_from_index(i_pos),
-                                        get_lon_from_index(j_pos))]
+                            get_lon_from_index(j_pos))]
                         counter = 1
                     elif val == h_max:
                         location_max += [(get_lat_from_index(i_pos),
-                                        get_lon_from_index(j_pos))]
+                            get_lon_from_index(j_pos))]
                         counter += 1
                     j_pos += 1
                 j_pos = j_ll
                 i_pos += 1
-    return (location_max, h_max, counter)
+    return location_max, h_max, counter
+
 
 def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=None, water=None):
     if ice is None:
@@ -100,8 +105,8 @@ def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=None, water=None):
     if lon_ur == 180:
         lon_ur -= CELLSIZE / 2
     # consider only correctly defined rectangle:
-    if ((lat_ll > lat_ur) or (lon_ll > lon_ur)):
-        return (location_min, NODATA, counter)
+    if (lat_ll > lat_ur) or (lon_ll > lon_ur):
+        return location_min, NODATA, counter
     # convert coordinates to data indices:
     i_ll = get_index_from_latitude(lat_ll)
     j_ll = get_index_from_longitude(lon_ll)
@@ -120,19 +125,19 @@ def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=None, water=None):
     file = os.path.join(path, filename)
     if os.path.isfile(file):
         with open(file, "rb") as f:
-            while(i_ur >= i_pos >= i_ll):
+            while i_ur >= i_pos >= i_ll:
                 f.seek((i_pos*NCOLS + j_pos) * 2)
                 num_values = j_ur - j_ll + 1
                 buf = f.read(num_values * 2)
                 values = struct.unpack('>{:d}h'.format(num_values), buf)
-                while(j_ll <= j_pos <= j_ur):
+                while j_ll <= j_pos <= j_ur:
                     val = values[j_pos - j_ll]      
-                    if (NODATA < val < h_min):
+                    if NODATA < val < h_min:
                         h_min = val
                         location_min = [(get_lat_from_index(i_pos),
                                          get_lon_from_index(j_pos))]
                         counter = 1
-                    elif (NODATA < val == h_min):
+                    elif NODATA < val == h_min:
                         location_min += [(get_lat_from_index(i_pos),
                                          get_lon_from_index(j_pos))]
                         counter += 1
@@ -141,7 +146,8 @@ def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur, ice=None, water=None):
                 i_pos += 1
     if h_min == -NODATA:
         h_min = NODATA
-    return (location_min, h_min, counter)
+    return location_min, h_min, counter
+
 
 def get_height(lat, lon, ice=None, water=None):
     if not (-90 <= lat <= 90 and -180 <= lon <= 180):

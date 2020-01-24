@@ -10,6 +10,7 @@ import height_map.gebco_2019 as gebco_2019
 import height_map.earth2014 as earth2014
 import height_map.height_info as height_info
 
+
 def get_height(lat, lon):
 
     srtm1_result = srtm1.get_height(lat, lon)
@@ -40,6 +41,7 @@ def get_height(lat, lon):
     results['height_info'] = height_info.get_height(lat, lon)
     return results
 
+
 def test_height(lat, lon, sources, name=''):
 
     print('##### height at {} ({}, {}) #####'.format(name, lat, lon))
@@ -48,7 +50,7 @@ def test_height(lat, lon, sources, name=''):
         try:
             result = source.get_height(lat, lon)
         except ValueError as e:
-            print (source, e)
+            print(source, e)
             continue
         duration = time.time() - t
         if result['altitude_m'] != source.NODATA:
@@ -59,8 +61,9 @@ def test_height(lat, lon, sources, name=''):
         print(water_results)
         if water_results['altitude_m'] != seafloor_results['altitude_m']:
             print(seafloor_results)
-    except ValueError as e:
+    except ValueError:
         print ('height_info:', e)
+
 
 def test_max(area, sources, name=''):
 
@@ -79,6 +82,7 @@ def test_max(area, sources, name=''):
             print('    {0!r}: {4}x {3:.2f}m at ({2}) in {1:.3f}s'
                   ''.format(source.attribution_name, duration, locations[:3],
                   elevation, counter))
+
 
 def test_min(area, sources, name=''):
 
