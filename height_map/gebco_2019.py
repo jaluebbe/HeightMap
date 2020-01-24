@@ -270,18 +270,3 @@ class Gebco2019:
         if h_min == -self.NODATA:
             h_min = self.NODATA
         return location_min, round(float(h_min), 1), counter
-
-
-gebco = Gebco2019()
-
-
-def get_height(lat, lon):
-    return gebco.get_height(lat, lon)
-
-
-def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
-    return gebco.get_min_height(lat_ll, lon_ll, lat_ur, lon_ur)
-
-
-def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
-    return gebco.get_max_height(lat_ll, lon_ll, lat_ur, lon_ur)
