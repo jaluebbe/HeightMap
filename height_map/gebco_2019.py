@@ -9,7 +9,6 @@ NROWS = 43200
 CELLSIZE = 1./240
 XLLCENTER = -180.
 YLLCENTER = -90.
-NODATA = -32768
 
 
 def get_index_from_latitude(lat):
@@ -29,7 +28,6 @@ def get_lon_from_index(j):
 
 
 class Gebco2019:
-
     attribution_url = ('https://www.gebco.net/data_and_products/'
         'gridded_bathymetry_data/gebco_2019/gebco_2019_info.html')
     attribution_name = 'The GEBCO Grid'
@@ -41,6 +39,7 @@ class Gebco2019:
     file = os.path.join(path, filename)
     cache_path = pwd
     cache_filename = 'gebco_2019_cache.json'
+    NODATA = -32768
     old_i = None
     old_j = None
     old_val = None
@@ -54,7 +53,7 @@ class Gebco2019:
     def get_height(self, lat, lon):
         if not (-90 <= lat <= 90 and -180 <= 90 <= 180):
             raise ValueError('invalid coordinates ({}, {})'.format(lat, lon))
-        val = NODATA
+        val = self.NODATA
         i = get_index_from_latitude(lat)
         j = get_index_from_longitude(lon)
         lat_found = get_lat_from_index(i)
@@ -79,7 +78,7 @@ class Gebco2019:
     def get_max_height_from_indices(self, i_ll, j_ll, i_ur, j_ur):
         i_ur = i_ur + 1
         j_ur = j_ur + 1
-        h_max = NODATA
+        h_max = self.NODATA
         location_max = []
         counter = 0
         h5_results = []
@@ -126,7 +125,7 @@ class Gebco2019:
         return location_max, round(float(h_max), 1), counter
 
     def get_max_height_from_cache(self, i_ll, j_ll, i_ur, j_ur):
-        h_max = NODATA
+        h_max = self.NODATA
         location_max = []
         counter = 0
         cache_file = os.path.join(self.cache_path, self.cache_filename)
@@ -144,7 +143,7 @@ class Gebco2019:
         return location_max, round(float(h_max), 1), counter
 
     def get_max_height_from_h5file(self, i_ll, j_ll, i_ur, j_ur):
-        h_max = NODATA
+        h_max = self.NODATA
         location_max = []
         counter = 0
         if self.h5_file is not None and i_ll < i_ur and j_ll < j_ur:
@@ -161,7 +160,7 @@ class Gebco2019:
             lon_ur -= CELLSIZE
         # consider only correctly defined rectangle:
         if (lat_ll > lat_ur) or (lon_ll > lon_ur):
-            return [], NODATA, 0
+            return [], self.NODATA, 0
         # convert coordinates to data indices:
         i_ll = get_index_from_latitude(lat_ll)
         j_ll = get_index_from_longitude(lon_ll)
@@ -176,7 +175,7 @@ class Gebco2019:
     def get_min_height_from_indices(self, i_ll, j_ll, i_ur, j_ur):
         i_ur = i_ur + 1
         j_ur = j_ur + 1
-        h_min = -NODATA
+        h_min = -self.NODATA
         location_min = []
         counter = 0
         h5_results = []
@@ -223,7 +222,7 @@ class Gebco2019:
         return location_min, round(float(h_min), 1), counter
 
     def get_min_height_from_cache(self, i_ll, j_ll, i_ur, j_ur):
-        h_min = -NODATA
+        h_min = -self.NODATA
         location_min = []
         counter = 0
         cache_file = os.path.join(self.cache_path, self.cache_filename)
@@ -241,7 +240,7 @@ class Gebco2019:
         return location_min, round(float(h_min), 1), counter
 
     def get_min_height_from_h5file(self, i_ll, j_ll, i_ur, j_ur):
-        h_min = -NODATA
+        h_min = -self.NODATA
         location_min = []
         counter = 0
         if self.h5_file is not None and i_ll < i_ur and j_ll < j_ur:
@@ -258,7 +257,7 @@ class Gebco2019:
             lon_ur -= CELLSIZE
         # consider only correctly defined rectangle:
         if (lat_ll > lat_ur) or (lon_ll > lon_ur):
-            return [], NODATA, 0
+            return [], self.NODATA, 0
         # convert coordinates to data indices:
         i_ll = get_index_from_latitude(lat_ll)
         j_ll = get_index_from_longitude(lon_ll)
@@ -268,8 +267,8 @@ class Gebco2019:
             i_ll, j_ll, i_ur, j_ur)
         location_min = [[get_lat_from_index(_x),
                          get_lon_from_index(_y)] for (_x, _y) in location_min]
-        if h_min == -NODATA:
-            h_min = NODATA
+        if h_min == -self.NODATA:
+            h_min = self.NODATA
         return location_min, round(float(h_min), 1), counter
 
 

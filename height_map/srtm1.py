@@ -8,7 +8,6 @@ from height_map.dgm200 import calculate_distance
 NCOLS = 3601
 NROWS = 3601
 CELLSIZE = 1./3600
-NODATA = -32768
 
 
 def get_index_from_latitude(lat, yllcenter):
@@ -49,6 +48,7 @@ class Srtm1:
         attribution_name)
 
     precision = 16.0  # 16m SRTM vertical error
+    NODATA = -32768
     old_file = None
     old_file_name = None
 
@@ -66,11 +66,11 @@ class Srtm1:
         xllcenter = floor(lon_ll)
         yllcenter = floor(lat_ll)
         total_location = []
-        total_h_max = NODATA
+        total_h_max = self.NODATA
         total_counter = 0
         # consider only correctly defined rectangle within SRTM coverage:
         if (lat_ll > lat_ur) or (lon_ll > lon_ur) or lat_ur > 60 or lat_ll < -56:
-            return [], NODATA, 0
+            return [], self.NODATA, 0
         # convert coordinates to data indices:
         i_ll = get_index_from_latitude(lat_ll, yllcenter)
         j_ll = get_index_from_longitude(lon_ll, xllcenter)
@@ -102,7 +102,7 @@ class Srtm1:
                 total_counter += counter
                 total_location += location
             j_ur = NCOLS - 1
-        h_max = NODATA
+        h_max = self.NODATA
         counter = 0
         location = []
         # start in the upper left edge of the target area
@@ -152,11 +152,11 @@ class Srtm1:
         xllcenter = floor(lon_ll)
         yllcenter = floor(lat_ll)
         total_location = []
-        total_h_min = -NODATA
+        total_h_min = -self.NODATA
         total_counter = 0
         # consider only correctly defined rectangle:
         if (lat_ll > lat_ur) or (lon_ll > lon_ur) or lat_ur > 60 or lat_ll < -56:
-            return [], NODATA, 0
+            return [], self.NODATA, 0
         # convert coordinates to data indices:
         i_ll = get_index_from_latitude(lat_ll, yllcenter)
         j_ll = get_index_from_longitude(lon_ll, xllcenter)
@@ -166,7 +166,7 @@ class Srtm1:
             # upper_neighbour
             (location, h_min, counter) = get_min_height(
                 yllcenter + 1 + CELLSIZE/2, lon_ll, lat_ur, min(lon_ur, xllcenter + 1))
-            if NODATA < h_min < total_h_min:
+            if self.NODATA < h_min < total_h_min:
                 total_h_min = h_min
                 total_counter = counter
                 total_location = location
@@ -180,7 +180,7 @@ class Srtm1:
             # right_neighbour
             (location, h_min, counter) = get_min_height(
                 lat_ll, xllcenter + 1 + CELLSIZE/2, lat_ur, lon_ur)
-            if NODATA < h_min < total_h_min:
+            if self.NODATA < h_min < total_h_min:
                 total_h_min = h_min
                 total_counter = counter
                 total_location = location
@@ -188,7 +188,7 @@ class Srtm1:
                 total_counter += counter
                 total_location += location
             j_ur = NCOLS - 1
-        h_min = -NODATA
+        h_min = -self.NODATA
         counter = 0
         location = []
         # start in the upper left edge of the target area
@@ -206,14 +206,14 @@ class Srtm1:
                     values = struct.unpack('>{:d}h'.format(num_values), buf)
                     while j_ll <= j_pos <= j_ur:
                         # if current height value larger than previous maximum
-                        if NODATA < values[j_pos - j_ll] < h_min:
+                        if self.NODATA < values[j_pos - j_ll] < h_min:
                             # store current height and position
                             h_min = values[j_pos - j_ll]
                             lat = get_lat_from_index(i_pos, yllcenter)
                             lon = get_lon_from_index(j_pos, xllcenter)
                             location = [(lat, lon)]
                             counter = 1
-                        elif NODATA < values[j_pos - j_ll] == h_min:
+                        elif self.NODATA < values[j_pos - j_ll] == h_min:
                             lat = get_lat_from_index(i_pos, yllcenter)
                             lon = get_lon_from_index(j_pos, xllcenter)
                             location += [(lat, lon)]
@@ -221,9 +221,9 @@ class Srtm1:
                         j_pos += 1
                     j_pos = j_ll
                     i_pos += 1
-            if h_min == -NODATA:
-                h_min = NODATA
-            if NODATA < h_min < total_h_min:
+            if h_min == -self.NODATA:
+                h_min = self.NODATA
+            if self.NODATA < h_min < total_h_min:
                 total_h_min = h_min
                 total_counter = counter
                 total_location = location
@@ -232,8 +232,8 @@ class Srtm1:
                 total_location += location
     #    elif file_name in srtm1_file_list:
     #        print('SRTM1: missing file', file_name)
-        if total_h_min == -NODATA:
-            total_h_min = NODATA
+        if total_h_min == -self.NODATA:
+            total_h_min = self.NODATA
         return total_location, total_h_min, total_counter
 
     def get_height(self, lat, lon):
@@ -243,7 +243,7 @@ class Srtm1:
         yllcenter = floor(lat)
         file_name = get_filename(yllcenter, xllcenter)
         fullpath = os.path.join(self.path, file_name)
-        val = NODATA
+        val = self.NODATA
         lat_found = lat
         lon_found = lon
         if os.path.isfile(fullpath):
