@@ -166,7 +166,7 @@ def get_height(double latitude, double longitude):
     if x == -1 or y == -1:
         return {
             'altitude_m': NODATA, 'source': attribution_name,
-            'latitude': latitude, 'lon': longitude, 'distance_m': 0,
+            'lat': latitude, 'lon': longitude, 'distance_m': 0,
             'attribution': attribution}
     file_name = os.path.join(path, grid_file)
     with open(file_name, "rb") as f:
@@ -176,9 +176,9 @@ def get_height(double latitude, double longitude):
     cdef double lat_found, lon_found
     (lat_found, lon_found) = get_latlon_from_indices(x, y)
     return {
-        'latitude_found': lat_found, 'longitude_found': lon_found,
+        'lat_found': lat_found, 'longitude_found': lon_found,
         'altitude_m': round(val * 100) / 100, 'source': attribution_name,
-        'latitude': latitude, 'longitude': longitude,
+        'lat': latitude, 'lon': longitude,
         'distance_m': get_distance(latitude, longitude, lat_found, lon_found),
         'attribution': attribution}
 
