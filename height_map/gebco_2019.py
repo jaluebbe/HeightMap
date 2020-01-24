@@ -41,7 +41,9 @@ class Gebco2019:
     file = os.path.join(path, filename)
     cache_path = pwd
     cache_filename = 'gebco_2019_cache.json'
-    old_data = {}
+    old_i = None
+    old_j = None
+    old_val = None
     h5_file = None
 
     def __init__(self):
@@ -52,7 +54,6 @@ class Gebco2019:
     def get_height(self, lat, lon):
         if not (-90 <= lat <= 90 and -180 <= 90 <= 180):
             raise ValueError('invalid coordinates ({}, {})'.format(lat, lon))
-        file = os.path.join(self.path, self.filename)
         val = NODATA
         i = get_index_from_latitude(lat)
         j = get_index_from_longitude(lon)
@@ -60,12 +61,14 @@ class Gebco2019:
         lon_found = get_lon_from_index(j)
         if self.h5_file is None:
             pass
-        elif self.old_data.get('i') == i and self.old_data.get('j') == j:
+        elif self.old_i == i and self.old_j == j:
             # same grid position, file access not necessary
-            val = self.old_data['val']
+            val = self.old_val
         else:
             val = round(float(self.h5_file['elevation'][i][j]), 2)
-            self.old_data.update({'i': i, 'j': j, 'val': val})
+            self.old_i = i
+            self.old_j = j
+            self.old_val = val
         return {
             'lat': lat, 'lon': lon, 'lat_found': round(lat_found, 6),
             'lon_found': round(lon_found, 6), 'altitude_m': val,
