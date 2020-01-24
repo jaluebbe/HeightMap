@@ -3,12 +3,16 @@
 import time
 import json
 import height_map.etopo1 as etopo1
-import height_map.srtm1 as srtm1
 import height_map.dgm200 as dgm200
 import height_map.terr50 as terr50
-import height_map.gebco_2019 as gebco_2019
 import height_map.earth2014 as earth2014
-import height_map.height_info as height_info
+from height_map.srtm1 import Srtm1
+from height_map.gebco_2019 import Gebco2019
+from height_map.height_info import HeightInfo
+
+srtm1 = Srtm1()
+gebco_2019 = Gebco2019()
+height_info = HeightInfo()
 
 
 def get_height(lat, lon):
@@ -61,8 +65,8 @@ def test_height(lat, lon, sources, name=''):
         print(water_results)
         if water_results['altitude_m'] != seafloor_results['altitude_m']:
             print(seafloor_results)
-    except ValueError:
-        print ('height_info:', e)
+    except ValueError as e:
+        print('height_info:', e)
 
 
 def test_max(area, sources, name=''):
