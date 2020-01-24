@@ -78,7 +78,7 @@ class Srtm1:
             i_ur = get_index_from_latitude(lat_ur, yllcenter)
         else:
             # upper_neighbour
-            (location, h_max, counter) = get_max_height(
+            (location, h_max, counter) = self.get_max_height(
                 yllcenter + 1 + CELLSIZE/2, lon_ll, lat_ur, min(lon_ur, xllcenter + 1))
             if h_max > total_h_max:
                 total_h_max = h_max
@@ -92,7 +92,7 @@ class Srtm1:
             j_ur = get_index_from_longitude(lon_ur, xllcenter)
         else:
             # right_neighbour
-            (location, h_max, counter) = get_max_height(
+            (location, h_max, counter) = self.get_max_height(
                 lat_ll, xllcenter + 1 + CELLSIZE/2, lat_ur, lon_ur)
             if h_max > total_h_max:
                 total_h_max = h_max
@@ -164,7 +164,7 @@ class Srtm1:
             i_ur = get_index_from_latitude(lat_ur, yllcenter)
         else:
             # upper_neighbour
-            (location, h_min, counter) = get_min_height(
+            (location, h_min, counter) = self.get_min_height(
                 yllcenter + 1 + CELLSIZE/2, lon_ll, lat_ur, min(lon_ur, xllcenter + 1))
             if self.NODATA < h_min < total_h_min:
                 total_h_min = h_min
@@ -178,7 +178,7 @@ class Srtm1:
             j_ur = get_index_from_longitude(lon_ur, xllcenter)
         else:
             # right_neighbour
-            (location, h_min, counter) = get_min_height(
+            (location, h_min, counter) = self.get_min_height(
                 lat_ll, xllcenter + 1 + CELLSIZE/2, lat_ur, lon_ur)
             if self.NODATA < h_min < total_h_min:
                 total_h_min = h_min
@@ -274,18 +274,3 @@ class Srtm1:
             'source': self.attribution_name, 'distance_m': round(
             calculate_distance(lat, lon, lat_found, lon_found), 3),
             'attribution': self.attribution}
-
-
-srtm = Srtm1()
-
-
-def get_height(lat, lon):
-    return srtm.get_height(lat, lon)
-
-
-def get_min_height(lat_ll, lon_ll, lat_ur, lon_ur):
-    return srtm.get_min_height(lat_ll, lon_ll, lat_ur, lon_ur)
-
-
-def get_max_height(lat_ll, lon_ll, lat_ur, lon_ur):
-    return srtm.get_max_height(lat_ll, lon_ll, lat_ur, lon_ur)
