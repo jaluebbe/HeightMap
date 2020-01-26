@@ -1,7 +1,6 @@
 import os
 import struct
 import json
-import time
 from pygeodesy import ellipsoidalVincenty as eV
 from pygeodesy import toOsgr, parseOSGR, Osgr
 from height_map.dgm200 import calculate_distance
