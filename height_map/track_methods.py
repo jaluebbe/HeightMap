@@ -40,8 +40,8 @@ def get_track_position(data: PositionRequest):
     for _location in data.track:
         current_location = eV.LatLon(_location.lat, _location.lon)
         if old_location:
-            segment_length, bearing = old_location.distanceTo3(current_location
-                )[:2]
+            segment_length, bearing = old_location.distanceTo3(
+                current_location)[:2]
             if distance + segment_length >= data.distance:
                 position = old_location.destination(data.distance - distance,
                     bearing).latlon2(ndigits=6)
@@ -87,40 +87,48 @@ class ResamplingRequest(BaseModel):
 
 
 @timeit
-def get_resampled_track(data: ResamplingRequest):
+def resample_track_list(track, step, include_existing_points=True):
     new_track = []
     distance = 0
-    target_distance = data.step
+    target_distance = step
     old_location = None
-    for _location in data.track:
-        current_location = eV.LatLon(_location.lat, _location.lon)
+    for _location in track:
+        current_location = eV.LatLon(_location[1], _location[0])
         if old_location:
-            segment_length, bearing = old_location.distanceTo3(current_location
-                )[:2]
+            segment_length, bearing = old_location.distanceTo3(
+                current_location)[:2]
             segment_end = distance + segment_length
             while segment_end >= target_distance:
                 old_location = old_location.destination(
                     target_distance - distance, bearing)
                 track_item = old_location.latlon2(ndigits=6)
-                new_track.append({'lat': track_item.lat, 'lon': track_item.lon})
+                new_track.append([track_item.lon, track_item.lat])
                 distance = target_distance
-                target_distance += data.step
+                target_distance += step
             remaining_distance, bearing = old_location.distanceTo3(
                 current_location)[:2]
             distance += remaining_distance
             existing_point = current_location.latlon2(ndigits=6)
-            if data.include_existing_points and existing_point != track_item:
-                target_distance = distance + data.step
+            if include_existing_points and existing_point != track_item:
+                target_distance = distance + step
                 track_item = existing_point
-                new_track.append({'lat': track_item.lat, 'lon': track_item.lon})
+                new_track.append([track_item.lon, track_item.lat])
         else:
             track_item = current_location.latlon2(ndigits=6)
-            new_track.append({'lat': track_item.lat, 'lon': track_item.lon})
+            new_track.append([track_item.lon, track_item.lat])
         old_location = current_location
     last_item = old_location.latlon2(ndigits=6)
-    if not data.include_existing_points and track_item != last_item:
-        new_track.append({'lat': last_item.lat, 'lon': last_item.lon})
+    if not include_existing_points and track_item != last_item:
+        new_track.append([last_item.lon, last_item.lat])
     return new_track
+
+
+@timeit
+def get_resampled_track(data: ResamplingRequest):
+    track = [[_location.lon, _location.lat] for _location in data.track]
+    resampled_track = resample_track_list(track, data.step,
+        data.include_existing_points)
+    return [{'lat': _item[1], 'lon': _item[0]} for _item in resampled_track]
 
 
 class GeoJSONLineString(BaseModel):
@@ -136,12 +144,13 @@ class GeoJSONRequest(BaseModel):
 
 @timeit
 def geojson_get_height_graph_data(data: GeoJSONRequest):
-    track = [Location(lat=pt[1], lon=pt[0]) for pt in data.geometry.coordinates]
-    _track = get_simplified_track(SimplifyRequest(track=track, epsilon=0.0001))
-#    _track = get_resampled_track(ResamplingRequest(track=_track, step=500))
-    track_elevation = get_track_elevation(ElevationRequest(track=_track))
-    _coordinates = [[round(pt['lon'], 6), round(pt['lat'], 6), pt['altitude_m']
-        ] for pt in track_elevation]
+    simplified_track = simplify_coords(data.dict()['geometry']['coordinates'],
+        epsilon=0.0001)
+    simplified_track = resample_track_list(simplified_track, 300)
+    track_elevation = [hi.get_height(y, x, water=False) for x, y in 
+        simplified_track]
+    _coordinates = [(round(pt['lon'], 6), round(pt['lat'], 6),
+        pt['altitude_m']) for pt in track_elevation]
     _feature = Feature(geometry=LineString(_coordinates),
         properties={"attributeType": "surface elevation"})
     return [FeatureCollection([_feature], properties={"summary": "elevation"})]
