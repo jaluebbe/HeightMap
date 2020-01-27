@@ -8,7 +8,7 @@ conda env create -f environment.yml
 
 ### conda/apt
 
-gunicorn cython numpy h5py gdal
+gunicorn cython numpy h5py gdal shapely requests
 
 ### pip
 

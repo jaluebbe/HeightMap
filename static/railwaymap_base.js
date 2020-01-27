@@ -111,7 +111,7 @@ var layerControl = L.control.layers(baseLayers, other_layers, {
 }).addTo(map);
 function loadNzRailwayMap() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', './static/NZ_Railway_Network.geojson');
+    xhr.open('GET', './static/NZ_railway_network_reduced.geojson');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function() {
         if (xhr.status === 200) {
