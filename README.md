@@ -70,9 +70,9 @@ Download ftp://geo10.elie.ucl.ac.be/v207/ESACCI-LC-L4-WB-Ocean-Land-Map-150m-P13
 
 ### NZ Railway Network
 
-A GeoJSON shapefile describing the New Zealand railway network published by KiwiRail. 
+GeoJSON shapefiles published by KiwiRail describing the New Zealand railway network including tracks, bridges, tunnels and level crossings.
 
-https://catalogue.data.govt.nz/dataset/nz-railway-network
+https://catalogue.data.govt.nz/organization/kiwirail-holdings-limited
 
 ## Startup of the web interface
 
