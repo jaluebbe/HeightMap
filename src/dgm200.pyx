@@ -176,7 +176,7 @@ def get_height(double latitude, double longitude):
     cdef double lat_found, lon_found
     (lat_found, lon_found) = get_latlon_from_indices(x, y)
     return {
-        'lat_found': lat_found, 'longitude_found': lon_found,
+        'lat_found': lat_found, 'lon_found': lon_found,
         'altitude_m': round(val * 100) / 100, 'source': attribution_name,
         'lat': latitude, 'lon': longitude,
         'distance_m': get_distance(latitude, longitude, lat_found, lon_found),
