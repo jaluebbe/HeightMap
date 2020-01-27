@@ -67,9 +67,12 @@ if (typeof mapboxAccessToken !== 'undefined') {
         "MapBox Satellite Streets": mapbox_streets_satellite
     });
 }
+map.createPane('tracks');
+map.getPane('tracks').style.zIndex = 392;
 function trackClicked(eo) {}
 var nzRailwayMap = L.geoJSON(null, {
-    attribution: '&copy; <a href="https://catalogue.data.govt.nz/dataset/nz-railway-network">KiwiRail</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC-BY</a>)',
+    attribution: 'Tracks &copy; <a href="https://catalogue.data.govt.nz/dataset/nz-railway-network">KiwiRail</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC-BY</a>)',
+    pane: 'tracks',
     onEachFeature: function(feature, layer) {
         layer.on('click', function(eo) {
             trackClicked(eo);
@@ -101,9 +104,9 @@ var openRailwayMap = L.tileLayer('https://{s}.tiles.openrailwaymap.org/standard/
     attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Map style: &copy; <a href="https://www.OpenRailwayMap.org">OpenRailwayMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
 });
 var other_layers = {
-    "NZ railway network": nzRailwayMap,
     "Openptmap": openPtMap,
-    "OpenRailwayMap": openRailwayMap
+    "OpenRailwayMap": openRailwayMap,
+    "NZ railway network": nzRailwayMap
 };
 var layerControl = L.control.layers(baseLayers, other_layers, {
     collapsed: L.Browser.mobile, // hide on mobile devices
