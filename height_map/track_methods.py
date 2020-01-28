@@ -88,33 +88,32 @@ class ResamplingRequest(BaseModel):
 
 @timeit
 def resample_track_list(track, step, include_existing_points=True):
-    new_track = []
+    if len(track) == 0:
+        return []
     distance = 0
     target_distance = step
-    old_location = None
-    for _location in track:
+    old_location = eV.LatLon(track[0][1], track[0][0])
+    track_item = old_location.latlon2(ndigits=6)
+    new_track = [[track_item.lon, track_item.lat]]
+    for _location in track[1:]:
         current_location = eV.LatLon(_location[1], _location[0])
-        if old_location:
-            segment_length, bearing = old_location.distanceTo3(
-                current_location)[:2]
-            segment_end = distance + segment_length
-            while segment_end >= target_distance:
-                old_location = old_location.destination(
-                    target_distance - distance, bearing)
-                track_item = old_location.latlon2(ndigits=6)
-                new_track.append([track_item.lon, track_item.lat])
-                distance = target_distance
-                target_distance += step
-            remaining_distance, bearing = old_location.distanceTo3(
-                current_location)[:2]
-            distance += remaining_distance
-            existing_point = current_location.latlon2(ndigits=6)
-            if include_existing_points and existing_point != track_item:
-                target_distance = distance + step
-                track_item = existing_point
-                new_track.append([track_item.lon, track_item.lat])
-        else:
-            track_item = current_location.latlon2(ndigits=6)
+        segment_length, bearing = old_location.distanceTo3(
+            current_location)[:2]
+        segment_end = distance + segment_length
+        while segment_end >= target_distance:
+            old_location = old_location.destination(
+                target_distance - distance, bearing)
+            track_item = old_location.latlon2(ndigits=6)
+            new_track.append([track_item.lon, track_item.lat])
+            distance = target_distance
+            target_distance += step
+        remaining_distance, bearing = old_location.distanceTo3(
+            current_location)[:2]
+        distance += remaining_distance
+        existing_point = current_location.latlon2(ndigits=6)
+        if include_existing_points and existing_point != track_item:
+            target_distance = distance + step
+            track_item = existing_point
             new_track.append([track_item.lon, track_item.lat])
         old_location = current_location
     last_item = old_location.latlon2(ndigits=6)
