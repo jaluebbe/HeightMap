@@ -25,7 +25,7 @@ var nzRailwayBridges = L.geoJSON(null, {
         };
     }
 }).addTo(map);
-layerControl.addOverlay(nzRailwayBridges, 'NZ Railway bridges');
+layerControl.addOverlay(nzRailwayBridges, 'NZ railway bridges');
 function loadNzRailwayBridges() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', './static/KiwiRail_bridges_reduced.geojson');
