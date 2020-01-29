@@ -25,7 +25,9 @@ var nzLevelCrossings = L.geoJSON(null, {
         });
     }
 });
-var clusteredLevelCrossings = L.markerClusterGroup({});
+var clusteredLevelCrossings = L.markerClusterGroup({
+    maxClusterRadius: 30
+});
 map.addLayer(clusteredLevelCrossings);
 layerControl.addOverlay(clusteredLevelCrossings, 'NZ level crossings');
 
