@@ -159,6 +159,12 @@ def get_min_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
     return (locations, h_min, counter)
 
 def get_height(double latitude, double longitude):
+    if (latitude < 42.27 or latitude > 55.1 or longitude < 5.86 or
+            longitude > 15.42):
+        return {
+            'altitude_m': NODATA, 'source': attribution_name,
+            'lat': latitude, 'lon': longitude, 'distance_m': 0,
+            'attribution': attribution}
     cdef int x, y
     (x, y) = get_indices_from_latlon(latitude, longitude)
     cdef double val
