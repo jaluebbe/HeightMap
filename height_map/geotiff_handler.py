@@ -1,5 +1,4 @@
-import gdal
-import gdalconst
+from osgeo import gdal, gdalconst
 import struct
 
 
@@ -32,12 +31,18 @@ class GeoTiffHandler:
         nodata_value = band.GetNoDataValue()
         fmt = self._pt2fmt(band.DataType)
         px, py = gdal.ApplyGeoTransform(self.inv_geo_transform, lon, lat)
+        px = int(px)
+        py = int(py)
+        if px == self.cols:
+            px -= 1
+        if py == self.rows:
+            py -= 1
         if px > self.cols or py > self.rows or px < 0 or py < 0:
             if fmt == 'f':
                 return float('nan')
             else:
                 return None
-        structval = band.ReadRaster(int(px), int(py), 1, 1,
+        structval = band.ReadRaster(px, py, 1, 1,
             buf_type=band.DataType)
         value = struct.unpack(fmt, structval)
         if value[0] == nodata_value:
