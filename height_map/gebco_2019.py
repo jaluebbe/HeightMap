@@ -51,7 +51,7 @@ class Gebco2019:
             self.h5_file = h5py.File(file, 'r')
 
     def get_height(self, lat, lon):
-        if not (-90 <= lat <= 90 and -180 <= 90 <= 180):
+        if not (-90 <= lat <= 90 and -180 <= lon <= 180):
             raise ValueError('invalid coordinates ({}, {})'.format(lat, lon))
         val = self.NODATA
         i = get_index_from_latitude(lat)

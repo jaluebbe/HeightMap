@@ -28,12 +28,14 @@ def test_map_bounds():
     assert wb.get_data_at_position(-90, 0)['label'] is not None
     assert wb.get_data_at_position(-90, 180)['label'] is not None
     # out of bounds
-    assert wb.get_data_at_position(-90.1, 0)['label'] is None
-    assert wb.get_data_at_position(90.1, 0)['label'] is None
-    assert wb.get_data_at_position(0, -180.1)['label'] is None
-    assert wb.get_data_at_position(0, 180.1)['label'] is None
-    assert wb.get_data_at_position(0, 360)['label'] is None
-
+    with pytest.raises(ValueError):
+        wb.get_data_at_position(-90.1, 0)
+    with pytest.raises(ValueError):
+        wb.get_data_at_position(0, -180.1)
+    with pytest.raises(ValueError):
+        wb.get_data_at_position(0, 180.1)
+    with pytest.raises(ValueError):
+        wb.get_data_at_position(0, 360)
 
 def test_content():
     wb = WaterBodies()
