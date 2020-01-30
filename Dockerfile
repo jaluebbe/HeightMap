@@ -4,12 +4,12 @@ RUN apt-get -y update &&  \
     apt-get -y install python3-pip python3-gdal wget && \
     pip3 install uvicorn gunicorn fastapi aiofiles geojson numpy \
     pygeodesy cython h5py simplification
-COPY ./start.sh /start.sh
+COPY docker/start.sh /start.sh
 RUN chmod +x /start.sh
 
-COPY ./gunicorn_conf.py /gunicorn_conf.py
+COPY docker/gunicorn_conf.py /gunicorn_conf.py
 
-COPY ./start-reload.sh /start-reload.sh
+COPY docker/start-reload.sh /start-reload.sh
 RUN chmod +x /start-reload.sh
 
 COPY height_map /app/height_map
