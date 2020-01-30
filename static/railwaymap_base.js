@@ -19,6 +19,7 @@ var wmsLayer = L.tileLayer.wms('https://sgx.geodatenzentrum.de/wms_topplus_open'
     format: 'image/png',
     transparent: true,
     minZoom: 1,
+    maxZoome: 9,
     attribution: '&copy <a href="https://www.bkg.bund.de">BKG</a> 2019, ' +
         '<a href= "http://sg.geodatenzentrum.de/web_public/Datenquellen_TopPlus_Open.pdf" >data sources</a> '
 });
