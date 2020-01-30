@@ -107,6 +107,10 @@ where mapboxAccessToken.js contains a line like
 var mapboxAccessToken = '<your_mapbox_token>'
 ```
 
+## Testing
+
+Run ```py.test tests``` from the main directory to perform some tests.
+
 ## Accessing the API and web interface
 
 You'll find an interative map at http://127.0.0.1:8000. Click anywhere on the map to obtain the local elevation from the most precise data source. 
