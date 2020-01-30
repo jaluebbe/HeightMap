@@ -1,6 +1,7 @@
 name: heightmap
 dependencies:
   - python=3
+  - pytest
   - gunicorn
   - cython
   - numpy
