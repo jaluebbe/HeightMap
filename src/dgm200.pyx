@@ -10,6 +10,11 @@ CELLSIZE = 200
 NCOLS = 3207
 NROWS = 4331
 NODATA = -9999
+LAT_MIN = 47.140653
+LAT_MAX = 55.016111
+LON_MIN = 5.558722
+LON_MAX = 15.574022
+
 pwd = os.path.dirname(os.path.abspath(__file__))
 path = os.path.join(pwd, 'maps/dgm200')
 attribution_url = 'http://www.bkg.bund.de'
@@ -73,6 +78,11 @@ def get_latlon_from_indices(int x, int y):
     return (lat, lon)
 
 def get_max_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
+    # ensure requested rectangle is not out of bounds:
+    if (lat_ll < LAT_MIN or lat_ll > LAT_MAX or lon_ll < LON_MIN or
+            lon_ll > LON_MAX or lat_ur < LAT_MIN or lat_ur > LAT_MAX or
+            lon_ur < LON_MIN or lon_ur > LON_MAX):
+        return ([], NODATA, 0)
     # consider only correctly defined rectangle:
     if (lat_ll > lat_ur or lon_ll > lon_ur):
         return ([], NODATA, 0)
@@ -115,6 +125,11 @@ def get_max_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
     return (locations, h_max, counter)
 
 def get_min_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
+    # ensure requested rectangle is not out of bounds:
+    if (lat_ll < LAT_MIN or lat_ll > LAT_MAX or lon_ll < LON_MIN or
+            lon_ll > LON_MAX or lat_ur < LAT_MIN or lat_ur > LAT_MAX or
+            lon_ur < LON_MIN or lon_ur > LON_MAX):
+        return ([], NODATA, 0)
     # consider only correctly defined rectangle:
     if (lat_ll > lat_ur or lon_ll > lon_ur):
         return ([], NODATA, 0)
@@ -159,8 +174,8 @@ def get_min_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
     return (locations, h_min, counter)
 
 def get_height(double latitude, double longitude):
-    if (latitude < 42.27 or latitude > 55.1 or longitude < 5.86 or
-            longitude > 15.42):
+    if (latitude < LAT_MIN or latitude > LAT_MAX or longitude < LON_MIN or
+            longitude > LON_MAX):
         return {
             'altitude_m': NODATA, 'source': attribution_name,
             'lat': latitude, 'lon': longitude, 'distance_m': 0,
