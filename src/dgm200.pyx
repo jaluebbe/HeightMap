@@ -10,10 +10,10 @@ CELLSIZE = 200
 NCOLS = 3207
 NROWS = 4331
 NODATA = -9999
-LAT_MIN = 47.140653
-LAT_MAX = 55.016111
-LON_MIN = 5.558722
-LON_MAX = 15.574022
+LAT_MIN = 47.141612
+LAT_MAX = 55.016964
+LON_MIN = 5.557084
+LON_MAX = 15.572619
 
 pwd = os.path.dirname(os.path.abspath(__file__))
 path = os.path.join(pwd, 'maps/dgm200')
@@ -59,22 +59,20 @@ def get_closest_distance(double latitude, double longitude):
     return (round(distance * 100) / 100, ref_lat, ref_lon)
 
 def get_indices_from_latlon(double latitude, double longitude):
-    cdef int x = -1
-    cdef int y = -1
-    cdef double easting, northing, val, ref_easting, ref_northing
-    val = NODATA
+    cdef double easting, northing
     easting, northing = LLtoUTM(latitude, longitude)
-    if (easting >= XLLCENTER and easting < XLLCENTER + CELLSIZE*NCOLS):
-        x = int(round(((easting - XLLCENTER) / CELLSIZE)))
-    if (northing >= YLLCENTER and northing < YLLCENTER + CELLSIZE*NROWS):
-        y = int(round(NROWS - 1 - ((northing - YLLCENTER) / CELLSIZE)))
-    return (x, y)
+    cdef int x = int(round(((easting - XLLCENTER) / CELLSIZE)))
+    cdef int y = int(round(NROWS - 1 - ((northing - YLLCENTER) / CELLSIZE)))
+    if x < 0 or x >= NCOLS or y < 0 or y >= NROWS:
+        x = -1
+        y = -1
+    return x, y
 
 def get_latlon_from_indices(int x, int y):
     cdef double easting = x*CELLSIZE + XLLCENTER
     cdef double northing = (NROWS - 1 - y)*CELLSIZE + YLLCENTER
     cdef double lat, lon
-    (lat, lon) = UTMtoLL(easting, northing)
+    lat, lon = UTMtoLL(easting, northing)
     return (lat, lon)
 
 def get_max_height(double lat_ll, double lon_ll, double lat_ur, double lon_ur):
