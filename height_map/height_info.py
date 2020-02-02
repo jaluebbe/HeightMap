@@ -1,7 +1,7 @@
-import height_map.dgm200 as dgm200
 import height_map.terr50 as terr50
 import height_map.earth2014 as earth2014
 from height_map.srtm1 import Srtm1
+from height_map.dgm200 import Dgm200
 from height_map.gebco_2019 import Gebco2019
 from height_map.cci_water_bodies_v4 import WaterBodies
 
@@ -14,7 +14,8 @@ class HeightInfo:
         self.wb = WaterBodies()
         self.srtm = Srtm1()
         self.gebco = Gebco2019()
-        self.sources = [terr50, self.srtm, dgm200, self.gebco, earth2014]
+        self.dgm = Dgm200()
+        self.sources = [terr50, self.dgm, self.gebco, earth2014]
 
     def get_height(self, lat, lon, water=True):
         """
@@ -27,9 +28,9 @@ class HeightInfo:
         """
         wb_label = self.wb.get_data_at_position(lat, lon)['label']
         is_ocean = wb_label == 'Ocean'
-        dgm200_result = dgm200.get_height(lat, lon)
-        if (dgm200_result['distance_m'] < 25) and (
-                dgm200_result['altitude_m'] != dgm200.NODATA) and not is_ocean:
+        dgm200_result = self.dgm.get_height(lat, lon)
+        if dgm200_result['distance_m'] < 25 and (dgm200_result['altitude_m']
+                != self.dgm.NODATA) and not is_ocean:
             # prefer sea floor bathymetry if possible
             dgm200_result['wb_label'] = wb_label
             return dgm200_result
@@ -45,7 +46,7 @@ class HeightInfo:
             # prefer sea floor bathymetry if possible
             srtm1_result['wb_label'] = wb_label
             return srtm1_result
-        if dgm200_result['altitude_m'] != dgm200.NODATA and not is_ocean:
+        if dgm200_result['altitude_m'] != self.dgm.NODATA and not is_ocean:
             # prefer sea floor bathymetry if possible
             dgm200_result['wb_label'] = wb_label
             return dgm200_result
