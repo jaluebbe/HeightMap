@@ -16,7 +16,8 @@ LON_MAX = 15.572619
 cdef double _deg2rad = M_PI / 180.0
 cdef double _rad2deg = 180.0 / M_PI
 
-cdef LLtoUTM(double Lat, double Long):
+
+cdef (double, double) LLtoUTM(double Lat, double Long):
     cdef double a = 6378137
     cdef double eccSquared = 0.00669438
     cdef double k0 = 0.9996
@@ -51,7 +52,8 @@ cdef LLtoUTM(double Lat, double Long):
         + (61 - 58*T + T*T + 600*C - 330*eccPrimeSquared)*pow(A, 6)/720)))
     return UTMEasting, UTMNorthing
 
-cdef UTMtoLL(double easting, double northing):
+
+cdef (double, double) UTMtoLL(double easting, double northing):
     cdef double k0 = 0.9996
     cdef double a = 6378137
     cdef double eccSquared = 0.00669438
@@ -88,6 +90,7 @@ cdef UTMtoLL(double easting, double northing):
     Long = LongOrigin + Long * _rad2deg
     return round(Lat * 1e6) / 1e6, round(Long * 1e6) / 1e6
 
+
 # calculate the distance between two gps coordinates:
 cdef double get_distance(double lat1, double lon1, double lat2, double lon2):
     cdef double degRad = 2 * M_PI / 360
@@ -95,11 +98,13 @@ cdef double get_distance(double lat1, double lon1, double lat2, double lon2):
         + cos(lat1 * degRad) * cos(lat2 * degRad) * cos((lon2 - lon1) * degRad))
     return distance
 
+
 # expose get_distance
 def calculate_distance(lat1, lon1, lat2, lon2):
     if lat1 == lat2 and lon1 == lon2:
         return 0
     return get_distance(lat1, lon1, lat2, lon2)
+
 
 # calculate the distance to the closest DGM200 reference point
 def get_closest_distance(double latitude, double longitude):
@@ -120,9 +125,11 @@ def get_closest_distance(double latitude, double longitude):
     ref_lat, ref_lon = UTMtoLL(ref_east, ref_north)
     # calculate distance between position and reference
     distance = get_distance(latitude, longitude, ref_lat, ref_lon)
-    return round(distance * 100) / 100, ref_lat, ref_lon
+    return {'distance': round(distance * 100) / 100, 'ref_lat': ref_lat,
+        'ref_lon': ref_lon}
 
-def get_indices_from_latlon(double latitude, double longitude):
+
+cdef (int, int) get_indices_from_latlon(double latitude, double longitude):
     cdef double easting, northing
     easting, northing = LLtoUTM(latitude, longitude)
     cdef int x = int(round(((easting - XLLCENTER) / CELLSIZE)))
@@ -132,12 +139,14 @@ def get_indices_from_latlon(double latitude, double longitude):
         y = -1
     return x, y
 
-def get_latlon_from_indices(int x, int y):
+
+cdef (double, double) get_latlon_from_indices(unsigned int x, unsigned int y):
     cdef double easting = x*CELLSIZE + XLLCENTER
     cdef double northing = (NROWS - 1 - y)*CELLSIZE + YLLCENTER
     cdef double lat, lon
     lat, lon = UTMtoLL(easting, northing)
     return lat, lon
+
 
 class Dgm200:
     logger = logging.getLogger(__name__)
@@ -158,6 +167,8 @@ class Dgm200:
         file = os.path.join(path, file_name)
         if os.path.isfile(file):
             self.file = file
+        else:
+            raise FileNotFoundError(file)
 
     def get_max_height(self, double lat_ll, double lon_ll, double lat_ur,
             double lon_ur):
