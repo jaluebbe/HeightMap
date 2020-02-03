@@ -11,6 +11,15 @@ def test_missing_file_operation():
     with pytest.raises(FileNotFoundError):
         wb = WaterBodies(path='non_existent_path')
 
+def test_check_for_metadata():
+    wb = WaterBodies()
+    for _location in [[53.8, 6.9], [47.56, 9.5], [47.94, 8.3]]:
+        data = wb.get_data_at_position(*_location)
+        assert data['value'] in [0, 1, 2]
+        assert data['label'] in ['Ocean', 'Land', 'Water']
+        assert isinstance(data['source'], str)
+        assert isinstance(data['attribution'], str)
+
 def test_map_bounds():
     wb = WaterBodies()
     # North Pole
@@ -41,7 +50,7 @@ def test_content():
     wb = WaterBodies()
     # Hambach open pit
     assert wb.get_data_at_position(50.91, 6.51)['label'] == 'Land'
-    # storage poll in Geeste
+    # storage pool in Geeste
     assert wb.get_data_at_position(52.588, 7.294)['label'] == 'Water'
     # London, River Thames
     assert wb.get_data_at_position(51.499, -0.122)['label'] == 'Water'
