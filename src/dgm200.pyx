@@ -277,6 +277,9 @@ class Dgm200:
         return result
 
     def get_height(self, double latitude, double longitude):
+        if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
+            raise ValueError('invalid coordinates ({}, {})'.format(latitude,
+                longitude))
         result = {
             'altitude_m': self.NODATA, 'source': self.attribution_name,
             'lat': latitude, 'lon': longitude, 'distance_m': 0,
