@@ -172,6 +172,10 @@ class Dgm200:
 
     def get_max_height(self, double lat_ll, double lon_ll, double lat_ur,
             double lon_ur):
+        if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
+                -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
+            raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
+                lat_ll, lon_ll, lat_ur, lon_ur))
         result = {'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
             'source': self.attribution_name, 'attribution': self.attribution}
         # ensure requested rectangle is not out of bounds:
@@ -223,6 +227,10 @@ class Dgm200:
 
     def get_min_height(self, double lat_ll, double lon_ll, double lat_ur,
             double lon_ur):
+        if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
+                -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
+            raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
+                lat_ll, lon_ll, lat_ur, lon_ur))
         result = {'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
             'source': self.attribution_name, 'attribution': self.attribution}
         # ensure requested rectangle is not out of bounds:

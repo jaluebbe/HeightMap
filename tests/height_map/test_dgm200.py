@@ -129,13 +129,17 @@ def test_check_bounds_get_max_height():
     # out of bounds
     assert dgm.get_max_height(52.5, 5, 53, 5.5)['h_max'] == dgm.NODATA
     # invalid coordinates
-    assert dgm.get_max_height(52.5, 5, 91, 5.5)['h_max'] == dgm.NODATA
-    assert dgm.get_max_height(-91, 5, 53, 5.5)['h_max'] == dgm.NODATA
-    assert dgm.get_max_height(52.5, -181, 53, 5.5)['h_max'] == dgm.NODATA
-    assert dgm.get_max_height(52.5, 5, 53, 181)['h_max'] == dgm.NODATA
+    with pytest.raises(ValueError):
+        dgm.get_max_height(52.5, 5, 91, 5.5)
+    with pytest.raises(ValueError):
+        dgm.get_max_height(-91, 5, 53, 5.5)
+    with pytest.raises(ValueError):
+        dgm.get_max_height(52.5, -181, 53, 5.5)
+    with pytest.raises(ValueError):
+        dgm.get_max_height(52.5, 5, 53, 181)
     # incorrect rectangle
     assert dgm.get_max_height(54.886907, 15.570925, 47.240591, 6.093066
-        )['h_max'] == dgm.NODATA
+                              )['h_max'] == dgm.NODATA
     # highest location
     assert math.isclose(dgm.get_max_height(47.240591, 6.093066, 54.886907,
         15.570925)['h_max'], 2920.32, abs_tol=10)
@@ -145,14 +149,18 @@ def test_check_bounds_get_min_height():
     dgm = Dgm200()
     # out of bounds
     assert dgm.get_min_height(52.5, 5, 53, 5.5)['h_min'] == dgm.NODATA
-    # invalid coordinates
-    assert dgm.get_min_height(52.5, 5, 91, 5.5)['h_min'] == dgm.NODATA
-    assert dgm.get_min_height(-91, 5, 53, 5.5)['h_min'] == dgm.NODATA
-    assert dgm.get_min_height(52.5, -181, 53, 5.5)['h_min'] == dgm.NODATA
-    assert dgm.get_min_height(52.5, 5, 53, 181)['h_min'] == dgm.NODATA
+    # invalid coordinates, expect ValueError
+    with pytest.raises(ValueError):
+        dgm.get_min_height(52.5, 5, 91, 5.5)
+    with pytest.raises(ValueError):
+        dgm.get_min_height(-91, 5, 53, 5.5)
+    with pytest.raises(ValueError):
+        dgm.get_min_height(52.5, -181, 53, 5.5)
+    with pytest.raises(ValueError):
+        dgm.get_min_height(52.5, 5, 53, 181)
     # incorrect rectangle
     assert dgm.get_min_height(54.886907, 15.570925, 47.240591, 6.093066
-        )['h_min'] == dgm.NODATA
+                              )['h_min'] == dgm.NODATA
     # lowest location
     assert math.isclose(dgm.get_min_height(47.240591, 6.093066, 54.886907,
         15.570925)['h_min'], -265.5, abs_tol=10)
