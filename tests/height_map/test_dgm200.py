@@ -33,44 +33,48 @@ def test_check_for_metadata_get_height():
 
 
 def test_map_bounds_get_height():
+    locations_off_coverage = [
+        # North Pole
+        [90, -180], [90, 0], [90, 180], [90, 179],
+        # Equator
+        [0, -180], [0, 0], [0, 180],
+        # South Pole
+        [-90, -180], [-90, 0], [-90, 180],
+        # lower left limit
+        [47.239659, 6.091796],
+        # lower right limit
+        [47.141612, 14.556905],
+        # upper right limit
+        [54.887716, 15.572619],
+        # upper left limit
+        [55.016964, 5.557084],
+        # lower left
+        [47.240591, 6.093066],
+        # upper right
+        [54.886907, 15.570925],
+    ]
+    invalid_locations = [
+        [-90.1, 0], [90.1, 0], [0, -180.1], [0, 180.1], [0, 360],
+    ]
+    locations_in_coverage = [
+        # min height
+        [50.925084, 6.529813],
+        # max height
+        [47.422239, 10.986123],
+        # locations in Germany
+        [53.57, 9.98], [52.51, 13.42], [47.94, 8.3],
+    ]
     dgm = Dgm200()
-    # North Pole
-    assert dgm.get_height(90, -180)['altitude_m'] == dgm.NODATA
-    assert dgm.get_height(90, 0)['altitude_m'] == dgm.NODATA
-    assert dgm.get_height(90, 180)['altitude_m'] == dgm.NODATA
-    # Equator
-    assert dgm.get_height(0, -180)['altitude_m'] == dgm.NODATA
-    assert dgm.get_height(0, 0)['altitude_m'] == dgm.NODATA
-    assert dgm.get_height(0, 180)['altitude_m'] == dgm.NODATA
-    # South Pole
-    assert dgm.get_height(-90, -180)['altitude_m'] == dgm.NODATA
-    assert dgm.get_height(-90, 0)['altitude_m'] == dgm.NODATA
-    assert dgm.get_height(-90, 180)['altitude_m'] == dgm.NODATA
+    # locations off dgm200 coverage
+    for location in locations_off_coverage:
+        assert dgm.get_height(*location)['altitude_m'] == dgm.NODATA
     # invalid coordinates
-    assert dgm.get_height(0, -181)['altitude_m'] == dgm.NODATA
-    assert dgm.get_height(0, 181)['altitude_m'] == dgm.NODATA
-    assert dgm.get_height(-91, 0)['altitude_m'] == dgm.NODATA
-    assert dgm.get_height(91, 0)['altitude_m'] == dgm.NODATA
-    # out of bounds
-    # lower left limit
-    assert dgm.get_height(47.239659, 6.091796)['altitude_m'] == dgm.NODATA
-    # lower right limit
-    assert dgm.get_height(47.141612, 14.556905)['altitude_m'] == dgm.NODATA
-    # upper right limit
-    assert dgm.get_height(54.887716, 15.572619)['altitude_m'] == dgm.NODATA
-    # upper left limit
-    assert dgm.get_height(55.016964, 5.557084)['altitude_m'] == dgm.NODATA
-    # lower left
-    assert dgm.get_height(47.240591, 6.093066)['altitude_m'] == dgm.NODATA
-    # upper right
-    assert dgm.get_height(54.886907, 15.570925)['altitude_m'] == dgm.NODATA
-    # min height
-    assert dgm.get_height(50.925084, 6.529813)['altitude_m'] != dgm.NODATA
-    # max height
-    assert dgm.get_height(47.422239, 10.986123)['altitude_m'] != dgm.NODATA
-    # locations in Germany
-    for _location in [[53.57, 9.98], [52.51, 13.42], [47.94, 8.3]]:
-        assert dgm.get_height(*_location)['altitude_m'] != dgm.NODATA
+    for location in invalid_locations:
+        with pytest.raises(ValueError):
+            dgm.get_height(*location)
+    # locations in dgm200 coverage
+    for location in locations_in_coverage:
+        assert dgm.get_height(*location)['altitude_m'] != dgm.NODATA
 
 
 def test_content_get_height():
@@ -129,6 +133,9 @@ def test_check_bounds_get_max_height():
     assert dgm.get_max_height(-91, 5, 53, 5.5)['h_max'] == dgm.NODATA
     assert dgm.get_max_height(52.5, -181, 53, 5.5)['h_max'] == dgm.NODATA
     assert dgm.get_max_height(52.5, 5, 53, 181)['h_max'] == dgm.NODATA
+    # incorrect rectangle
+    assert dgm.get_max_height(54.886907, 15.570925, 47.240591, 6.093066
+        )['h_max'] == dgm.NODATA
     # highest location
     assert math.isclose(dgm.get_max_height(47.240591, 6.093066, 54.886907,
         15.570925)['h_max'], 2920.32, abs_tol=10)
@@ -143,6 +150,9 @@ def test_check_bounds_get_min_height():
     assert dgm.get_min_height(-91, 5, 53, 5.5)['h_min'] == dgm.NODATA
     assert dgm.get_min_height(52.5, -181, 53, 5.5)['h_min'] == dgm.NODATA
     assert dgm.get_min_height(52.5, 5, 53, 181)['h_min'] == dgm.NODATA
+    # incorrect rectangle
+    assert dgm.get_min_height(54.886907, 15.570925, 47.240591, 6.093066
+        )['h_min'] == dgm.NODATA
     # lowest location
     assert math.isclose(dgm.get_min_height(47.240591, 6.093066, 54.886907,
         15.570925)['h_min'], -265.5, abs_tol=10)
