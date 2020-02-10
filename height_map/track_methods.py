@@ -146,7 +146,7 @@ class GeoJSONRequest(BaseModel):
 @timeit
 def geojson_get_height_graph_data(data: GeoJSONRequest):
     _coords = [xy[0:2] for xy in data.dict()['geometry']['coordinates']]
-    simplified_track = simplify_coords(_coords, epsilon=0.0001)
+    simplified_track = simplify_coords(_coords, epsilon=0.00003)
     simplified_track = resample_track_list(simplified_track, 300)
     track_elevation = [hi.get_height(y, x, water=False) for x, y in 
         simplified_track]
