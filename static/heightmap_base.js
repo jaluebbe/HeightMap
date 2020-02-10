@@ -50,28 +50,6 @@ baseLayers = {
     "Esri Oceans": esriOceans,
     "Esri Imagery": esriImagery
 };
-if (typeof mapboxAccessToken !== 'undefined') {
-    var mapbox_streets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
-        mapboxAccessToken, {
-            maxZoom: 19,
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; ' +
-                '<a href="https://www.mapbox.com/">Mapbox</a>',
-            id: 'mapbox.streets'
-        });
-    var mapbox_streets_satellite = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
-        mapboxAccessToken, {
-            maxZoom: 19,
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; ' +
-                '<a href="https://www.mapbox.com/">Mapbox</a>',
-            id: 'mapbox.streets-satellite'
-        });
-    Object.assign(baseLayers, {
-        "Mapbox Streets": mapbox_streets,
-        "MapBox Satellite Streets": mapbox_streets_satellite
-    });
-}
 var sevenSummits = L.geoJSON(null, {
     onEachFeature: function(feature, layer) {
         var tooltipContent =
@@ -154,6 +132,26 @@ var layerControl = L.control.layers(baseLayers, other_layers, {
     collapsed: L.Browser.mobile, // hide on mobile devices
     position: 'topright'
 }).addTo(map);
+if (typeof mapboxAccessToken !== 'undefined') {
+    var mapbox_streets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+        mapboxAccessToken, {
+            maxZoom: 19,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; ' +
+                '<a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox.streets'
+        });
+    var mapbox_streets_satellite = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+        mapboxAccessToken, {
+            maxZoom: 19,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; ' +
+                '<a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox.streets-satellite'
+        });
+    layerControl.addBaseLayer(mapbox_streets, 'Mapbox Streets');
+    layerControl.addBaseLayer(mapbox_streets_satellite, 'MapBox Satellite Streets');
+}
 function loadSevenSummits() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', './static/seven_summits.json');
