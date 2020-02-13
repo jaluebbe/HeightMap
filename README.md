@@ -40,16 +40,6 @@ The SRTM tiles could be replaced by .hgt files available from https://data.opend
 
 ### World wide coverage of ocean and terrain
 
-Select one of the following data sources for world wide coverage of ocean and terrain. GEBCO_2019 is the more recent dataset with higher resolution than Earth 2014 but consumes a lot of memory on disk.
-
-#### Earth 2014 
-
-1 arc-minute resolution. Values are 16bit integer. File size approximately 467 MB.
-
-http://ddfe.curtin.edu.au/models/Earth2014/
-
-Put http://ddfe.curtin.edu.au/models/Earth2014/data_1min/topo_grids/Earth2014.TBI2014.1min.geod.bin to height_map/maps/earth2014/ .
-
 #### GEBCO_2019
 
 15 arc-second resolution. Values are 32bit float. File size approximately 12 GB.

@@ -1,5 +1,4 @@
 import height_map.terr50 as terr50
-import height_map.earth2014 as earth2014
 from height_map.srtm1 import Srtm1
 from height_map.dgm200 import Dgm200
 from height_map.gebco_2019 import Gebco2019
@@ -15,15 +14,14 @@ class HeightInfo:
         self.srtm = Srtm1()
         self.gebco = Gebco2019()
         self.dgm = Dgm200()
-        self.sources = [terr50, self.dgm, self.gebco, earth2014]
+        self.sources = [terr50, self.dgm, self.gebco]
 
-    def get_height(self, lat, lon, water=True):
+    def get_height(self, lat, lon):
         """
         Get the elevation of the given location from the best available data source.
 
         :param lat: float -- latitude.
         :param lon: float -- longitude.
-        :param water: bool -- Should water surface be reported as 0m?
         :returns: dict
         """
         wb_label = self.wb.get_data_at_position(lat, lon)['label']
@@ -54,10 +52,6 @@ class HeightInfo:
         if gebco_2019_result['altitude_m'] != self.gebco.NODATA:
             gebco_2019_result['wb_label'] = wb_label
             return gebco_2019_result
-        earth2014_result = earth2014.get_height(lat, lon, water=water)
-        if earth2014_result['altitude_m'] != earth2014.NODATA:
-            earth2014_result['wb_label'] = wb_label
-            return earth2014_result
         else:
             return {'altitude_m': self.NODATA, 'lat': lat, 'lon': lon,
                 'distance_m': 0, 'source': 'NODATA', 'wb_label': wb_label}

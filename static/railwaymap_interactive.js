@@ -19,7 +19,11 @@ function getHeightGraphData(feature) {
                     left: 50
                 },
                 expand: true,
-                position: "bottomright"
+                position: "bottomright",
+                highlightStyle: {
+                    weight: 2,
+                    color: 'red'
+                }
             });
             hg.addTo(map);
             hg.addData(geojson);
