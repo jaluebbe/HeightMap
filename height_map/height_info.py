@@ -1,6 +1,5 @@
 import height_map.dgm200 as dgm200
 import height_map.terr50 as terr50
-import height_map.earth2014 as earth2014
 from height_map.srtm1 import Srtm1
 from height_map.gebco_2019 import Gebco2019
 from height_map.cci_water_bodies_v4 import WaterBodies
@@ -14,7 +13,7 @@ class HeightInfo:
         self.wb = WaterBodies()
         self.srtm = Srtm1()
         self.gebco = Gebco2019()
-        self.sources = [terr50, self.srtm, dgm200, self.gebco, earth2014]
+        self.sources = [terr50, self.srtm, dgm200, self.gebco]
 
     def get_height(self, lat, lon, water=True):
         """
@@ -53,11 +52,6 @@ class HeightInfo:
         if gebco_2019_result['altitude_m'] != self.gebco.NODATA:
             gebco_2019_result['wb_label'] = wb_label
             return gebco_2019_result
-        earth2014_result = earth2014.get_height(lat, lon, water=water)
-        if earth2014_result['altitude_m'] != earth2014.NODATA:
-            earth2014_result['wb_label'] = wb_label
-            return earth2014_result
-        else:
             return {'altitude_m': self.NODATA, 'lat': lat, 'lon': lon,
                 'distance_m': 0, 'source': 'NODATA', 'wb_label': wb_label}
 
