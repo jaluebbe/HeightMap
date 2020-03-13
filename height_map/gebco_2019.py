@@ -75,12 +75,12 @@ class Gebco2019:
             self.old_i = i
             self.old_j = j
             self.old_val = val
+        distance = calculate_distance(lat, lon, lat_found, lon_found)
         return {
             'lat': lat, 'lon': lon, 'lat_found': round(lat_found, 6),
             'lon_found': round(lon_found, 6), 'altitude_m': val,
-            'source': self.attribution_name, 'distance_m': round(
-            calculate_distance(lat, lon, lat_found, lon_found), 3),
-            'attribution': self.attribution}
+            'source': self.attribution_name,
+            'distance_m': round(distance, 3), 'attribution': self.attribution}
 
     @timeit
     def get_max_height(self, lat_ll, lon_ll, lat_ur, lon_ur):
