@@ -35,7 +35,7 @@ async def railway():
 def get_height(
         lat: float = Query(..., ge=-90, le=90),
         lon: float = Query(..., ge=-180, le=180)):
-    response = hi.get_height(lat, lon, water=False)
+    response = hi.get_height(lat, lon)
     if response['source'] == 'NODATA':
         raise HTTPException(status_code=404, detail="no data available")
     return response
