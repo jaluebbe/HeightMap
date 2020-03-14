@@ -22,12 +22,12 @@ async def root():
 
 
 @app.get("/gps", include_in_schema=False)
-async def root():
+async def gps():
     return FileResponse('static/heightmap_gps.html')
 
 
 @app.get("/railway", include_in_schema=False)
-async def root():
+async def railway():
     return FileResponse('static/railwaymap.html')
 
 
