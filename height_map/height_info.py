@@ -102,6 +102,17 @@ class HeightInfo:
         if lat_ll > lat_ur or lon_ll > lon_ur:
             return result
         for source in self.sources:
-            result = source.get_min_max_height(lat_ll, lon_ll, lat_ur, lon_ur)
-            if source.NODATA not in (result['h_min'], result['h_max']):
-                return result
+            _result = source.get_min_max_height(lat_ll, lon_ll, lat_ur, lon_ur)
+            if _result['h_min'] == source.NODATA:
+                continue
+            elif _result['h_max'] == source.NODATA:
+                continue
+            elif _result['h_min'] == _result['h_max']:
+                continue
+            elif _result['counter_min'] > 50:
+                continue
+            elif _result['counter_max'] > 50:
+                continue
+            result.update(_result)
+            break
+        return result
