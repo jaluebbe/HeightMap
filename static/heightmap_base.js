@@ -133,24 +133,43 @@ var layerControl = L.control.layers(baseLayers, other_layers, {
     position: 'topright'
 }).addTo(map);
 if (typeof mapboxAccessToken !== 'undefined') {
-    var mapbox_streets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
-        mapboxAccessToken, {
-            maxZoom: 19,
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; ' +
-                '<a href="https://www.mapbox.com/">Mapbox</a>',
-            id: 'mapbox.streets'
-        });
-    var mapbox_streets_satellite = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
-        mapboxAccessToken, {
-            maxZoom: 19,
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; ' +
-                '<a href="https://www.mapbox.com/">Mapbox</a>',
-            id: 'mapbox.streets-satellite'
-        });
+
+    var mapbox_streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+        tileSize: 512,
+        maxZoom: 18,
+        zoomOffset: -1,
+        id: 'mapbox/streets-v11',
+        accessToken: mapboxAccessToken
+    });
+    var mapbox_satellite_streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+        tileSize: 512,
+        maxZoom: 18,
+        zoomOffset: -1,
+        id: 'mapbox/satellite-streets-v11',
+        accessToken: mapboxAccessToken
+    });
+    var mapbox_outdoors = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+        tileSize: 512,
+        maxZoom: 18,
+        zoomOffset: -1,
+        id: 'mapbox/outdoors-v11',
+        accessToken: mapboxAccessToken
+    });
+    var mapbox_navigation_preview = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+        tileSize: 512,
+        maxZoom: 18,
+        zoomOffset: -1,
+        id: 'mapbox/navigation-preview-day-v4',
+        accessToken: mapboxAccessToken
+    });
     layerControl.addBaseLayer(mapbox_streets, 'Mapbox Streets');
-    layerControl.addBaseLayer(mapbox_streets_satellite, 'MapBox Satellite Streets');
+    layerControl.addBaseLayer(mapbox_satellite_streets, 'MapBox Satellite Streets');
+    layerControl.addBaseLayer(mapbox_outdoors, 'Mapbox Outdoors');
+    layerControl.addBaseLayer(mapbox_navigation_preview, 'Mapbox Navigation Preview');
 }
 function loadSevenSummits() {
     var xhr = new XMLHttpRequest();
