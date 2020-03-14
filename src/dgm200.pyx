@@ -284,6 +284,84 @@ class Dgm200:
             'counter_min': counter})
         return result
 
+    def get_min_max_height(self, double lat_ll, double lon_ll, double lat_ur,
+            double lon_ur):
+        if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
+                -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
+            raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
+                lat_ll, lon_ll, lat_ur, lon_ur))
+        result = {
+            'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
+            'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
+            'source': self.attribution_name, 'attribution': self.attribution}
+        # ensure requested rectangle is not out of bounds:
+        if (lat_ll < LAT_MIN or lat_ll > LAT_MAX or lon_ll < LON_MIN or
+                lon_ll > LON_MAX or lat_ur < LAT_MIN or lat_ur > LAT_MAX or
+                lon_ur < LON_MIN or lon_ur > LON_MAX):
+            return result
+        # consider only correctly defined rectangle:
+        if lat_ll > lat_ur or lon_ll > lon_ur:
+            return result
+        cdef int x_ll, y_ll, x_ur, y_ur
+        cdef double val
+        x_ll, y_ll = get_indices_from_latlon(lat_ll, lon_ll)
+        if x_ll == -1 or y_ll == -1:
+            return result
+        x_ur, y_ur = get_indices_from_latlon(lat_ur, lon_ur)
+        if x_ur == -1 or y_ur == -1:
+            return result
+        #
+        cdef double h_max = self.NODATA
+        cdef double h_min = -self.NODATA
+        cdef int counter_max = 0
+        cdef int counter_min = 0
+        # start in the upper left edge of the target area
+        cdef int x_pos = x_ll
+        cdef int y_pos = y_ur
+        locations_max = []
+        locations_min = []
+        with open(self.file, "rb") as f:
+            while y_ur <= y_pos <= y_ll:
+                #
+                f.seek((y_pos*NCOLS + x_pos) * 4)
+                num_values = x_ur - x_ll + 1
+                buf = f.read(num_values * 4)
+                values = struct.unpack('>{:d}f'.format(num_values), buf)
+                while(x_ll <= x_pos <= x_ur):
+                    val = values[x_pos - x_ll]
+                    if val == self.NODATA:
+                        pass
+                    elif val < h_min:
+                        h_min = val
+                        locations_min.clear()
+                        locations_min.append(get_latlon_from_indices(x_pos,
+                            y_pos))
+                        counter_min = 1
+                    elif val == h_min:
+                        locations_min.append(get_latlon_from_indices(x_pos,
+                            y_pos))
+                        counter_min += 1
+                    if val > h_max:
+                        h_max = val
+                        locations_max.clear()
+                        locations_max.append(get_latlon_from_indices(x_pos,
+                            y_pos))
+                        counter_max = 1
+                    elif val == h_max:
+                        locations_max.append(get_latlon_from_indices(x_pos,
+                            y_pos))
+                        counter_max += 1
+                    x_pos += 1
+                x_pos = x_ll
+                y_pos += 1
+        if h_min == -self.NODATA:
+            h_min = self.NODATA
+        result.update({
+            'location_max': locations_max, 'h_max': h_max,
+            'counter_max': counter_max, 'location_min': locations_min,
+            'h_min': h_min, 'counter_min': counter_min})
+        return result
+
     def get_height(self, double latitude, double longitude):
         if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
             raise ValueError('invalid coordinates ({}, {})'.format(latitude,
