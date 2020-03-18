@@ -156,6 +156,7 @@ class Dgm200:
         attribution_url)
     precision = 10.0  # max height error of dgm200 dataset
     file = None
+    seabed_included = False
     NODATA = -9999
 
     def __init__(self, path=None, file_name=None):

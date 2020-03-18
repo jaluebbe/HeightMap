@@ -52,6 +52,7 @@ class Terrain50:
                    'database right 2019</a>').format(attribution_url)
     NODATA = -32768
     precision = 4.0  # RMS error
+    seabed_included = False
 
     def __init__(self, path=None, cache_path=None, cache_file_name=None):
         pwd = os.path.dirname(os.path.abspath(__file__))

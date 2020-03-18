@@ -34,6 +34,7 @@ class Gebco2019:
     attribution_name = 'The GEBCO Grid'
     attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,
         attribution_name)
+    seabed_included = True
     NODATA = -32768
     old_i = None
     old_j = None

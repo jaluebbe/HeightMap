@@ -48,6 +48,7 @@ class Srtm1:
         attribution_name)
 
     precision = 16.0  # 16m SRTM vertical error
+    seabed_included = False
     NODATA = -32768
     old_file = None
     old_file_name = None
