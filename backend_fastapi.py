@@ -75,7 +75,8 @@ def get_min_max_height(
         extreme_locations.append(geojson.Feature(
             geometry=geojson.Point(_location[::-1]), properties={
                 "type": "maximum", "elevation_m": round(result['h_max'], 1)}))
-    return geojson.FeatureCollection(extreme_locations)
+    return geojson.FeatureCollection(extreme_locations, properties={
+        'source': result['source']})
 
 
 @app.post("/api/get_track_length")
