@@ -56,7 +56,7 @@ var minMaxLocations = L.geoJSON(null, {
     onEachFeature: function(feature, layer) {
         var tooltipContent =
             '' + feature.properties.type + "<br>" +
-            feature.properties.elevation_m + "&nbsp;m";
+            feature.properties.elevation_m + "&nbsp;m<br>" + feature.properties.source;
         layer.bindTooltip(tooltipContent, {
             direction: "top"
         });

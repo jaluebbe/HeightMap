@@ -70,11 +70,13 @@ def get_min_max_height(
     for _location in result['location_min']:
         extreme_locations.append(geojson.Feature(
             geometry=geojson.Point(_location[::-1]), properties={
-                "type": "minimum", "elevation_m": round(result['h_min'], 1)}))
+                "type": "minimum", "elevation_m": round(result['h_min'], 1),
+                "source": result['source_min']}))
     for _location in result['location_max']:
         extreme_locations.append(geojson.Feature(
             geometry=geojson.Point(_location[::-1]), properties={
-                "type": "maximum", "elevation_m": round(result['h_max'], 1)}))
+                "type": "maximum", "elevation_m": round(result['h_max'], 1),
+                "source": result['source_max']}))
     return geojson.FeatureCollection(extreme_locations, properties={
         'source': result['source']})
 

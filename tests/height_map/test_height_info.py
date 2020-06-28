@@ -144,6 +144,8 @@ def test_check_for_metadata_get_min_max_height():
     assert isinstance(data['location_max'], list)
     assert data['counter_max'] >= 0
     assert isinstance(data['source'], str)
+    assert isinstance(data['source_min'], str)
+    assert isinstance(data['source_max'], str)
     assert isinstance(data['attribution'], str)
 
 
