@@ -109,46 +109,46 @@ class HeightInfo:
                     lon_ur)
                 min_locations = _result['location_min']
                 max_locations = _result['location_max']
-                if len(min_locations) == 0:
-                    continue
-                if len(max_locations) == 0:
-                    continue
                 min_is_ocean = [
                     self.wb.get_data_at_position(lat, lon)['label'] == 'Ocean'
                     for lat, lon in min_locations]
                 max_is_ocean = [
                     self.wb.get_data_at_position(lat, lon)['label'] == 'Ocean'
                     for lat, lon in max_locations]
-                if len(min_locations) < 50 and (not any(min_is_ocean) or
+                if 0 < len(min_locations) < 50 and (not any(min_is_ocean) or
                         source.seabed_included):
                     min_found = True
                     _result['source_min'] = _result['source']
-                if len(max_locations) < 50 and (not any(max_is_ocean) or
+                if 0 < len(max_locations) < 50 and (not any(max_is_ocean) or
                         source.seabed_included):
                     max_found = True
                     _result['source_max'] = _result['source']
+                if not min_found and not max_found:
+                    continue
             elif not max_found:
                 _result = source.get_max_height(lat_ll, lon_ll, lat_ur, lon_ur)
-                if len(_result['location_max']) == 0:
-                    continue
+                max_locations = _result['location_max']
                 max_is_ocean = [
                     self.wb.get_data_at_position(lat, lon)['label'] == 'Ocean'
-                    for lat, lon in _result['location_max']]
-                if len(max_locations) < 50 and (not any(max_is_ocean) or
+                    for lat, lon in max_locations]
+                if 0 < len(max_locations) < 50 and (not any(max_is_ocean) or
                         source.seabed_included):
                     max_found = True
                     _result['source_max'] = _result['source']
+                else:
+                    continue
             elif not min_found:
                 _result = source.get_min_height(lat_ll, lon_ll, lat_ur, lon_ur)
-                if len(_result['location_min']) == 0:
-                    continue
+                min_locations = _result['location_min']
                 min_is_ocean = [
                     self.wb.get_data_at_position(lat, lon)['label'] == 'Ocean'
-                    for lat, lon in _result['location_min']]
-                if len(min_locations) < 50 and (not any(min_is_ocean) or
+                    for lat, lon in min_locations]
+                if 0 < len(min_locations) < 50 and (not any(min_is_ocean) or
                         source.seabed_included):
                     min_found = True
                     _result['source_min'] = _result['source']
+                else:
+                    continue
             else:
                 break
             _result.pop('attribution')
