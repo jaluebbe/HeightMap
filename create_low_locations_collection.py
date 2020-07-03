@@ -12,7 +12,7 @@ challenger_deep = Feature(
     "url": "https://en.wikipedia.org/wiki/Challenger_Deep",
     "type": "subsea_depression"})
 
-challenger_deep = Feature(
+horizon_deep = Feature(
     geometry=Point((-23.25833, -174.726667)[::-1]), properties={
     "name": "Horizon Deep", "elevation_m": -10800,
     "url": "https://en.wikipedia.org/wiki/Tonga_Trench",
@@ -128,7 +128,7 @@ low_locations = FeatureCollection([
     hambach_surface_mine, dead_sea, qattara_depression, karagiye, ayding_lake,
     danakil_depression, lake_assal, sea_of_galilee, calypso_deep, manila_trench,
     litke_deep, south_sandwich_trench, cayman_trough, diamantina_deep,
-    lake_enriquillo, sabkhat_ghuzayyil
+    lake_enriquillo, sabkhat_ghuzayyil, horizon_deep
     ])
 
 file_name = 'static/low_locations.json'
