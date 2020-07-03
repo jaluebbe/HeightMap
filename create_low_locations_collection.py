@@ -12,6 +12,12 @@ challenger_deep = Feature(
     "url": "https://en.wikipedia.org/wiki/Challenger_Deep",
     "type": "subsea_depression"})
 
+challenger_deep = Feature(
+    geometry=Point((-23.25833, -174.726667)[::-1]), properties={
+    "name": "Horizon Deep", "elevation_m": -10800,
+    "url": "https://en.wikipedia.org/wiki/Tonga_Trench",
+    "type": "subsea_depression"})
+
 badwater_basin = Feature(
     geometry=Point((36.250278, -116.825833)[::-1]), properties={
     "name": "Badwater Basin", "elevation_m": -85,
