@@ -28,7 +28,7 @@ def get_lon_from_index(j):
     return round(j*CELLSIZE + XLLCENTER, 6)
 
 
-class Gebco2019:
+class Gebco:
     attribution_url = ('https://www.gebco.net/data_and_products/'
         'gridded_bathymetry_data/gebco_2019/gebco_2019_info.html')
     attribution_name = 'The GEBCO Grid'
@@ -45,7 +45,7 @@ class Gebco2019:
             cache_file_name=None):
         pwd = os.path.dirname(os.path.abspath(__file__))
         if path is None:
-            path = os.path.join(pwd, 'maps/gebco_2019')
+            path = os.path.join(pwd, 'maps/gebco')
         if file_name is None:
             file_name = 'GEBCO_2019.nc'
         if cache_path is None:
@@ -225,7 +225,7 @@ class Gebco2019:
             x_max, y_max = np.where(selection == h_max)
             locations_max = [(i_ll+_x, j_ll+_y) for _x, _y in zip(x_max, y_max)]
         elif not os.path.isfile(cache_file):
-            raise FileNotFoundError('GEBCO_2019 min/max cache file is missing.')
+            raise FileNotFoundError('GEBCO min/max cache file is missing.')
         return locations_max
 
     @timeit
@@ -241,7 +241,7 @@ class Gebco2019:
             x_min, y_min = np.where(selection == h_min)
             locations_min = [(i_ll+_x, j_ll+_y) for _x, _y in zip(x_min, y_min)]
         elif not os.path.isfile(cache_file):
-            raise FileNotFoundError('GEBCO_2019 min/max cache file is missing.')
+            raise FileNotFoundError('GEBCO min/max cache file is missing.')
         return locations_min
 
     @timeit
@@ -263,7 +263,7 @@ class Gebco2019:
             locations_min = [(i_ll+_x, j_ll+_y) for _x, _y in zip(x_min, y_min)]
             locations = set(locations_max + locations_min)
         elif not os.path.isfile(cache_file):
-            raise FileNotFoundError('GEBCO_2019 min/max cache file is missing.')
+            raise FileNotFoundError('GEBCO min/max cache file is missing.')
         return locations
 
     @timeit

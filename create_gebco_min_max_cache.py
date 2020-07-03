@@ -1,9 +1,9 @@
 import os
 import json
 import numpy as np
-from height_map.gebco_2019 import Gebco2019
+from height_map.gebco import Gebco
 
-gebco = Gebco2019()
+gebco = Gebco()
 
 z_max = np.zeros([180, 360])
 z_min = np.zeros([180, 360])

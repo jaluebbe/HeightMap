@@ -5,13 +5,13 @@ import json
 from height_map.terr50 import Terrain50
 from height_map.srtm1 import Srtm1
 from height_map.dgm200 import Dgm200
-from height_map.gebco_2019 import Gebco2019
+from height_map.gebco import Gebco
 from height_map.height_info import HeightInfo
 
 dgm200 = Dgm200()
 terr50 = Terrain50()
 srtm1 = Srtm1()
-gebco_2019 = Gebco2019()
+gebco = Gebco()
 height_info = HeightInfo()
 
 
@@ -20,7 +20,7 @@ def get_height(lat, lon):
     srtm1_result = srtm1.get_height(lat, lon)
     terr50_result = terr50.get_height(lat, lon)
     dgm200_result = dgm200.get_height(lat, lon)
-    gebco_2019_result = gebco_2019.get_height(lat, lon)
+    gebco_result = gebco.get_height(lat, lon)
 
     results = {'request': {'lat': lat, 'lon': lon}}
     if srtm1_result['altitude_m'] != srtm1.NODATA:
@@ -29,8 +29,8 @@ def get_height(lat, lon):
         results['TERR50'] = terr50_result
     if dgm200_result['altitude_m'] != dgm200.NODATA:
         results['DGM200'] = dgm200_result
-    if gebco_2019_result['altitude_m'] != gebco_2019.NODATA:
-        results['GEBCO_2019'] = gebco_2019_result
+    if gebco_result['altitude_m'] != gebco.NODATA:
+        results['GEBCO'] = gebco_result
     results['height_info'] = height_info.get_height(lat, lon)
     return results
 
@@ -95,7 +95,7 @@ def test_min(area, sources, name=''):
 
 if __name__ == "__main__":
 
-    sources = [dgm200, srtm1, terr50, gebco_2019]
+    sources = [dgm200, srtm1, terr50, gebco]
     with open('test_locations.json', 'r') as f:
         locations = json.loads(f.read())
     for location in locations['points']:
@@ -103,7 +103,7 @@ if __name__ == "__main__":
         lat = location['lat']
         lon = location['lon']
         results = test_height(lat, lon, sources, name=label)
-    sources = [dgm200, terr50, gebco_2019, height_info]
+    sources = [dgm200, terr50, gebco, height_info]
     for location in locations['areas']:
         label = location['label']
         area = location['area']

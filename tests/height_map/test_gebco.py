@@ -3,18 +3,18 @@ import sys
 import pytest
 import math
 sys.path.append(os.getcwd())
-from height_map.gebco_2019 import Gebco2019
+from height_map.gebco import Gebco
 
 
 def test_missing_file_operation():
     with pytest.raises(FileNotFoundError):
-        Gebco2019(file_name='missing_file.tif')
+        Gebco(file_name='missing_file.tif')
     with pytest.raises(FileNotFoundError):
-        Gebco2019(path='non_existent_path')
+        Gebco(path='non_existent_path')
 
 
 def test_check_for_metadata_get_height():
-    gebco = Gebco2019()
+    gebco = Gebco()
     for location in [[53.57, 9.98], [52.51, 13.42], [47.94, 8.3], [-41, 172]]:
         data = gebco.get_height(*location)
         assert data['altitude_m'] != gebco.NODATA
@@ -38,7 +38,7 @@ def test_map_bounds():
     invalid_locations = [
         [-90.1, 0], [90.1, 0], [0, -180.1], [0, 180.1], [0, 360],
     ]
-    gebco = Gebco2019()
+    gebco = Gebco()
     for location in locations:
         assert gebco.get_height(*location)['altitude_m'] != gebco.NODATA
     # out of bounds
@@ -48,7 +48,7 @@ def test_map_bounds():
 
 
 def test_content_get_height():
-    gebco = Gebco2019()
+    gebco = Gebco()
     # Hambach open pit
     assert math.isclose(gebco.get_height(50.91, 6.51)['altitude_m'], -94.83,
         abs_tol=16)
@@ -118,7 +118,7 @@ def test_content_get_height():
 
 
 def test_check_for_metadata_get_max_height():
-    gebco = Gebco2019()
+    gebco = Gebco()
     data = gebco.get_max_height(51, 7, 52, 8)
     assert data['h_max'] != gebco.NODATA
     assert isinstance(data['h_max'], float)
@@ -129,7 +129,7 @@ def test_check_for_metadata_get_max_height():
 
 
 def test_check_for_metadata_get_min_height():
-    gebco = Gebco2019()
+    gebco = Gebco()
     data = gebco.get_min_height(51, 7, 52, 8)
     assert data['h_min'] != gebco.NODATA
     assert isinstance(data['h_min'], float)
@@ -140,7 +140,7 @@ def test_check_for_metadata_get_min_height():
 
 
 def test_check_for_metadata_get_min_max_height():
-    gebco = Gebco2019()
+    gebco = Gebco()
     data = gebco.get_min_max_height(51, 7, 52, 8)
     assert data['h_min'] != gebco.NODATA
     assert isinstance(data['h_min'], float)
@@ -155,7 +155,7 @@ def test_check_for_metadata_get_min_max_height():
 
 
 def test_check_bounds_get_max_height():
-    gebco = Gebco2019()
+    gebco = Gebco()
     # in bounds
     assert gebco.get_max_height(52.5, 5, 53, 5.5)['h_max'] != gebco.NODATA
     # invalid coordinates
@@ -179,7 +179,7 @@ def test_check_bounds_get_max_height():
 
 
 def test_check_bounds_get_min_height():
-    gebco = Gebco2019()
+    gebco = Gebco()
     # in bounds
     assert gebco.get_min_height(52.5, 5, 53, 5.5)['h_min'] != gebco.NODATA
     # invalid coordinates
@@ -203,7 +203,7 @@ def test_check_bounds_get_min_height():
 
 
 def test_check_bounds_get_min_max_height():
-    gebco = Gebco2019()
+    gebco = Gebco()
     # in bounds
     _result = gebco.get_min_max_height(52.5, 5, 53, 5.5)
     assert _result['h_max'] != gebco.NODATA

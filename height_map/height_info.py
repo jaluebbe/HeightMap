@@ -1,7 +1,7 @@
 from height_map.terr50 import Terrain50
 from height_map.srtm1 import Srtm1
 from height_map.dgm200 import Dgm200
-from height_map.gebco_2019 import Gebco2019
+from height_map.gebco import Gebco
 from height_map.cci_water_bodies_v4 import WaterBodies
 
 
@@ -12,7 +12,7 @@ class HeightInfo:
     def __init__(self):
         self.wb = WaterBodies()
         self.srtm = Srtm1()
-        self.gebco = Gebco2019()
+        self.gebco = Gebco()
         self.dgm = Dgm200()
         self.terr50 = Terrain50()
         self.sources = [self.terr50, self.dgm, self.gebco]
@@ -49,10 +49,10 @@ class HeightInfo:
             # prefer sea floor bathymetry if possible
             dgm200_result['wb_label'] = wb_label
             return dgm200_result
-        gebco_2019_result = self.gebco.get_height(lat, lon)
-        if gebco_2019_result['altitude_m'] != self.gebco.NODATA:
-            gebco_2019_result['wb_label'] = wb_label
-            return gebco_2019_result
+        gebco_result = self.gebco.get_height(lat, lon)
+        if gebco_result['altitude_m'] != self.gebco.NODATA:
+            gebco_result['wb_label'] = wb_label
+            return gebco_result
         else:
             return {'altitude_m': self.NODATA, 'lat': lat, 'lon': lon,
                 'distance_m': 0, 'source': 'NODATA', 'wb_label': wb_label}
