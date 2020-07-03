@@ -71,8 +71,8 @@ def test_content_get_height():
     assert math.isclose(gebco.get_height(47.420833, 13.0625)['altitude_m'],
         2818.2, abs_tol=16)
     # lowest location
-    assert math.isclose(gebco.get_height(23.9125, -175.679)['altitude_m'],
-        -10880.6, abs_tol=16)
+    assert math.isclose(gebco.get_height(11.366667, 142.5875)['altitude_m'],
+        -10952, abs_tol=16)
     # highest location
     assert math.isclose(gebco.get_height(27.9875, 86.925)['altitude_m'],
         8613.2, abs_tol=16)
@@ -199,8 +199,7 @@ def test_check_bounds_get_min_height():
         15.570925)['h_min'], -195.2, abs_tol=16)
     # lowest location of the world
     assert math.isclose(gebco.get_min_height(-90, -180, 90, 180)['h_min'],
-        -10880.6, abs_tol=16)
-
+        -10952, abs_tol=16)
 
 def test_check_bounds_get_min_max_height():
     gebco = Gebco()
@@ -230,4 +229,4 @@ def test_check_bounds_get_min_max_height():
     # highest and lowest location of the world
     _result = gebco.get_min_max_height(-90, -180, 90, 180)
     assert math.isclose(_result['h_max'], 8613.2, abs_tol=16)
-    assert math.isclose(_result['h_min'], -10880.6, abs_tol=16)
+    assert math.isclose(_result['h_min'], -10952, abs_tol=16)
