@@ -64,6 +64,9 @@ GeoJSON shapefiles published by KiwiRail describing the New Zealand railway netw
 
 https://catalogue.data.govt.nz/organization/kiwirail-holdings-limited
 
+The datasets being used are *kiwirail-tunnels1*, *kiwirail-bridges1*, *nz-railway-network* and *level-crossings-railway*.
+
+
 ## Startup of the web interface
 
 The web interface and API is hosted using FastAPI. It could also be run as a Docker container.
