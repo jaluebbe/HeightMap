@@ -34,7 +34,7 @@ https://lpdaac.usgs.gov/products/srtmgl1v003/
 
 Download required tiles from https://dwtkns.com/srtm30m/ , unpack and put them to height_map/maps/srtm1/ .
 
-#### Replacement of SRTM .hgt files with improved data
+#### Replacement of SRTM .hgt files with improved data for many European countries:
 
 The SRTM tiles could be replaced by .hgt files available from https://data.opendataportal.at/dataset/dtm-europe where SRTM data is replaced by LiDAR where open data sources are available.
 
