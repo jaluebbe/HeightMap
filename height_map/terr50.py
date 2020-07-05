@@ -20,8 +20,14 @@ def get_y(osgr):
 
 
 def osgr_to_grid(osgr):
-    return Osgr(osgr.easting - (osgr.easting % CELLSIZE),
-        osgr.northing - (osgr.northing % CELLSIZE))
+    easting_remainder = osgr.easting % CELLSIZE
+    northing_remainder = osgr.northing % CELLSIZE
+    if easting_remainder > CELLSIZE / 2:
+        easting_remainder -= CELLSIZE
+    if northing_remainder > CELLSIZE / 2:
+        northing_remainder -= CELLSIZE
+    return Osgr(osgr.easting - easting_remainder,
+        osgr.northing - northing_remainder)
 
 
 def get_filename(osgr):
