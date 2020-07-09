@@ -48,7 +48,7 @@ https://www.gebco.net/data_and_products/gridded_bathymetry_data/
 
 Download the global GEBCO_2020 Grid in netCDF format, unpack it and put GEBCO_2020.nc to height_map/maps/gebco/ .
 
-#### CCI Water Bodies v4.0
+#### ESA CCI Water Bodies v4.0
 
 World wide map of ocean, water and land bodies in 150m resolution.
 
@@ -57,6 +57,19 @@ https://www.mdpi.com/2072-4292/9/1/36
 http://maps.elie.ucl.ac.be/CCI/viewer/download.php
 
 Download ftp://geo10.elie.ucl.ac.be/v207/ESACCI-LC-L4-WB-Ocean-Land-Map-150m-P13Y-2000-v4.0.tif and put it to height_map/maps/cci_wb4 .
+
+#### ESA CCI Land Cover Maps v2.1.1
+
+http://maps.elie.ucl.ac.be/CCI/viewer/download.php
+
+Download C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.nc from http://maps.elie.ucl.ac.be/CCI/viewer/download.php and convert it to GeoTIFF:
+```
+gdalwarp -of Gtiff -co COMPRESS=LZW -co TILED=YES -ot Byte -te -180.0000000 -90.0000000 180.0000000 90.0000000 -tr 0.002777777777778 0.002777777777778 -t_srs EPSG:4326 NETCDF:C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.nc:lccs_class C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.tif
+```
+
+The corresponding legend is available at http://maps.elie.ucl.ac.be/CCI/viewer/download/ESACCI-LC-Legend.csv .
+
+Put the GeoTIFF file and the legend to height_map/maps/cci_land_cover/ .
 
 ### NZ Railway Network
 
