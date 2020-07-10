@@ -34,4 +34,4 @@ class LandCover:
         return {
             'value': value, 'label': _legend['label'],
             'color': _legend['color'], 'source': self.attribution_name,
-            'attribution': self.attribution}
+            'attributions': [self.attribution]}

@@ -274,4 +274,4 @@ class Srtm1:
             'lon_found': round(lon_found, 6), 'altitude_m': val,
             'source': self.attribution_name, 'distance_m': round(
             calculate_distance(lat, lon, lat_found, lon_found), 3),
-            'attribution': self.attribution}
+            'attributions': [self.attribution]}

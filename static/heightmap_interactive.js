@@ -23,12 +23,12 @@ info.onAdd = function (map) {
 info.showText = function(infoText) {
     this._div.innerHTML = infoText;
 };
-info.updateElevation = function(altitude_m, source, wb_label) {
+info.updateElevation = function(altitude, source, surfaceLabel) {
     var txt = "<div style='text-align: right;'><b>"
-        + altitude_m + "&nbsp;m</b></div>";
-    if (wb_label)
-        txt += "<div style='text-align: right;'>" + wb_label + "</div>";
-    txt += source;
+        + altitude + "&nbsp;m</b></div>";
+    txt += "<div style='text-align: right;'>" + source + "</div>";
+    if (surfaceLabel)
+        txt += "<div style='text-align: right;'>" + surfaceLabel + "</div>";
     this._div.innerHTML = txt;
 };
 info.addTo(map);
@@ -105,8 +105,27 @@ function requestHeight(e) {
                 + height_info.altitude_m + "&nbsp;m</b></div>" + height_info.source);
             myCircle.setLatLng([height_info.lat_found, height_info.lon_found]);
             myCircle.setRadius(height_info.distance_m);
-	    info.updateElevation(height_info.altitude_m, height_info.source, height_info.wb_label);
-            map.attributionControl.addAttribution(height_info.attribution);
+            if (height_info.wb_label == 'Land')
+                addLandCover(latlng.lat, latlng.lng, height_info.altitude_m, height_info.source);
+            else
+                info.updateElevation(height_info.altitude_m, height_info.source, height_info.wb_label);
+            height_info.attributions.forEach(attribution => map.attributionControl.addAttribution(attribution));
+        }
+    };
+    xhr.send();
+}
+
+function addLandCover(lat, lon, altitude, heightSource) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', './api/get_land_cover' + '?lat=' + lat + '&lon=' + lon);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            let lcData = JSON.parse(xhr.responseText)
+            lcData.attributions.forEach(attribution => map.attributionControl.addAttribution(attribution));
+            info.updateElevation(altitude, heightSource, lcData.label);
+        } else {
+            info.updateElevation(altitude, heightSource, 'Land');
         }
     };
     xhr.send();

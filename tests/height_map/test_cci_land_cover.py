@@ -23,7 +23,7 @@ def test_check_for_metadata():
         assert isinstance(data['color'], list)
         assert len(data['color']) == 3
         assert isinstance(data['source'], str)
-        assert isinstance(data['attribution'], str)
+        assert isinstance(data['attributions'], list)
 
 def test_map_bounds():
     lc = LandCover()

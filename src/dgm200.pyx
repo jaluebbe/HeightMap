@@ -178,7 +178,7 @@ class Dgm200:
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
                 lat_ll, lon_ll, lat_ur, lon_ur))
         result = {'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         # ensure requested rectangle is not out of bounds:
         if (lat_ll < LAT_MIN or lat_ll > LAT_MAX or lon_ll < LON_MIN or
                 lon_ll > LON_MAX or lat_ur < LAT_MIN or lat_ur > LAT_MAX or
@@ -233,7 +233,7 @@ class Dgm200:
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
                 lat_ll, lon_ll, lat_ur, lon_ur))
         result = {'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         # ensure requested rectangle is not out of bounds:
         if (lat_ll < LAT_MIN or lat_ll > LAT_MAX or lon_ll < LON_MIN or
                 lon_ll > LON_MAX or lat_ur < LAT_MIN or lat_ur > LAT_MAX or
@@ -294,7 +294,7 @@ class Dgm200:
         result = {
             'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
             'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         # ensure requested rectangle is not out of bounds:
         if (lat_ll < LAT_MIN or lat_ll > LAT_MAX or lon_ll < LON_MIN or
                 lon_ll > LON_MAX or lat_ur < LAT_MIN or lat_ur > LAT_MAX or
@@ -370,7 +370,7 @@ class Dgm200:
         result = {
             'altitude_m': self.NODATA, 'source': self.attribution_name,
             'lat': latitude, 'lon': longitude, 'distance_m': 0,
-            'attribution': self.attribution}
+            'attributions': [self.attribution]}
         if (latitude < LAT_MIN or latitude > LAT_MAX or longitude < LON_MIN or
                 longitude > LON_MAX):
             return result
