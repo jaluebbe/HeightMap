@@ -9,13 +9,13 @@ from height_map.terr50 import Terrain50
 def test_check_for_metadata_get_height():
     terr50 = Terrain50()
     for location in [[51.499, -0.122], [51.5052, -0.1666], [51.5058, -0.1834],
-                     [51.509, -0.163], [51.507, -0.179]]:
+                     [51.509, -0.163], [51.507, -0.179], [49.9262, -6.2979]]:
         data = terr50.get_height(*location)
         assert data['altitude_m'] != terr50.NODATA
         assert isinstance(data['source'], str)
         assert isinstance(data['attributions'], list)
         assert data['distance_m'] >= 0
-        assert data['distance_m'] < 70.72
+        assert data['distance_m'] < 35.36
         assert isinstance(data['lat_found'], float)
         assert isinstance(data['lon_found'], float)
 
