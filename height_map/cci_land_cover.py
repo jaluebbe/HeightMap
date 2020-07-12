@@ -24,11 +24,11 @@ class LandCover:
         self.gth = GeoTiffHandler(os.path.join(path, file_name))
 
     def get_value_at_position(self, lat, lon):
+        if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+            raise ValueError('invalid coordinates ({}, {})'.format(lat, lon))
         return self.gth.get_value_at_position(lat, lon)
 
     def get_data_at_position(self, lat, lon):
-        if not (-90 <= lat <= 90 and -180 <= lon <= 180):
-            raise ValueError('invalid coordinates ({}, {})'.format(lat, lon))
         value = self.get_value_at_position(lat, lon)
         _legend = self.legend.get(str(value))
         return {
