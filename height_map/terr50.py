@@ -82,7 +82,7 @@ class Terrain50:
             raise ValueError('invalid coordinates ({}, {})'.format(lat, lon))
         result = {
             'altitude_m': self.NODATA, 'source': self.attribution_name, 'lat': lat,
-            'lon': lon, 'distance_m': 0, 'attribution': self.attribution}
+            'lon': lon, 'distance_m': 0, 'attributions': [self.attribution]}
         if lat < 49.7 or lat > 62 or lon < -10 or lon > 4:
             return result
         try:
@@ -119,7 +119,7 @@ class Terrain50:
     @timeit
     def get_max_height(self, lat_ll, lon_ll, lat_ur, lon_ur):
         result = {'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
                 -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
@@ -147,7 +147,7 @@ class Terrain50:
     @timeit
     def get_min_height(self, lat_ll, lon_ll, lat_ur, lon_ur):
         result = {'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
                 -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
@@ -177,7 +177,7 @@ class Terrain50:
         result = {
             'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
             'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
                 -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(

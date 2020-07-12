@@ -13,7 +13,7 @@ def test_check_for_metadata_get_height():
         data = terr50.get_height(*location)
         assert data['altitude_m'] != terr50.NODATA
         assert isinstance(data['source'], str)
-        assert isinstance(data['attribution'], str)
+        assert isinstance(data['attributions'], list)
         assert data['distance_m'] >= 0
         assert data['distance_m'] < 70.72
         assert isinstance(data['lat_found'], float)
@@ -73,7 +73,7 @@ def test_check_for_metadata_get_max_height():
     assert isinstance(data['location_max'], list)
     assert data['counter_max'] >= 0
     assert isinstance(data['source'], str)
-    assert isinstance(data['attribution'], str)
+    assert isinstance(data['attributions'], list)
 
 
 def test_check_for_metadata_get_min_height():
@@ -84,7 +84,7 @@ def test_check_for_metadata_get_min_height():
     assert isinstance(data['location_min'], list)
     assert data['counter_min'] >= 0
     assert isinstance(data['source'], str)
-    assert isinstance(data['attribution'], str)
+    assert isinstance(data['attributions'], list)
 
 
 def test_check_for_metadata_get_min_max_height():
@@ -99,7 +99,7 @@ def test_check_for_metadata_get_min_max_height():
     assert isinstance(data['location_max'], list)
     assert data['counter_max'] >= 0
     assert isinstance(data['source'], str)
-    assert isinstance(data['attribution'], str)
+    assert isinstance(data['attributions'], list)
 
 
 def test_check_bounds_get_max_height():

@@ -3,9 +3,11 @@ from starlette.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 import geojson
 from height_map.height_info import HeightInfo
+from height_map.cci_land_cover import LandCover
 import height_map.track_methods as tm
 
 hi = HeightInfo()
+lc = LandCover()
 
 app = FastAPI(
     openapi_prefix='',
@@ -109,3 +111,10 @@ def post_get_resampled_track(data: tm.ResamplingRequest):
 @app.post("/api/geojson/get_height_graph_data")
 def post_geojson_get_height_graph_data(data: tm.GeoJSONRequest):
     return tm.geojson_get_height_graph_data(data)
+
+@app.get("/api/get_land_cover")
+def get_surface_cover(
+    lat: float = Query(..., ge=-90, le=90),
+    lon: float = Query(..., ge=-180, le=180)
+    ):
+    return lc.get_data_at_position(lat, lon)

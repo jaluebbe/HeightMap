@@ -81,12 +81,12 @@ class Gebco:
             'lat': lat, 'lon': lon, 'lat_found': round(lat_found, 6),
             'lon_found': round(lon_found, 6), 'altitude_m': val,
             'source': self.attribution_name,
-            'distance_m': round(distance, 3), 'attribution': self.attribution}
+            'distance_m': round(distance, 3), 'attributions': [self.attribution]}
 
     @timeit
     def get_max_height(self, lat_ll, lon_ll, lat_ur, lon_ur):
         result = {'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
                 -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
@@ -109,7 +109,7 @@ class Gebco:
     @timeit
     def get_min_height(self, lat_ll, lon_ll, lat_ur, lon_ur):
         result = {'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
                 -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
@@ -136,7 +136,7 @@ class Gebco:
         result = {
             'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
             'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
                 -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(

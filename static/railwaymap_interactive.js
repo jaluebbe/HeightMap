@@ -61,7 +61,7 @@ function getHeightGraphData(feature) {
                 hg.remove();
             hg = L.control.heightgraph({
                 mappings: colorMappings,
-                width: 640,
+                width: window.innerWidth - 20,
                 height: 200,
                 margins: {
                     top: 10,
