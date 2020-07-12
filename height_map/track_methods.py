@@ -6,10 +6,12 @@ from geojson import FeatureCollection, Feature, LineString
 import pygeodesy.ellipsoidalVincenty as eV
 from simplification.cutil import simplify_coords
 from height_map.height_info import HeightInfo
+from height_map.cci_land_cover import LandCover
 from height_map.timeit import timeit
 
 logger = logging.getLogger(__name__)
 hi = HeightInfo()
+lc = LandCover()
 
 
 class Location(BaseModel):
@@ -152,4 +154,22 @@ def geojson_get_height_graph_data(data: GeoJSONRequest):
         pt['altitude_m']) for pt in track_elevation]
     _feature = Feature(geometry=LineString(_coordinates),
         properties={"attributeType": "surface elevation"})
-    return [FeatureCollection([_feature], properties={"summary": "elevation"})]
+    _elevation_feature_collection = FeatureCollection([_feature],
+        properties={"summary": "elevation"})
+    _lc_values = [lc.get_value_at_position(_lat, _lon) for _lon, _lat,
+        _altitude_m in _coordinates]
+    _features = []
+    _track = [_coordinates[0]]
+    _current_value = _lc_values[0]
+    _number_coords = len(_lc_values)
+    for _i in range(1, _number_coords):
+        _track.append(_coordinates[_i])
+        if _current_value != _lc_values[_i] or _i == _number_coords - 1:
+            _feature = Feature(geometry=LineString(_track),
+                properties={"attributeType": str(_current_value)})
+            _features.append(_feature)
+            _track = [_coordinates[_i]]
+            _current_value = _lc_values[_i]
+    _land_cover_feature_collection = FeatureCollection(_features,
+        properties={"summary": "land cover"})
+    return [_elevation_feature_collection, _land_cover_feature_collection]
