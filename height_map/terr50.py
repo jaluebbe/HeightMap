@@ -140,7 +140,10 @@ class Terrain50:
         except ValueError:
             return result
         file_list = {}
-        self.create_filelist(osgr_ll, osgr_ur, file_list)
+        try:
+            self.create_filelist(osgr_ll, osgr_ur, file_list)
+        except IOError:
+            return result
         result.update(self.check_max_files(self.filter_max_list(file_list)))
         return result
 
@@ -168,7 +171,10 @@ class Terrain50:
         except ValueError:
             return result
         file_list = {}
-        self.create_filelist(osgr_ll, osgr_ur, file_list)
+        try:
+            self.create_filelist(osgr_ll, osgr_ur, file_list)
+        except IOError:
+            return result
         result.update(self.check_min_files(self.filter_min_list(file_list)))
         return result
 
@@ -198,7 +204,10 @@ class Terrain50:
         except ValueError:
             return result
         file_list = {}
-        self.create_filelist(osgr_ll, osgr_ur, file_list)
+        try:
+            self.create_filelist(osgr_ll, osgr_ur, file_list)
+        except IOError:
+            return result
         result.update(self.check_min_max_files(self.filter_min_max_list(
             file_list)))
         return result
@@ -417,3 +426,5 @@ class Terrain50:
                         and y_ll == NROWS - 1)
             file_list[filename] = {'x_ll': x_ll, 'y_ll': y_ll, 'x_ur': x_ur,
                 'y_ur': y_ur, 'complete': complete}
+        else:
+            raise IOError(f'requested {filename} out of Terrain50 coverage or file is missing.')
