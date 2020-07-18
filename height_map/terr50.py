@@ -3,7 +3,7 @@ import struct
 import json
 from pygeodesy import ellipsoidalVincenty as eV
 from pygeodesy import toOsgr, parseOSGR, Osgr
-from height_map.dgm200 import calculate_distance
+from height_map import calculate_distance
 from height_map.timeit import timeit
 
 CELLSIZE = 50

@@ -2,7 +2,7 @@ import struct
 from math import floor
 import json
 import os
-from height_map.dgm200 import calculate_distance
+from height_map import calculate_distance
 from height_map.timeit import timeit
 
 NCOLS = 3601
