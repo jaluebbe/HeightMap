@@ -4,12 +4,6 @@ import pytest
 import math
 sys.path.append(os.getcwd())
 from height_map.dgm200 import Dgm200
-from height_map.dgm200 import calculate_distance
-
-
-def test_calculate_distance():
-    assert math.isclose(calculate_distance(50.925084, 6.529813, 47.422239,
-        10.986123), 506340.755, abs_tol=0.001)
 
 
 def test_missing_file_operation():

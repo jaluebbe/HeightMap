@@ -3,7 +3,7 @@ FROM debian:buster-slim
 RUN apt-get -y update &&  \
     apt-get -y install python3-pip python3-gdal wget && \
     pip3 install uvicorn gunicorn fastapi aiofiles geojson numpy \
-    pygeodesy cython h5py simplification
+    pygeodesy h5py simplification
 COPY docker/start.sh /start.sh
 RUN chmod +x /start.sh
 
@@ -15,9 +15,6 @@ RUN chmod +x /start-reload.sh
 COPY height_map /app/height_map
 COPY static /app/static
 COPY backend_fastapi.py /app/main.py
-COPY src /app/src
-
-RUN cd /app/src && sh compile.sh && cd ..
 
 WORKDIR /app/
 
