@@ -3,7 +3,7 @@ import struct
 import json
 from pygeodesy import ellipsoidalVincenty as eV
 from pygeodesy import toOsgr, parseOSGR, Osgr
-from height_map.dgm200 import calculate_distance
+from height_map import calculate_distance
 from height_map.timeit import timeit
 
 CELLSIZE = 50
@@ -20,8 +20,14 @@ def get_y(osgr):
 
 
 def osgr_to_grid(osgr):
-    return Osgr(osgr.easting - (osgr.easting % CELLSIZE),
-        osgr.northing - (osgr.northing % CELLSIZE))
+    easting_remainder = osgr.easting % CELLSIZE
+    northing_remainder = osgr.northing % CELLSIZE
+    if easting_remainder > CELLSIZE / 2:
+        easting_remainder -= CELLSIZE
+    if northing_remainder > CELLSIZE / 2:
+        northing_remainder -= CELLSIZE
+    return Osgr(osgr.easting - easting_remainder,
+        osgr.northing - northing_remainder)
 
 
 def get_filename(osgr):
@@ -76,7 +82,7 @@ class Terrain50:
             raise ValueError('invalid coordinates ({}, {})'.format(lat, lon))
         result = {
             'altitude_m': self.NODATA, 'source': self.attribution_name, 'lat': lat,
-            'lon': lon, 'distance_m': 0, 'attribution': self.attribution}
+            'lon': lon, 'distance_m': 0, 'attributions': [self.attribution]}
         if lat < 49.7 or lat > 62 or lon < -10 or lon > 4:
             return result
         try:
@@ -113,7 +119,7 @@ class Terrain50:
     @timeit
     def get_max_height(self, lat_ll, lon_ll, lat_ur, lon_ur):
         result = {'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
                 -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
@@ -134,14 +140,17 @@ class Terrain50:
         except ValueError:
             return result
         file_list = {}
-        self.create_filelist(osgr_ll, osgr_ur, file_list)
+        try:
+            self.create_filelist(osgr_ll, osgr_ur, file_list)
+        except IOError:
+            return result
         result.update(self.check_max_files(self.filter_max_list(file_list)))
         return result
 
     @timeit
     def get_min_height(self, lat_ll, lon_ll, lat_ur, lon_ur):
         result = {'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
                 -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
@@ -162,7 +171,10 @@ class Terrain50:
         except ValueError:
             return result
         file_list = {}
-        self.create_filelist(osgr_ll, osgr_ur, file_list)
+        try:
+            self.create_filelist(osgr_ll, osgr_ur, file_list)
+        except IOError:
+            return result
         result.update(self.check_min_files(self.filter_min_list(file_list)))
         return result
 
@@ -171,7 +183,7 @@ class Terrain50:
         result = {
             'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
             'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}
         if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
                 -90 <= lat_ur <= 90 and -180 <= lon_ur <= 180):
             raise ValueError('invalid coordinates ({}, {}), ({}, {})'.format(
@@ -192,7 +204,10 @@ class Terrain50:
         except ValueError:
             return result
         file_list = {}
-        self.create_filelist(osgr_ll, osgr_ur, file_list)
+        try:
+            self.create_filelist(osgr_ll, osgr_ur, file_list)
+        except IOError:
+            return result
         result.update(self.check_min_max_files(self.filter_min_max_list(
             file_list)))
         return result
@@ -411,3 +426,5 @@ class Terrain50:
                         and y_ll == NROWS - 1)
             file_list[filename] = {'x_ll': x_ll, 'y_ll': y_ll, 'x_ur': x_ur,
                 'y_ur': y_ur, 'complete': complete}
+        else:
+            raise IOError(f'requested {filename} out of Terrain50 coverage or file is missing.')

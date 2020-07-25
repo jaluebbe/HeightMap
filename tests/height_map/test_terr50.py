@@ -9,13 +9,13 @@ from height_map.terr50 import Terrain50
 def test_check_for_metadata_get_height():
     terr50 = Terrain50()
     for location in [[51.499, -0.122], [51.5052, -0.1666], [51.5058, -0.1834],
-                     [51.509, -0.163], [51.507, -0.179]]:
+                     [51.509, -0.163], [51.507, -0.179], [49.9262, -6.2979]]:
         data = terr50.get_height(*location)
         assert data['altitude_m'] != terr50.NODATA
         assert isinstance(data['source'], str)
-        assert isinstance(data['attribution'], str)
+        assert isinstance(data['attributions'], list)
         assert data['distance_m'] >= 0
-        assert data['distance_m'] < 70.72
+        assert data['distance_m'] < 35.36
         assert isinstance(data['lat_found'], float)
         assert isinstance(data['lon_found'], float)
 
@@ -50,7 +50,7 @@ def test_content_get_height():
         25.95, abs_tol=4)
     # Greenwich Observatory
     assert math.isclose(terr50.get_height(51.477963, -0.001647)['altitude_m'],
-        47.5, abs_tol=4)
+        38, abs_tol=4)
     # Ben Macdhui (1309m)
     assert math.isclose(terr50.get_height(57.069982, -3.670007)['altitude_m'],
         1304.6, abs_tol=4)
@@ -73,7 +73,7 @@ def test_check_for_metadata_get_max_height():
     assert isinstance(data['location_max'], list)
     assert data['counter_max'] >= 0
     assert isinstance(data['source'], str)
-    assert isinstance(data['attribution'], str)
+    assert isinstance(data['attributions'], list)
 
 
 def test_check_for_metadata_get_min_height():
@@ -84,7 +84,7 @@ def test_check_for_metadata_get_min_height():
     assert isinstance(data['location_min'], list)
     assert data['counter_min'] >= 0
     assert isinstance(data['source'], str)
-    assert isinstance(data['attribution'], str)
+    assert isinstance(data['attributions'], list)
 
 
 def test_check_for_metadata_get_min_max_height():
@@ -99,13 +99,13 @@ def test_check_for_metadata_get_min_max_height():
     assert isinstance(data['location_max'], list)
     assert data['counter_max'] >= 0
     assert isinstance(data['source'], str)
-    assert isinstance(data['attribution'], str)
+    assert isinstance(data['attributions'], list)
 
 
 def test_check_bounds_get_max_height():
     terr50 = Terrain50()
     # in bounds
-    assert terr50.get_max_height(50.5, -6.2, 59.5, 3.0)['h_max'] != terr50.NODATA
+    assert terr50.get_max_height(50.8, -3.1, 53, 0.8)['h_max'] != terr50.NODATA
     # invalid coordinates
     with pytest.raises(ValueError):
         terr50.get_max_height(52.5, 5, 91, 5.5)
@@ -118,16 +118,19 @@ def test_check_bounds_get_max_height():
     # incorrect rectangle
     assert terr50.get_max_height(54.886907, 15.570925, 47.240591, 6.093066
                                  )['h_max'] == terr50.NODATA
-    # highest location in the bounding box of the UK
-    assert math.isclose(terr50.get_max_height(49.96, -7.572168, 58.635,
-        1.681531)['h_max'], 1345.4, abs_tol=4)
+    # highest location within the bounding box of the UK:
+    # this is not fully covered by Terrain50
+    assert terr50.get_max_height(49.96, -7.572168, 58.635, 1.681531
+                                 )['h_max'] == terr50.NODATA
+    # this search area should work without problems
+    assert math.isclose(terr50.get_max_height(55.7, -5.6, 57.9,
+        -3.9)['h_max'], 1345.4, abs_tol=4)
 
 
 def test_check_bounds_get_min_height():
     terr50 = Terrain50()
     # in bounds
-    assert terr50.get_min_height(50.5, -6.2, 59.5, 3.0)['h_min'
-        ] != terr50.NODATA
+    assert terr50.get_min_height(50.8, -3.1, 53, 0.8)['h_min'] != terr50.NODATA
     # invalid coordinates
     with pytest.raises(ValueError):
         terr50.get_min_height(52.5, 5, 91, 5.5)
@@ -140,15 +143,21 @@ def test_check_bounds_get_min_height():
     # incorrect rectangle
     assert terr50.get_min_height(54.886907, 15.570925, 47.240591, 6.093066)[
                'h_min'] == terr50.NODATA
-    # lowest location in the bounding box of the UK
-    assert math.isclose(terr50.get_min_height(49.96, -7.572168, 58.635,
-        1.681531)['h_min'], -47.4, abs_tol=4)
+    # search for the lowest locations in the bounding box of the UK:
+    # this is not fully covered by Terrain50
+    assert terr50.get_min_height(49.96, -7.572168, 58.635, 1.681531)[
+               'h_min'] == terr50.NODATA
+    # these search areas should work without problems
+    assert math.isclose(terr50.get_min_height(55.06, -1.7, 55.12,
+        -1.6)['h_min'], -24, abs_tol=4)
+    assert math.isclose(terr50.get_min_height(50.8, -3.1, 53.8,
+        0.1)['h_min'], -27, abs_tol=4)
 
 
 def test_check_bounds_get_min_max_height():
     terr50 = Terrain50()
     # in bounds
-    _result = terr50.get_min_max_height(50.5, -6.2, 59.5, 3.0)
+    _result = terr50.get_min_max_height(50.8, -3.1, 53, 0.8)
     assert _result['h_max'] != terr50.NODATA
     assert _result['h_min'] != terr50.NODATA
     # invalid coordinates
@@ -161,12 +170,23 @@ def test_check_bounds_get_min_max_height():
     with pytest.raises(ValueError):
         terr50.get_min_max_height(52.5, 5, 53, 181)
     # incorrect rectangle
-    _result = terr50.get_min_max_height(54.886907, 15.570925, 47.240591,
-        6.093066)
+    _result = terr50.get_min_max_height(54.8869, 15.5709, 47.2405, 6.0930)
     assert _result['h_max'] == terr50.NODATA
     assert _result['h_min'] == terr50.NODATA
-    # highest and lowest location in the bounding box of the UK
-    _result = terr50.get_min_max_height(49.96, -7.572168, 58.635,
-        1.681531)
+    # highest and lowest locations in the bounding box of the UK:
+    # this is not fully covered by Terrain50
+    _result = terr50.get_min_max_height(49.96, -7.572168, 58.635, 1.681531)
+    assert _result['h_max'] == terr50.NODATA
+    assert _result['h_min'] == terr50.NODATA
+    # these search areas should work without problems
+    _result = terr50.get_min_max_height(55.7, -5.6, 57.9, -3.9)
     assert math.isclose(_result['h_max'], 1345.4, abs_tol=4)
-    assert math.isclose(_result['h_min'], -47.4, abs_tol=4)
+    assert math.isclose(_result['h_min'], -12, abs_tol=4)
+    # these search areas should work without problems
+    _result = terr50.get_min_max_height(55.06, -1.7, 55.12, -1.6)
+    assert math.isclose(_result['h_max'], 114, abs_tol=4)
+    assert math.isclose(_result['h_min'], -24, abs_tol=4)
+    # these search areas should work without problems
+    _result = terr50.get_min_max_height(50.8, -3.1, 53.8, 0.1)
+    assert math.isclose(_result['h_max'], 797, abs_tol=4)
+    assert math.isclose(_result['h_min'], -27, abs_tol=4)

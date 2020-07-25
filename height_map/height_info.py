@@ -25,37 +25,46 @@ class HeightInfo:
         :param lon: float -- longitude.
         :returns: dict
         """
-        wb_label = self.wb.get_data_at_position(lat, lon)['label']
+        wb_data = self.wb.get_data_at_position(lat, lon)
+        wb_label = wb_data['label']
+        wb_attributions = wb_data['attributions']
         is_ocean = wb_label == 'Ocean'
         dgm200_result = self.dgm.get_height(lat, lon)
         if dgm200_result['distance_m'] < 25 and (dgm200_result['altitude_m']
                 != self.dgm.NODATA) and not is_ocean:
             # prefer sea floor bathymetry if possible
             dgm200_result['wb_label'] = wb_label
+            dgm200_result['attributions'] += wb_attributions
             return dgm200_result
         terr50_result = self.terr50.get_height(lat, lon)
         h_terr50 = terr50_result['altitude_m']
         if h_terr50 != self.terr50.NODATA and not is_ocean or h_terr50 > 0:
             # prefer sea floor bathymetry if possible
             terr50_result['wb_label'] = wb_label
+            terr50_result['attributions'] += wb_attributions
             return terr50_result
         srtm1_result = self.srtm.get_height(lat, lon)
         h_srtm1 = srtm1_result['altitude_m']
         if h_srtm1 != self.srtm.NODATA and not is_ocean or h_srtm1 > 0:
             # prefer sea floor bathymetry if possible
             srtm1_result['wb_label'] = wb_label
+            srtm1_result['attributions'] += wb_attributions
             return srtm1_result
         if dgm200_result['altitude_m'] != self.dgm.NODATA and not is_ocean:
             # prefer sea floor bathymetry if possible
             dgm200_result['wb_label'] = wb_label
+            dgm200_result['attributions'] += wb_attributions
             return dgm200_result
         gebco_result = self.gebco.get_height(lat, lon)
         if gebco_result['altitude_m'] != self.gebco.NODATA:
             gebco_result['wb_label'] = wb_label
+            gebco_result['attributions'] += wb_attributions
             return gebco_result
         else:
-            return {'altitude_m': self.NODATA, 'lat': lat, 'lon': lon,
-                'distance_m': 0, 'source': 'NODATA', 'wb_label': wb_label}
+            return {
+                'altitude_m': self.NODATA, 'lat': lat, 'lon': lon,
+                'distance_m': 0, 'source': 'NODATA', 'wb_label': wb_label,
+                'attributions': wb_attributions}
 
     def get_max_height(self, lat_ll, lon_ll, lat_ur, lon_ur):
         if not (-90 <= lat_ll <= 90 and -180 <= lon_ll <= 180 and
@@ -64,7 +73,7 @@ class HeightInfo:
                 lat_ll, lon_ll, lat_ur, lon_ur))
         result = {
             'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
-            'source': self.attribution_name, 'attribution': ''}
+            'source': self.attribution_name, 'attributions': []}
         # consider only correctly defined rectangle:
         if lat_ll > lat_ur or lon_ll > lon_ur:
             return result
@@ -80,7 +89,7 @@ class HeightInfo:
                 lat_ll, lon_ll, lat_ur, lon_ur))
         result = {
             'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
-            'source': self.attribution_name, 'attribution': ''}
+            'source': self.attribution_name, 'attributions': []}
         # consider only correctly defined rectangle:
         if lat_ll > lat_ur or lon_ll > lon_ur:
             return result
@@ -97,7 +106,7 @@ class HeightInfo:
         result = {
             'location_max': [], 'h_max': self.NODATA, 'counter_max': 0,
             'location_min': [], 'h_min': self.NODATA, 'counter_min': 0,
-            'source': self.attribution_name, 'attribution': ''}
+            'source': self.attribution_name, 'attributions': []}
         # consider only correctly defined rectangle:
         if lat_ll > lat_ur or lon_ll > lon_ur:
             return result
@@ -151,7 +160,7 @@ class HeightInfo:
                     continue
             else:
                 break
-            _result.pop('attribution')
+            _result.pop('attributions')
             _result.pop('source')
             result.update(_result)
         return result

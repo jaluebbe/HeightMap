@@ -41,8 +41,8 @@ function requestHeight(e) {
                 map.setView(e.latlng);
             }
             myPolyline.setLatLngs([e.latlng, [height_info.lat_found, height_info.lon_found]]);
-	    info.updateElevation(height_info.altitude_m, height_info.source);
-            map.attributionControl.addAttribution(height_info.attribution);
+            info.updateElevation(height_info.altitude_m, height_info.source);
+            height_info.attributions.forEach(attribution => map.attributionControl.addAttribution(attribution));
         }
     };
     xhr.send();

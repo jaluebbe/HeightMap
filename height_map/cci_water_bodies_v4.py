@@ -27,4 +27,4 @@ class WaterBodies:
         value = self.get_value_at_position(lat, lon)
         return {
             'value': value, 'label': self.legend.get(str(value)),
-            'source': self.attribution_name, 'attribution': self.attribution}
+            'source': self.attribution_name, 'attributions': [self.attribution]}

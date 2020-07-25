@@ -18,7 +18,7 @@ def test_check_for_metadata():
         assert data['value'] in [0, 1, 2]
         assert data['label'] in ['Ocean', 'Land', 'Water']
         assert isinstance(data['source'], str)
-        assert isinstance(data['attribution'], str)
+        assert isinstance(data['attributions'], list)
 
 def test_map_bounds():
     wb = WaterBodies()
