@@ -1,5 +1,13 @@
 var hg;
 
+function adjustHeightgraphWidth() {
+    if (hg !== undefined) {
+        hg.resize({
+            width: window.innerWidth - 20
+        });
+    }
+}
+
 function getSteepnessBin(steepness) {
     if (steepness < 2)
         return 0;
@@ -126,3 +134,5 @@ function trackClicked(eo) {
 map.on('click', function(eo) {
     activeTrackSegment.clearLayers();
 });
+
+window.addEventListener('resize', adjustHeightgraphWidth);
