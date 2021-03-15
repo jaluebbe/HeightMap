@@ -1,26 +1,34 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-slim AS build_image
+FROM debian:buster-slim
 
-ENV VIRTUAL_ENV=/opt/venv
-RUN python3 -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-RUN pip3 install aiofiles geojson numpy \
-    pygeodesy h5py simplification
-
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-slim AS final_image
 RUN apt-get -y update &&  \
-    apt-get -y install --no-install-recommends python3-gdal && \
-    apt-get -y clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get -y install python3-pip python3-gdal python3-numpy && \
+    pip3 install --no-cache-dir uvicorn gunicorn fastapi aiofiles geojson \
+    pygeodesy h5py simplification uvloop websockets httptools && \
+    apt-get -y remove build-essential python3-setuptools python3-pip && \
+    apt -y autoremove
 
-COPY --from=build_image /opt/venv /opt/venv
+COPY docker/start.sh /start.sh
+RUN chmod +x /start.sh
 
-ENV VIRTUAL_ENV=/opt/venv
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+COPY docker/gunicorn_conf.py /gunicorn_conf.py
 
-ENV KEEP_ALIVE=120
-ENV TIMEOUT=60
+COPY docker/start-reload.sh /start-reload.sh
+RUN chmod +x /start-reload.sh
 
 COPY height_map /app/height_map
 COPY static /app/static
 COPY backend_fastapi.py /app/main.py
+
+ENV KEEP_ALIVE=120
+ENV TIMEOUT=60
+
+WORKDIR /app/
+
+ENV PYTHONPATH=/app
+
+EXPOSE 80
+
+# Run the start script, it will check for an /app/prestart.sh script (e.g.
+# for migrations)
+# And then will start Gunicorn with Uvicorn
+CMD ["/start.sh"]
