@@ -152,10 +152,6 @@ def geojson_get_height_graph_data(data: GeoJSONRequest):
     track_elevation = [hi.get_height(y, x) for x, y in simplified_track]
     _coordinates = [(round(pt['lon'], 6), round(pt['lat'], 6),
         pt['altitude_m']) for pt in track_elevation]
-    _feature = Feature(geometry=LineString(_coordinates),
-        properties={"attributeType": "surface elevation"})
-    _elevation_feature_collection = FeatureCollection([_feature],
-        properties={"summary": "elevation"})
     _lc_values = [lc.get_value_at_position(_lat, _lon) for _lon, _lat,
         _altitude_m in _coordinates]
     _features = []
@@ -172,4 +168,4 @@ def geojson_get_height_graph_data(data: GeoJSONRequest):
             _current_value = _lc_values[_i]
     _land_cover_feature_collection = FeatureCollection(_features,
         properties={"summary": "land cover"})
-    return [_elevation_feature_collection, _land_cover_feature_collection]
+    return [_land_cover_feature_collection]
