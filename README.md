@@ -20,11 +20,11 @@ pygeodesy geojson fastapi uvicorn aiofiles simplification
 
 https://www.bkg.bund.de/EN/Home/home.html
 
-Put http://sg.geodatenzentrum.de/web_download/dgm/dgm200/utm32s/gridascii/dgm200.utm32s.gridascii.zip to downloads/ and call dgm200_grid_conversion.py .
+Put https://daten.gdz.bkg.bund.de/produkte/dgm/dgm200/aktuell/dgm200.utm32s.gridascii.zip to downloads/ and call dgm200_grid_conversion.py .
 
 ### OS Terrain 50 (UK, 50m grid, registration required):
 
-Download ASCII Grid version of OS Terrain 50 from
+Download ASCII Grid version of OS Terrain 50 from 
 https://www.ordnancesurvey.co.uk/business-and-government/products/terrain-50.html to downloads/ and call terr50_data_conversion.py .
 Finally, call create_terr50_min_max_cache.py to generate a cache of min/max values.
 
