@@ -56,7 +56,7 @@ https://www.mdpi.com/2072-4292/9/1/36
 
 http://maps.elie.ucl.ac.be/CCI/viewer/download.php
 
-Download ftp://geo10.elie.ucl.ac.be/v207/ESACCI-LC-L4-WB-Ocean-Land-Map-150m-P13Y-2000-v4.0.tif and put it to height_map/maps/cci_wb4 .
+Download ftp://geo10.elie.ucl.ac.be/CCI/WaterBodies/ESACCI-LC-L4-WB-Ocean-Land-Map-150m-P13Y-2000-v4.0.tif and put it to height_map/maps/cci_wb4 .
 
 #### ESA CCI Land Cover Maps v2.1.1
 
