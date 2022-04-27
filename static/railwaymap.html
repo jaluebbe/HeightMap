@@ -6,21 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" integrity="sha384-lPzjPsFQL6te2x+VxmV6q1DpRxpRk0tmnl2cpwAO5y04ESyc752tnEWPKDfl1olr" crossorigin="">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" integrity="sha384-5kMSQJ6S4Qj5i09mtMNrWpSi8iXw230pKU76xTmrpezGnNJQzj0NzXjQLLg+jE7k" crossorigin="">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha384-Nh5DPXalR9stszhRpPoPEIgr5F2M4xe7DWJ7iqTp8FtJz0cvNdO/NvY2yjUSLfIS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" integrity="sha384-wgw+aLYNQ7dlhK47ZPK7FRACiq7ROZwgFNg0m04avm4CaXS+Z9Y7nMu8yNjBKYC+" crossorigin="anonymous">
     <link rel="stylesheet" href="static/heightmap.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.heightgraph@1.2.0/dist/L.Control.Heightgraph.min.css" integrity="sha384-dQUsX9Y3X6Kc8th87tD6BbTlMh8X3sbHIsFSSnjjgxFZx/aKx/lm5SiZyZ0PBEyp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.heightgraph@1.4.0/dist/L.Control.Heightgraph.min.css" integrity="sha384-dQUsX9Y3X6Kc8th87tD6BbTlMh8X3sbHIsFSSnjjgxFZx/aKx/lm5SiZyZ0PBEyp" crossorigin="anonymous">
 </head>
 <body>
     <div id="map"></div>
-    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster-src.js" integrity="sha384-N9K+COcUk7tr9O2uHZVp6jl7ueGhWsT+LUKUhd/VpA0svQrQMGArhY8r/u/Pkwih" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha384-4Dmmo81xejNChaqLOci80VhUcuEAD5pXpCtqtizmdgWEzdETh3zrJvzOhU4T79cN" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin="anonymous"></script>
     <script src="static/spin.js/spin.min.js"></script>
     <script src="static/leaflet-spin/leaflet.spin.min.js"></script>
-    <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js" integrity="sha384-ncjQQgFqwnbQEsvycZ039sHooQ0/d0b2WwkBTVBLgLHQ5HHIkZLT/glLx0UHC/bW" crossorigin=""></script>
-    <script src="https://unpkg.com/@turf/turf@5.1.6/turf.min.js" integrity="sha384-4AJURQ1iuA3c9I5pNFJ7YBjDqwLDoYhkOeBQlXtGTGGlavq433OFewlaCMV1Cta2" crossorigin=""></script>
-    <script src="https://unpkg.com/leaflet.heightgraph@1.3.0/dist/L.Control.Heightgraph.min.js" integrity="sha384-8qsdGJWfmeG0jZ9Qc2VYQb5UCWGBsKqQklIC8euuUgMKFWWyvweaJkCf3oD4zoDy" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/esri-leaflet@3.0.8/dist/esri-leaflet.js" integrity="sha384-8Q1n9lzxUdCpU9MxNrwmOtCuSduQS7UzMnXkUqhwLXZpnukKQMicou/E/oEXMVLr" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js" integrity="sha384-82q0nm29xZzIo5BMtDYnh2/NxeO6FoaK1S/0nF84w3cEsqbBfun3JdMyDVYWfVY5" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/leaflet.heightgraph@1.4.0/dist/L.Control.Heightgraph.min.js" integrity="sha384-OJ3MtC8ZGaRrR2Vg6X3ULHR5GMX6ITXrCja1REhkTZZKQDsHWlfIvRwoLwdxjPoN" crossorigin="anonymous"></script>
     <script src="static/string_to_colour.js"></script>
     <script src="static/mapboxAccessToken.js"></script>
     <script src="static/color_mappings.js"></script>
