@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 RUN apt-get -y update &&  \
     apt-get -y install python3-pip python3-gdal python3-numpy && \
