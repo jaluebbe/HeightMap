@@ -67,6 +67,9 @@ def test_content_get_height():
     # lowest location of this dataset in Germany
     assert math.isclose(gebco.get_height(50.92, 6.5)['altitude_m'],
         -192.2, abs_tol=16)
+    # surface mine in Belgium
+    assert math.isclose(gebco.get_height(50.604167, 3.479167)['altitude_m'],
+        -87, abs_tol=16)
     # highest location of this dataset in the bounding box of Germany
     assert math.isclose(gebco.get_height(47.420833, 13.0625)['altitude_m'],
         2818.2, abs_tol=16)
