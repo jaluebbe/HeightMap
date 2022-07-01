@@ -40,13 +40,13 @@ The SRTM tiles could be replaced by .hgt files available from https://data.opend
 
 ### World wide coverage of ocean and terrain
 
-#### GEBCO_2020
+#### GEBCO_2022
 
 15 arc-second resolution. Values are 16bit integer. File size approximately 7.5 GB.
 
 https://www.gebco.net/data_and_products/gridded_bathymetry_data/
 
-Download the global GEBCO_2020 Grid in netCDF format, unpack it and put GEBCO_2020.nc to height_map/maps/gebco/ .
+Download the global GEBCO_2022 Grid in netCDF format, unpack it and put GEBCO_2022.nc to height_map/maps/gebco/ .
 
 #### ESA CCI Water Bodies v4.0
 
