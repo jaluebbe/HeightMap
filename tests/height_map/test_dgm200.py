@@ -74,7 +74,7 @@ def test_map_bounds_get_height():
 def test_content_get_height():
     dgm = Dgm200()
     # Hambach open pit
-    assert math.isclose(dgm.get_height(50.91, 6.51)['altitude_m'], -94.83,
+    assert math.isclose(dgm.get_height(50.91, 6.51)['altitude_m'], -77.13,
         abs_tol=10)
     # storage pool in Geeste
     assert math.isclose(dgm.get_height(52.588, 7.294)['altitude_m'], 34,
@@ -89,11 +89,11 @@ def test_content_get_height():
     assert math.isclose(dgm.get_height(52.8, 7.4)['altitude_m'], 24.64,
         abs_tol=10)
     # lowest location
-    assert math.isclose(dgm.get_height(50.925084, 6.529813)['altitude_m'],
-        -265.5, abs_tol=10)
+    assert math.isclose(dgm.get_height(50.91826, 6.54725)['altitude_m'],
+        -290, abs_tol=10)
     # highest location
-    assert math.isclose(dgm.get_height(47.422239, 10.986123)['altitude_m'],
-        2920.32, abs_tol=10)
+    assert math.isclose(dgm.get_height(47.42219, 10.98877)['altitude_m'],
+        2914, abs_tol=10)
 
 
 def test_check_for_metadata_get_max_height():
@@ -157,4 +157,4 @@ def test_check_bounds_get_min_height():
                               )['h_min'] == dgm.NODATA
     # lowest location
     assert math.isclose(dgm.get_min_height(47.240591, 6.093066, 54.886907,
-        15.570925)['h_min'], -265.5, abs_tol=10)
+        15.570925)['h_min'], -290, abs_tol=10)

@@ -69,7 +69,7 @@ class Dgm200:
     logger = logging.getLogger(__name__)
     attribution_url = 'http://www.bkg.bund.de'
     attribution_name = 'DGM200'
-    attribution = '&copy GeoBasis-DE / <a href="{}">BKG</a> 2019'.format(
+    attribution = '&copy GeoBasis-DE / <a href="{}">BKG</a> 2023'.format(
         attribution_url)
     precision = 10.0  # max height error of dgm200 dataset
     file = None
