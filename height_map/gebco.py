@@ -30,8 +30,8 @@ def get_lon_from_index(j):
 
 class Gebco:
     attribution_url = ('https://www.gebco.net/data_and_products/'
-        'gridded_bathymetry_data/gebco_2022/')
-    attribution_name = 'GEBCO_2022 Grid'
+        'gridded_bathymetry_data/gebco_2023/')
+    attribution_name = 'GEBCO_2023 Grid'
     attribution = '&copy <a href="{}">{}</a>'.format(attribution_url,
         attribution_name)
     seabed_included = True
@@ -47,11 +47,11 @@ class Gebco:
         if path is None:
             path = os.path.join(pwd, 'maps/gebco')
         if file_name is None:
-            file_name = 'GEBCO_2022.nc'
+            file_name = 'GEBCO_2023.nc'
         if cache_path is None:
             self.cache_path = pwd
         if cache_file_name is None:
-            self.cache_file_name = 'gebco_2022_cache.json'
+            self.cache_file_name = 'gebco_2023_cache.json'
         file = os.path.join(path, file_name)
         if os.path.isfile(file):
             self.h5_file = h5py.File(file, 'r')
