@@ -36,7 +36,7 @@ Download required tiles from https://dwtkns.com/srtm30m/ , unpack and put them t
 
 #### Replacement of SRTM .hgt files with improved data for many European countries:
 
-The SRTM tiles could be replaced by .hgt files available from https://data.opendataportal.at/dataset/dtm-europe where SRTM data is replaced by LiDAR where open data sources are available.
+The SRTM tiles could be replaced by .hgt files available from https://sonny.4lima.de where SRTM data is replaced by LiDAR where open data sources are available.
 
 ### World wide coverage of ocean and terrain
 
