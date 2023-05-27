@@ -2,7 +2,6 @@ import requests
 import json
 
 host = 'http://127.0.0.1:8000'
-host = 'https://heightmap.lingen.jl82.de'
 
 simple_test_track = [
     {'lat': 52.1346, 'lon': 7.6848},
