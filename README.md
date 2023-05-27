@@ -62,9 +62,9 @@ Download ftp://geo10.elie.ucl.ac.be/CCI/WaterBodies/ESACCI-LC-L4-WB-Ocean-Land-M
 
 http://maps.elie.ucl.ac.be/CCI/viewer/download.php
 
-Download C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.nc from http://maps.elie.ucl.ac.be/CCI/viewer/download.php and convert it to GeoTIFF:
+Download C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.nc from http://maps.elie.ucl.ac.be/CCI/viewer/download.php and convert it to GeoTIFF:
 ```
-gdalwarp -of Gtiff -co COMPRESS=LZW -co TILED=YES -ot Byte -te -180.0000000 -90.0000000 180.0000000 90.0000000 -tr 0.002777777777778 0.002777777777778 -t_srs EPSG:4326 NETCDF:C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.nc:lccs_class C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.tif
+gdalwarp -of Gtiff -co COMPRESS=LZW -co TILED=YES -ot Byte -te -180.0000000 -90.0000000 180.0000000 90.0000000 -tr 0.002777777777778 0.002777777777778 -t_srs EPSG:4326 NETCDF:C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.nc:lccs_class C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.tif
 ```
 
 The corresponding legend is available at http://maps.elie.ucl.ac.be/CCI/viewer/download/ESACCI-LC-Legend.csv .

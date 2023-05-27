@@ -17,7 +17,7 @@ class LandCover:
             path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                 'maps/cci_land_cover')
         if file_name is None:
-            file_name = 'C3S-LC-L4-LCCS-Map-300m-P1Y-2018-v2.1.1.tif'
+            file_name = 'C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.tif'
         legend_file = os.path.join(path, 'cci_land_cover_legend.json')
         with open(legend_file, 'r') as f:
             self.legend = json.load(f)
