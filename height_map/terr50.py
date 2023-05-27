@@ -31,7 +31,7 @@ def osgr_to_grid(osgr):
 
 
 def get_filename(osgr):
-    filename = osgr.toStr(prec=2, sep='') + '.bin'
+    filename = osgr.toStr(prec=1, sep='') + '.bin'
     return filename
 
 
@@ -55,7 +55,7 @@ class Terrain50:
         'terrain-50.html')
     attribution_name = 'OS Terrain 50'
     attribution = ('<a href="{}">Contains OS data &copy; Crown copyright and '
-                   'database right 2019</a>').format(attribution_url)
+                   'database right 2022</a>').format(attribution_url)
     NODATA = -32768
     precision = 4.0  # RMS error
     seabed_included = False

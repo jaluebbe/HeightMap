@@ -47,16 +47,16 @@ def test_content_get_height():
         28.96, abs_tol=4)
     # London, Kensington Gardens
     assert math.isclose(terr50.get_height(51.507, -0.179)['altitude_m'],
-        25.95, abs_tol=4)
+        25.95, abs_tol=5)
     # Greenwich Observatory
     assert math.isclose(terr50.get_height(51.477963, -0.001647)['altitude_m'],
         38, abs_tol=4)
     # Ben Macdhui (1309m)
     assert math.isclose(terr50.get_height(57.069982, -3.670007)['altitude_m'],
-        1304.6, abs_tol=4)
+        1304.6, abs_tol=5)
     # Ben Nevis (1345m)
     assert math.isclose(terr50.get_height(56.796556, -5.004599)['altitude_m'],
-        1345, abs_tol=4)
+        1345, abs_tol=6)
     # Leinster Gardens
     assert math.isclose(terr50.get_height(51.512638, -0.183821)['altitude_m'],
         25, abs_tol=4)
@@ -149,9 +149,9 @@ def test_check_bounds_get_min_height():
                'h_min'] == terr50.NODATA
     # these search areas should work without problems
     assert math.isclose(terr50.get_min_height(55.06, -1.7, 55.12,
-        -1.6)['h_min'], -24, abs_tol=4)
+        -1.6)['h_min'], -31.5, abs_tol=4)
     assert math.isclose(terr50.get_min_height(50.8, -3.1, 53.8,
-        0.1)['h_min'], -27, abs_tol=4)
+        0.1)['h_min'], -132, abs_tol=4)
 
 
 def test_check_bounds_get_min_max_height():
@@ -185,8 +185,8 @@ def test_check_bounds_get_min_max_height():
     # these search areas should work without problems
     _result = terr50.get_min_max_height(55.06, -1.7, 55.12, -1.6)
     assert math.isclose(_result['h_max'], 114, abs_tol=4)
-    assert math.isclose(_result['h_min'], -24, abs_tol=4)
+    assert math.isclose(_result['h_min'], -31.5, abs_tol=4)
     # these search areas should work without problems
     _result = terr50.get_min_max_height(50.8, -3.1, 53.8, 0.1)
     assert math.isclose(_result['h_max'], 797, abs_tol=4)
-    assert math.isclose(_result['h_min'], -27, abs_tol=4)
+    assert math.isclose(_result['h_min'], -132, abs_tol=4)
