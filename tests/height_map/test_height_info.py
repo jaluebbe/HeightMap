@@ -58,10 +58,10 @@ def test_content_get_height():
     assert math.isclose(height_info.get_height(52.8, 7.4)['altitude_m'], 24.64,
         abs_tol=16)
     # lowest location in Germany
-    assert math.isclose(height_info.get_height(50.925084, 6.529813)['altitude_m'],
-        -265.5, abs_tol=16)
+    assert math.isclose(height_info.get_height(50.91826, 6.54725)['altitude_m'],
+        -290, abs_tol=10)
     # highest location in the bounding box of Germany
-    assert math.isclose(height_info.get_height(47.422239, 10.986123)['altitude_m'],
+    assert math.isclose(height_info.get_height(47.42219, 10.98877)['altitude_m'],
         2920.32, abs_tol=16)
     # lowest location
     assert math.isclose(height_info.get_height(11.366667, 142.5875)['altitude_m'],
@@ -191,7 +191,7 @@ def test_check_bounds_get_min_height():
                                 )['h_min'] == height_info.NODATA
     # lowest location in the bounding box of Germany
     assert math.isclose(height_info.get_min_height(47.240591, 6.093066, 54.886907,
-        15.570925)['h_min'], -265.5, abs_tol=16)
+        15.570925)['h_min'], -290, abs_tol=16)
     # lowest location of the world
     assert math.isclose(height_info.get_min_height(-90, -180, 90, 180)['h_min'],
         -10928, abs_tol=16)
@@ -221,7 +221,7 @@ def test_check_bounds_get_min_max_height():
     _result = height_info.get_min_max_height(47.240591, 6.093066, 54.886907,
         15.570925)
     assert math.isclose(_result['h_max'], 2920, abs_tol=16)
-    assert math.isclose(_result['h_min'], -265.5, abs_tol=16)
+    assert math.isclose(_result['h_min'], -290, abs_tol=16)
     # highest and lowest location of the world
     _result = height_info.get_min_max_height(-90, -180, 90, 180)
     assert math.isclose(_result['h_max'], 8613.2, abs_tol=16)
