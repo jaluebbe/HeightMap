@@ -86,16 +86,16 @@ The web interface and API is hosted using FastAPI. It could also be run as a Doc
 
 ### FastAPI
 ```
-gunicorn -w8 -b 0.0.0.0:8000 backend_fastapi:app -k uvicorn.workers.UvicornWorker
+python backend_fastapi.py
 ```
+You should take care if you would like to host on all interfaces (0.0.0.0) or on localhost (127.0.0.1) only.
+Just modify the host parameter in the __main__ method according to your needs.
+
 ### Build and run as a Docker container
 ```
 docker build -t heightmap ./
 docker run -d -p 8000:80 --mount src=`pwd`/height_map/maps,target=/app/height_map/maps,type=bind,consistency=cached heightmap
 ```
-### Downloading images from hub.docker.com
-Instead of building the image, you may try to download it from hub.docker.com. 
-Simply use jaluebbe/heightmap as image to run.
 
 ### Additional mounting options
 You may add you own imprint and/or privacy statement by adding
