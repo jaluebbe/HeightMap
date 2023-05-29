@@ -3,7 +3,7 @@ FROM debian:bullseye-slim
 RUN apt-get -y update &&  \
     apt-get -y install python3-pip python3-gdal python3-numpy && \
     pip3 install --no-cache-dir uvicorn gunicorn fastapi aiofiles geojson \
-    pygeodesy h5py simplification uvloop websockets httptools && \
+    pygeodesy>=23.5 h5py simplification uvloop websockets httptools && \
     apt-get -y remove build-essential python3-setuptools python3-pip && \
     apt -y autoremove
 
