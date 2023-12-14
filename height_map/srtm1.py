@@ -468,5 +468,5 @@ class Srtm1:
             "distance_m": round(
                 calculate_distance(lat, lon, lat_found, lon_found), 3
             ),
-            "attributions": self.attributions,
+            "attributions": self.attributions.copy(),
         }
